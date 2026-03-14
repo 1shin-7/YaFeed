@@ -1,10 +1,8 @@
 package com.w57736e.yafeed.presentation.screens.news_detail
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material.icons.filled.Person
@@ -12,6 +10,7 @@ import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -37,16 +36,6 @@ fun NewsDetailScreen(
     val formattedDate = remember(article.pubDate) { DateUtils.formatRssDateFull(article.pubDate) }
     val content = article.content ?: "No content available."
     var selectedImageUrl by remember { mutableStateOf<String?>(null) }
-    var showTimeText by remember { mutableStateOf(false) }
-
-    LaunchedEffect(scrollState.isScrollInProgress) {
-        if (scrollState.isScrollInProgress) {
-            showTimeText = true
-        } else {
-            kotlinx.coroutines.delay(2000)
-            showTimeText = false
-        }
-    }
 
     selectedImageUrl?.let { imageUrl ->
         Dialog(onDismissRequest = { selectedImageUrl = null }) {
@@ -57,8 +46,7 @@ fun NewsDetailScreen(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        ScreenScaffold(
+    ScreenScaffold(
             scrollState = scrollState,
             edgeButton = {
             EdgeButton(
@@ -80,11 +68,16 @@ fun NewsDetailScreen(
                 }
             }
         }
-    ) {
+    ) { contentPadding ->
         TransformingLazyColumn(
             state = scrollState,
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(top = 0.dp, bottom = 64.dp)
+            contentPadding = PaddingValues(
+                top = 0.dp,
+                start = 0.dp,
+                end = 0.dp,
+                bottom = contentPadding.calculateBottomPadding()
+            )
         ) {
             // 顶部图片 + 渐变遮罩 + 标题 复合项
             item {
@@ -146,7 +139,7 @@ fun NewsDetailScreen(
             if (article.author != null || article.pubDate != null) {
                 item {
                     Column(
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                         horizontalAlignment = Alignment.Start
                     ) {
@@ -230,19 +223,6 @@ fun NewsDetailScreen(
                     showImages = showImages
                 )
             }
-        }
-    }
-
-        AnimatedVisibility(
-            visible = showTimeText,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            TimeText(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
-            )
         }
     }
 }

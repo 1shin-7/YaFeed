@@ -9,6 +9,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.wear.compose.material3.AppScaffold
 import androidx.wear.compose.navigation.SwipeDismissableNavHost
 import androidx.wear.compose.navigation.composable
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
@@ -64,10 +65,11 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
     val newsListViewModel = remember { NewsListViewModel(repository, prefManager, context) }
 
     YaFeedTheme {
-        SwipeDismissableNavHost(
-            navController = navController,
-            startDestination = "home"
-        ) {
+        AppScaffold {
+            SwipeDismissableNavHost(
+                navController = navController,
+                startDestination = "home"
+            ) {
             composable("home") {
                 HomeScreen(
                     viewModel = homeViewModel,
@@ -186,6 +188,7 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
             composable("settings_about") {
                 com.w57736e.yafeed.presentation.screens.settings.AboutScreen()
             }
+        }
         }
     }
 }

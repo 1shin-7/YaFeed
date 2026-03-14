@@ -1,8 +1,5 @@
 package com.w57736e.yafeed.presentation.screens.home
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apps
@@ -10,10 +7,11 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
-import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
+import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material3.*
 import com.w57736e.yafeed.presentation.components.SourceCard
 import com.w57736e.yafeed.presentation.components.SourceGridItem
@@ -25,48 +23,35 @@ fun HomeScreen(
     onSettingsClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val scrollState = rememberTransformingLazyColumnState()
-    var showTimeText by remember { mutableStateOf(false) }
+    val scrollState = rememberScalingLazyListState()
 
-    LaunchedEffect(scrollState.isScrollInProgress) {
-        if (scrollState.isScrollInProgress) {
-            showTimeText = true
-        } else {
-            kotlinx.coroutines.delay(2000)
-            showTimeText = false
-        }
-    }
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        ScreenScaffold(
-            scrollState = scrollState,
-            edgeButton = {
-                EdgeButton(
-                    onClick = { viewModel.toggleViewMode() }
+    ScreenScaffold(
+        scrollState = scrollState,
+        edgeButton = {
+            EdgeButton(
+                onClick = { viewModel.toggleViewMode() }
+            ) {
+                Row(
+                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
                 ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = if (uiState.isGridView) Icons.Default.Menu else Icons.Default.Apps,
-                            contentDescription = null
-                        )
-                        Text(if (uiState.isGridView) "List" else "Grid")
-                    }
+                    Icon(
+                        imageVector = if (uiState.isGridView) Icons.Default.Menu else Icons.Default.Apps,
+                        contentDescription = null
+                    )
+                    Text(if (uiState.isGridView) "List" else "Grid")
                 }
             }
+        }
+    ) { contentPadding ->
+        ScalingLazyColumn(
+            state = scrollState,
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(
+                top = contentPadding.calculateTopPadding(),
+                start = contentPadding.calculateStartPadding(LayoutDirection.Ltr),
+                end = contentPadding.calculateEndPadding(LayoutDirection.Ltr),
+            )
         ) {
-            TransformingLazyColumn(
-                state = scrollState,
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(
-                    top = 28.dp,
-                    start = 12.dp,
-                    end = 12.dp,
-                    bottom = 64.dp
-                )
-            ) {
                 item {
                     Text(
                         "YaFeed",
@@ -82,7 +67,7 @@ fun HomeScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(bottom = 8.dp),
+                                .padding(bottom = 6.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             rowSources.forEach { source ->
@@ -122,17 +107,4 @@ fun HomeScreen(
                 }
             }
         }
-
-        AnimatedVisibility(
-            visible = showTimeText,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            TimeText(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
-            )
-        }
-    }
 }

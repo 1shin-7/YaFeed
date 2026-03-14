@@ -2,8 +2,10 @@ package com.w57736e.yafeed.presentation.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
@@ -57,6 +59,7 @@ fun ContentRenderer(
                                 .fillMaxWidth()
                                 .height(120.dp)
                                 .padding(vertical = 8.dp)
+                                .clip(RoundedCornerShape(4.dp))
                                 .clickable { onImageClick(block.content) },
                             contentScale = ContentScale.Crop
                         )
