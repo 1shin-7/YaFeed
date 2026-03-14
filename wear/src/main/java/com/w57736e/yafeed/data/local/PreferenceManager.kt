@@ -21,6 +21,7 @@ class PreferenceManager(private val context: Context) {
         val BROWSER_TYPE = stringPreferencesKey("browser_type")
         val BROWSER_AVAILABLE = booleanPreferencesKey("browser_available")
         val NOTIFICATION_ENABLED = booleanPreferencesKey("notification_enabled")
+        val LAST_MODIFIED = longPreferencesKey("last_modified")
     }
 
     val uiScale: Flow<Float> = dataStore.data.map { it[UI_SCALE] ?: 1.0f }
@@ -32,43 +33,49 @@ class PreferenceManager(private val context: Context) {
     val browserType: Flow<String> = dataStore.data.map { it[BROWSER_TYPE] ?: "default" }
     val browserAvailable: Flow<Boolean> = dataStore.data.map { it[BROWSER_AVAILABLE] ?: false }
     val notificationEnabled: Flow<Boolean> = dataStore.data.map { it[NOTIFICATION_ENABLED] ?: false }
+    val lastModified: Flow<Long> = dataStore.data.map { it[LAST_MODIFIED] ?: 0L }
 
     suspend fun setUiScale(scale: Float) {
-        dataStore.edit { it[UI_SCALE] = scale }
+        dataStore.edit { it[UI_SCALE] = scale; it[LAST_MODIFIED] = System.currentTimeMillis() }
     }
 
     suspend fun setShowImages(show: Boolean) {
-        dataStore.edit { it[SHOW_IMAGES] = show }
+        dataStore.edit { it[SHOW_IMAGES] = show; it[LAST_MODIFIED] = System.currentTimeMillis() }
     }
 
     suspend fun setUpdateInterval(interval: Long) {
-        dataStore.edit { it[UPDATE_INTERVAL] = interval }
+        dataStore.edit { it[UPDATE_INTERVAL] = interval; it[LAST_MODIFIED] = System.currentTimeMillis() }
     }
 
     suspend fun setMaxCacheSize(size: Int) {
-        dataStore.edit { it[MAX_CACHE_SIZE] = size }
+        dataStore.edit { it[MAX_CACHE_SIZE] = size; it[LAST_MODIFIED] = System.currentTimeMillis() }
     }
 
     suspend fun setFontSize(size: Float) {
-        dataStore.edit { it[FONT_SIZE] = size }
+        dataStore.edit { it[FONT_SIZE] = size; it[LAST_MODIFIED] = System.currentTimeMillis() }
     }
 
     suspend fun setBrowserType(type: String) {
-        dataStore.edit { it[BROWSER_TYPE] = type }
+        dataStore.edit { it[BROWSER_TYPE] = type; it[LAST_MODIFIED] = System.currentTimeMillis() }
     }
 
     suspend fun setBrowserAvailable(available: Boolean) {
-        dataStore.edit { it[BROWSER_AVAILABLE] = available }
+        dataStore.edit { it[BROWSER_AVAILABLE] = available; it[LAST_MODIFIED] = System.currentTimeMillis() }
     }
 
     suspend fun setNotificationEnabled(enabled: Boolean) {
-        dataStore.edit { it[NOTIFICATION_ENABLED] = enabled }
+        dataStore.edit { it[NOTIFICATION_ENABLED] = enabled; it[LAST_MODIFIED] = System.currentTimeMillis() }
+    }
+
+    suspend fun setListViewGrid(grid: Boolean) {
+        dataStore.edit { it[LIST_VIEW_GRID] = grid; it[LAST_MODIFIED] = System.currentTimeMillis() }
     }
 
     suspend fun toggleViewMode() {
-        dataStore.edit { 
+        dataStore.edit {
             val current = it[LIST_VIEW_GRID] ?: false
             it[LIST_VIEW_GRID] = !current
+            it[LAST_MODIFIED] = System.currentTimeMillis()
         }
     }
 }

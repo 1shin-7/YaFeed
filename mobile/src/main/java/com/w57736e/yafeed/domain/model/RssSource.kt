@@ -10,8 +10,6 @@ data class RssSource(
     val name: String,
     val url: String,
     val faviconUrl: String? = null,
-    val lastUpdate: Long = 0,
-    val latestTitle: String? = null,
     val notificationEnabled: Boolean = true,
     val order: Int = 0,
     val lastModified: Long = System.currentTimeMillis()

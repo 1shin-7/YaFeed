@@ -4,13 +4,11 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.w57736e.yafeed.domain.model.ArticleEntity
 import com.w57736e.yafeed.domain.model.RssSource
 
-@Database(entities = [RssSource::class, ArticleEntity::class], version = 6, exportSchema = false)
+@Database(entities = [RssSource::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun sourceDao(): SourceDao
-    abstract fun articleDao(): ArticleDao
 
     companion object {
         @Volatile
@@ -21,10 +19,8 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "yafeed_database"
-                )
-                .fallbackToDestructiveMigration() // For development simplicity
-                .build()
+                    "yafeed_mobile_database"
+                ).build()
                 INSTANCE = instance
                 instance
             }

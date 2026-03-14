@@ -16,7 +16,7 @@ android {
         minSdk = 28
         targetSdk = 36
         versionCode = 1
-        versionName = "1.0.302"
+        versionName = "1.1.0"
 
     }
 
@@ -46,6 +46,10 @@ android {
 
 dependencies {
     implementation(libs.play.services.wearable)
+
+    // Coroutines for Play Services
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)

@@ -35,6 +35,10 @@ class RssRepository(
 
     suspend fun getSourceById(id: Int): RssSource? = sourceDao.getSourceById(id)
 
+    suspend fun syncSources(sources: List<RssSource>) {
+        sourceDao.insertAll(sources)
+    }
+
     fun getCachedArticles(sourceId: Int): Flow<List<RssArticle>> {
         return articleDao.getArticlesBySource(sourceId).map { entities ->
             entities.map { it.toDomain() }
