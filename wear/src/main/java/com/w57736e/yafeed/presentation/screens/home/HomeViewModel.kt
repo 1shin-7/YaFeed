@@ -20,13 +20,15 @@ class HomeViewModel(
     private val preferenceManager: PreferenceManager
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(HomeUiState())
+    private val _isRefreshing = MutableStateFlow(false)
+
     val uiState: StateFlow<HomeUiState> = combine(
         repository.getAllSources(),
         preferenceManager.isGridView,
-        preferenceManager.uiScale
-    ) { sources, isGrid, scale ->
-        HomeUiState(sources, isGrid, false, scale)
+        preferenceManager.uiScale,
+        _isRefreshing
+    ) { sources, isGrid, scale, refreshing ->
+        HomeUiState(sources, isGrid, refreshing, scale)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), HomeUiState())
 
     init {
@@ -41,15 +43,15 @@ class HomeViewModel(
 
     fun refreshAll() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
+            _isRefreshing.value = true
             val cacheSize = preferenceManager.maxCacheSize.first()
-            val sources = uiState.value.sources.ifEmpty { 
-                repository.getAllSources().first() 
+            val sources = uiState.value.sources.ifEmpty {
+                repository.getAllSources().first()
             }
             sources.forEach { source ->
                 repository.fetchAndCache(source.id, cacheSize)
             }
-            _uiState.update { it.copy(isLoading = false) }
+            _isRefreshing.value = false
         }
     }
 }

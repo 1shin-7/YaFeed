@@ -32,17 +32,13 @@ fun HomeScreen(
         scrollState = scrollState,
         edgeButton = {
             EdgeButton(
-                onClick = { viewModel.toggleViewMode() }
+                onClick = { viewModel.toggleViewMode() },
+                buttonSize = EdgeButtonSize.Small
             ) {
-                Row(
-                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = if (uiState.isGridView) Icons.Default.Menu else Icons.Default.Apps,
-                        contentDescription = null
-                    )
-                    Text(if (uiState.isGridView) "List" else "Grid")
-                }
+                Icon(
+                    imageVector = if (uiState.isGridView) Icons.Default.Menu else Icons.Default.Apps,
+                    contentDescription = null
+                )
             }
         }
     ) { contentPadding ->

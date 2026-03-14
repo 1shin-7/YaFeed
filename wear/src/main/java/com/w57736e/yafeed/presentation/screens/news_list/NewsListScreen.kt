@@ -36,14 +36,14 @@ fun NewsListScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = contentPadding
             ) {
-            item {
-                Text(
-                    uiState.source?.name ?: "Latest News",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(bottom = 12.dp)
-                )
-            }
+                item {
+                    Text(
+                        uiState.source?.name ?: "Latest News",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
+                }
 
             if (uiState.articles.isEmpty() && uiState.isLoading) {
                 item {
