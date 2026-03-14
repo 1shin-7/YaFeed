@@ -8,6 +8,7 @@ import com.w57736e.yafeed.domain.model.RssArticle
 import com.w57736e.yafeed.domain.model.RssSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.net.URI
 
 class RssRepository(
     private val sourceDao: SourceDao,
@@ -17,7 +18,8 @@ class RssRepository(
     fun getAllSources(): Flow<List<RssSource>> = sourceDao.getAllSources()
 
     suspend fun addSource(url: String, name: String) {
-        val source = RssSource(name = name, url = url)
+        val faviconUrl = resolveFavicon(url)
+        val source = RssSource(name = name, url = url, faviconUrl = faviconUrl)
         sourceDao.insertSource(source)
     }
 
@@ -30,6 +32,16 @@ class RssRepository(
     fun getCachedArticles(sourceId: Int): Flow<List<RssArticle>> {
         return articleDao.getArticlesBySource(sourceId).map { entities ->
             entities.map { it.toDomain() }
+        }
+    }
+
+    private fun resolveFavicon(url: String): String {
+        return try {
+            val uri = URI(url)
+            val host = uri.host ?: ""
+            "https://www.google.com/s2/favicons?domain=$host&sz=64"
+        } catch (e: Exception) {
+            ""
         }
     }
 
@@ -55,11 +67,19 @@ class RssRepository(
             // Prune old articles
             articleDao.pruneArticles(sourceId, maxCacheSize)
 
+            // Resolve favicon if missing
+            val resolvedFavicon = if (source.faviconUrl.isNullOrBlank()) {
+                resolveFavicon(source.url)
+            } else {
+                source.faviconUrl
+            }
+
             // Update source metadata
             val latestTitle = channel.items.firstOrNull()?.title
             val updatedSource = source.copy(
                 latestTitle = latestTitle,
-                lastUpdate = System.currentTimeMillis()
+                lastUpdate = System.currentTimeMillis(),
+                faviconUrl = resolvedFavicon
             )
             sourceDao.updateSource(updatedSource)
         } catch (e: Exception) {

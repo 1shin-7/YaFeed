@@ -11,7 +11,7 @@ import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.*
 import coil.compose.AsyncImage
 import com.w57736e.yafeed.domain.model.RssArticle
-import com.w57736e.yafeed.data.repository.HtmlUtils
+import com.w57736e.yafeed.data.repository.DateUtils
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @Composable
@@ -19,26 +19,36 @@ fun NewsDetailScreen(
     article: RssArticle
 ) {
     val scrollState = rememberTransformingLazyColumnState()
-    val cleanTitle = remember(article.title) { HtmlUtils.stripHtml(article.title) }
+    val formattedDate = remember(article.pubDate) { DateUtils.formatRssDateFull(article.pubDate) }
     val content = article.content ?: "No content available."
     
-    ScreenScaffold(scrollState = scrollState) {
+    ScreenScaffold(
+        scrollState = scrollState,
+        edgeButton = {
+            EdgeButton(
+                onClick = { /* TODO: Open in browser */ }
+            ) {
+                Text("View Original")
+            }
+        }
+    ) {
         TransformingLazyColumn(
             state = scrollState,
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(top = 24.dp, start = 12.dp, end = 12.dp, bottom = 48.dp)
+            contentPadding = PaddingValues(top = 24.dp, start = 12.dp, end = 12.dp, bottom = 64.dp)
         ) {
-            // 标题
+            // 标题：使用 MarkdownText 以支持标题内的 HTML 实体
             item {
-                Text(
-                    cleanTitle,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
+                MarkdownText(
+                    markdown = article.title,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurface
+                    ),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
             }
 
-            // 文章首图 (如果有)
+            // 文章首图
             if (article.imageUrl != null) {
                 item {
                     AsyncImage(
@@ -56,7 +66,7 @@ fun NewsDetailScreen(
             // 作者和日期
             if (article.pubDate != null || article.author != null) {
                 item {
-                    val info = listOfNotNull(article.author, article.pubDate).joinToString(" • ")
+                    val info = listOfNotNull(article.author, formattedDate).joinToString(" • ")
                     Text(
                         info,
                         style = MaterialTheme.typography.labelSmall,
@@ -66,28 +76,16 @@ fun NewsDetailScreen(
                 }
             }
 
-            // 正文：全量使用 MarkdownText 以支持嵌入图片
+            // 正文：全量使用 MarkdownText，支持内嵌图片
             item {
                 MarkdownText(
                     markdown = content,
                     modifier = Modifier.fillMaxWidth(),
-                    // 强制指定可见颜色和适合手表的行高
                     style = MaterialTheme.typography.bodySmall.copy(
                         color = MaterialTheme.colorScheme.onSurface,
                         lineHeight = 18.sp
                     )
                 )
-            }
-
-            // 原始链接按钮
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = { /* TODO: Open in browser */ },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("View Original")
-                }
             }
         }
     }

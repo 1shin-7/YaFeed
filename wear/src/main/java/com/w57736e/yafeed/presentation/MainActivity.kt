@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             val currentSources = repository.getAllSources().first()
             if (currentSources.isEmpty()) {
-                repository.addSource("https://www.theverge.com/rss/index.xml", "The Verge")
+                repository.addSource("htnitps://www.theverge.com/rss/index.xml", "The Verge")
                 repository.addSource("https://9to5google.com/feed/", "9to5Google")
                 repository.addSource("https://www.ithome.com/rss", "ITHome")
             }
