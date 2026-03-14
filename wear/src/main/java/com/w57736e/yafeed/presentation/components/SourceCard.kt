@@ -33,7 +33,7 @@ fun SourceCard(
                 AsyncImage(
                     model = source.faviconUrl,
                     contentDescription = null,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(16.dp)
                 )
             }
         },

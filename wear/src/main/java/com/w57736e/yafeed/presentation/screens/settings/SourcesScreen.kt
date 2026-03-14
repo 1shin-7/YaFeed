@@ -1,14 +1,22 @@
 package com.w57736e.yafeed.presentation.screens.settings
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.*
 import com.w57736e.yafeed.domain.model.RssSource
+import com.w57736e.yafeed.presentation.components.SplitActionButton
 
 @Composable
 fun SourcesScreen(
@@ -17,32 +25,85 @@ fun SourcesScreen(
     onDeleteSource: (RssSource) -> Unit
 ) {
     val scrollState = rememberTransformingLazyColumnState()
+    var sourceToDelete by remember { mutableStateOf<RssSource?>(null) }
+
+    sourceToDelete?.let { source ->
+        Dialog(onDismissRequest = { sourceToDelete = null }) {
+            Column(
+                modifier = Modifier.fillMaxSize().padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Warning,
+                    contentDescription = null,
+                    modifier = Modifier.size(48.dp),
+                    tint = MaterialTheme.colorScheme.error
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Delete ${source.name}?",
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, androidx.compose.ui.Alignment.CenterHorizontally)
+                ) {
+                    FilledIconButton(
+                        onClick = { sourceToDelete = null }
+                    ) {
+                        Icon(Icons.Default.Close, contentDescription = "Cancel")
+                    }
+                    FilledIconButton(
+                        onClick = {
+                            onDeleteSource(source)
+                            sourceToDelete = null
+                        },
+                        colors = IconButtonDefaults.filledIconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.error
+                        )
+                    ) {
+                        Icon(Icons.Default.Check, contentDescription = "Confirm")
+                    }
+                }
+            }
+        }
+    }
+
     ScreenScaffold(scrollState = scrollState) {
         TransformingLazyColumn(
             state = scrollState,
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(top = 24.dp, start = 12.dp, end = 12.dp, bottom = 24.dp)
+            contentPadding = PaddingValues(top = 24.dp)
         ) {
             item {
                 Text("News Sources", style = MaterialTheme.typography.titleMedium)
             }
 
             items(sources) { source ->
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(source.name, modifier = Modifier.weight(1f))
-                    IconButton(onClick = { onDeleteSource(source) }) {
-                        Text("X") 
-                    }
-                }
+                SplitActionButton(
+                    label = source.name,
+                    onContainerClick = {},
+                    onActionClick = { sourceToDelete = source },
+                    actionIcon = {
+                        Icon(
+                            Icons.Default.Delete,
+                            contentDescription = "Delete",
+                            tint = MaterialTheme.colorScheme.onErrorContainer
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).padding(start = 12.dp, end = 12.dp)
+                )
             }
 
             item {
-                Button(
+                EdgeButton(
                     onClick = { /* Show add dialog */ },
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
                 ) {
                     Text("Add Source")
                 }

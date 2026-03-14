@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             val currentSources = repository.getAllSources().first()
             if (currentSources.isEmpty()) {
-                repository.addSource("htnitps://www.theverge.com/rss/index.xml", "The Verge")
+                repository.addSource("https://www.theverge.com/rss/index.xml", "The Verge")
                 repository.addSource("https://9to5google.com/feed/", "9to5Google")
                 repository.addSource("https://www.ithome.com/rss", "ITHome")
             }
@@ -110,6 +110,7 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
             composable("settings") {
                 SettingsScreen(
                     onSourcesClick = { navController.navigate("settings_sources") },
+                    onGeneralClick = { navController.navigate("settings_general") },
                     onUiSettingsClick = { navController.navigate("settings_ui") },
                     onAboutClick = { navController.navigate("settings_about") }
                 )
@@ -124,21 +125,25 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                 )
             }
 
-            composable("settings_ui") {
-                val uiState by homeViewModel.uiState.collectAsState()
+            composable("settings_general") {
                 val maxCacheSize by prefManager.maxCacheSize.collectAsState(20)
-                
-                com.w57736e.yafeed.presentation.screens.settings.UiSettingsScreen(
-                    uiScale = uiState.uiScale,
-                    showImages = true,
-                    updateInterval = 30,
+
+                com.w57736e.yafeed.presentation.screens.settings.GeneralSettingsScreen(
                     maxCacheSize = maxCacheSize,
-                    onUiScaleChange = { /* TODO */ },
-                    onShowImagesChange = { /* TODO */ },
-                    onUpdateIntervalChange = { /* TODO */ },
+                    updateInterval = 30,
                     onMaxCacheSizeChange = { size ->
                         scope.launch { prefManager.setMaxCacheSize(size) }
-                    }
+                    },
+                    onUpdateIntervalChange = { /* TODO */ }
+                )
+            }
+
+            composable("settings_ui") {
+                com.w57736e.yafeed.presentation.screens.settings.UiSettingsScreen(
+                    showImages = true,
+                    fontSize = 1.0f,
+                    onShowImagesChange = { /* TODO */ },
+                    onFontSizeChange = { /* TODO */ }
                 )
             }
 

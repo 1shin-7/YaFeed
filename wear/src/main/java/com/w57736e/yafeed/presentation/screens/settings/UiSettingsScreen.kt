@@ -1,6 +1,10 @@
 package com.w57736e.yafeed.presentation.screens.settings
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -10,14 +14,10 @@ import androidx.wear.compose.material3.*
 
 @Composable
 fun UiSettingsScreen(
-    uiScale: Float,
     showImages: Boolean,
-    updateInterval: Long,
-    maxCacheSize: Int,
-    onUiScaleChange: (Float) -> Unit,
+    fontSize: Float,
     onShowImagesChange: (Boolean) -> Unit,
-    onUpdateIntervalChange: (Long) -> Unit,
-    onMaxCacheSizeChange: (Int) -> Unit
+    onFontSizeChange: (Float) -> Unit
 ) {
     val scrollState = rememberTransformingLazyColumnState()
     ScreenScaffold(scrollState = scrollState) {
@@ -35,44 +35,31 @@ fun UiSettingsScreen(
                     checked = showImages,
                     onCheckedChange = onShowImagesChange,
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                    label = { Text("Show Images") }
+                    label = {
+                        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Icon(Icons.Default.Image, contentDescription = null)
+                            Text("Show Images")
+                        }
+                    }
                 )
             }
 
             item {
-                Text(
-                    "Cache Size: $maxCacheSize",
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 12.dp)
-                )
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Button(onClick = { onMaxCacheSizeChange(maxCacheSize - 5) }, modifier = Modifier.weight(1f)) { Text("-5") }
-                    Button(onClick = { onMaxCacheSizeChange(maxCacheSize + 5) }, modifier = Modifier.weight(1f)) { Text("+5") }
-                }
-            }
-
-            item {
-                Text(
-                    "UI Scale: ${"%.1f".format(uiScale)}x",
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 12.dp)
-                )
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Button(onClick = { onUiScaleChange(uiScale - 0.1f) }, modifier = Modifier.weight(1f)) { Text("-") }
-                    Button(onClick = { onUiScaleChange(uiScale + 0.1f) }, modifier = Modifier.weight(1f)) { Text("+") }
-                }
-            }
-
-            item {
-                Text(
-                    "Update Interval: $updateInterval min",
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 12.dp)
-                )
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Button(onClick = { onUpdateIntervalChange(15) }, modifier = Modifier.weight(1f)) { Text("15") }
-                    Button(onClick = { onUpdateIntervalChange(30) }, modifier = Modifier.weight(1f)) { Text("30") }
-                    Button(onClick = { onUpdateIntervalChange(60) }, modifier = Modifier.weight(1f)) { Text("60") }
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+                    horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        "Font Size: ${"%.1f".format(fontSize)}x",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Slider(
+                        value = fontSize,
+                        onValueChange = onFontSizeChange,
+                        valueRange = 0.8f..1.5f,
+                        steps = 6,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
         }

@@ -1,5 +1,8 @@
 package com.w57736e.yafeed.presentation.screens.news_list
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -18,16 +21,27 @@ fun NewsListScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberTransformingLazyColumnState()
+    var showTimeText by remember { mutableStateOf(false) }
 
     LaunchedEffect(sourceId) {
         viewModel.setSourceId(sourceId)
     }
 
-    ScreenScaffold(scrollState = scrollState) {
+    LaunchedEffect(scrollState.isScrollInProgress) {
+        if (scrollState.isScrollInProgress) {
+            showTimeText = true
+        } else {
+            kotlinx.coroutines.delay(2000)
+            showTimeText = false
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        ScreenScaffold(scrollState = scrollState) {
         TransformingLazyColumn(
             state = scrollState,
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(top = 24.dp, start = 12.dp, end = 12.dp, bottom = 24.dp)
+            contentPadding = PaddingValues(top = 28.dp, start = 12.dp, end = 12.dp, bottom = 24.dp)
         ) {
             item {
                 Text(
@@ -62,6 +76,19 @@ fun NewsListScreen(
                     )
                 }
             }
+        }
+    }
+
+        AnimatedVisibility(
+            visible = showTimeText,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            TimeText(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+            )
         }
     }
 }

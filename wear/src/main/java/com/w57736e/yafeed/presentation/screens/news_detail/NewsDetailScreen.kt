@@ -1,7 +1,14 @@
 package com.w57736e.yafeed.presentation.screens.news_detail
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.OpenInBrowser
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +35,16 @@ fun NewsDetailScreen(
     val formattedDate = remember(article.pubDate) { DateUtils.formatRssDateFull(article.pubDate) }
     val content = article.content ?: "No content available."
     var selectedImageUrl by remember { mutableStateOf<String?>(null) }
+    var showTimeText by remember { mutableStateOf(false) }
+
+    LaunchedEffect(scrollState.isScrollInProgress) {
+        if (scrollState.isScrollInProgress) {
+            showTimeText = true
+        } else {
+            kotlinx.coroutines.delay(2000)
+            showTimeText = false
+        }
+    }
 
     selectedImageUrl?.let { imageUrl ->
         Dialog(onDismissRequest = { selectedImageUrl = null }) {
@@ -38,20 +55,33 @@ fun NewsDetailScreen(
         }
     }
 
-    ScreenScaffold(
-        scrollState = scrollState,
-        edgeButton = {
+    Box(modifier = Modifier.fillMaxSize()) {
+        ScreenScaffold(
+            scrollState = scrollState,
+            edgeButton = {
             EdgeButton(
                 onClick = { /* TODO: Open in browser */ }
             ) {
-                Text("View Original")
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    Icon(
+                        Icons.Default.OpenInBrowser,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Text(
+                        "View",
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
             }
         }
     ) {
         TransformingLazyColumn(
             state = scrollState,
             modifier = Modifier.fillMaxSize(),
-            // 移除水平 Padding，让图片能铺满
             contentPadding = PaddingValues(top = 0.dp, bottom = 64.dp)
         ) {
             // 顶部图片 + 渐变遮罩 + 标题 复合项
@@ -111,15 +141,74 @@ fun NewsDetailScreen(
             }
 
             // 作者和日期 (添加水平 Padding)
-            if (article.pubDate != null || article.author != null) {
+            if (article.author != null || article.pubDate != null) {
                 item {
-                    val info = listOfNotNull(article.author, formattedDate).joinToString(" • ")
-                    Text(
-                        info,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
-                    )
+                    Column(
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        article.author?.let { author ->
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    Icons.Default.Person,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(14.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    author,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                        formattedDate?.let { date ->
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    Icons.Default.Schedule,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(14.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    date,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                        article.categories?.takeIf { it.isNotEmpty() }?.let { categories ->
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                modifier = Modifier.padding(top = 4.dp)
+                            ) {
+                                categories.take(3).forEach { category ->
+                                    Box(
+                                        modifier = Modifier
+                                            .height(20.dp)
+                                            .background(
+                                                color = MaterialTheme.colorScheme.secondaryContainer,
+                                                shape = MaterialTheme.shapes.small
+                                            )
+                                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                                    ) {
+                                        Text(
+                                            text = category,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSecondaryContainer
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -137,6 +226,19 @@ fun NewsDetailScreen(
                         .padding(horizontal = 12.dp)
                 )
             }
+        }
+    }
+
+        AnimatedVisibility(
+            visible = showTimeText,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            TimeText(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+            )
         }
     }
 }
