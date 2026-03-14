@@ -30,12 +30,16 @@ import com.w57736e.yafeed.presentation.components.ContentRenderer
 fun NewsDetailScreen(
     article: RssArticle,
     fontSize: Float = 1.0f,
-    showImages: Boolean = true
+    showImages: Boolean = true,
+    browserAvailable: Boolean = false,
+    browserType: String = "webview",
+    onOpenInBrowser: (String, String) -> Unit = { _, _ -> }
 ) {
     val scrollState = rememberTransformingLazyColumnState()
     val formattedDate = remember(article.pubDate) { DateUtils.formatRssDateFull(article.pubDate) }
     val content = article.content ?: "No content available."
     var selectedImageUrl by remember { mutableStateOf<String?>(null) }
+    var showNoBrowserDialog by remember { mutableStateOf(false) }
 
     selectedImageUrl?.let { imageUrl ->
         Dialog(onDismissRequest = { selectedImageUrl = null }) {
@@ -46,11 +50,46 @@ fun NewsDetailScreen(
         }
     }
 
+    if (showNoBrowserDialog) {
+        Dialog(onDismissRequest = { showNoBrowserDialog = false }) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.9f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text(
+                        "暂无可用浏览器",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        "无法跳转",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Button(onClick = { showNoBrowserDialog = false }) {
+                        Text("确定")
+                    }
+                }
+            }
+        }
+    }
+
     ScreenScaffold(
             scrollState = scrollState,
             edgeButton = {
             EdgeButton(
-                onClick = { /* TODO: Open in browser */ }
+                onClick = {
+                    if (browserAvailable) {
+                        article.link?.let { onOpenInBrowser(it, browserType) }
+                    } else {
+                        showNoBrowserDialog = true
+                    }
+                }
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
