@@ -1,13 +1,12 @@
 package com.w57736e.yafeed.presentation.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material3.*
-import coil.compose.AsyncImage
+import com.w57736e.yafeed.data.repository.DateUtils
+import com.w57736e.yafeed.data.repository.HtmlUtils
 import com.w57736e.yafeed.domain.model.RssArticle
 
 @Composable
@@ -16,33 +15,28 @@ fun ArticleCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val formattedDate = DateUtils.formatRssDate(article.pubDate)
+    val cleanTitle = HtmlUtils.stripHtml(article.title)
+    val footer = if (article.author != null) "${article.author} • $formattedDate" else formattedDate
+
     TitleCard(
         onClick = onClick,
-        title = { 
+        title = {
             Text(
-                article.title, 
+                cleanTitle, 
                 maxLines = 2, 
-                overflow = TextOverflow.Ellipsis 
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.titleSmall
             ) 
         },
         subtitle = {
-            if (article.author != null) {
-                Text(article.author, style = MaterialTheme.typography.bodySmall)
-            }
-        },
-        time = {
-            if (article.pubDate != null) {
-                Text(article.pubDate, style = MaterialTheme.typography.bodySmall)
-            }
+            Text(
+                footer, 
+                style = MaterialTheme.typography.labelSmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         },
         modifier = modifier.fillMaxWidth()
-    ) {
-        if (article.imageUrl != null) {
-            AsyncImage(
-                model = article.imageUrl,
-                contentDescription = null,
-                modifier = Modifier.size(64.dp)
-            )
-        }
-    }
+    )
 }

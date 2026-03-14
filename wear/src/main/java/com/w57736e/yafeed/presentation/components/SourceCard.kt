@@ -2,6 +2,8 @@ package com.w57736e.yafeed.presentation.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
@@ -23,7 +25,9 @@ fun SourceCard(
 
     AppCard(
         onClick = onClick,
-        appName = { Text(source.name) },
+        appName = {
+            Text(source.name) 
+        },
         appImage = {
             if (source.faviconUrl != null) {
                 AsyncImage(
@@ -40,9 +44,11 @@ fun SourceCard(
                 overflow = TextOverflow.Ellipsis
             ) 
         },
-        time = { Text(updateTime) },
+        time = { 
+            Text(updateTime) 
+        },
         modifier = modifier.fillMaxWidth()
     ) {
-        // Content
+        // Content area (ColumnScope)
     }
 }

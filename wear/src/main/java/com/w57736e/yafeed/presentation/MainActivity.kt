@@ -3,10 +3,7 @@ package com.w57736e.yafeed.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
@@ -19,9 +16,9 @@ import com.prof18.rssparser.RssParser
 import com.w57736e.yafeed.data.local.AppDatabase
 import com.w57736e.yafeed.data.local.PreferenceManager
 import com.w57736e.yafeed.data.repository.RssRepository
-import com.w57736e.yafeed.domain.model.RssSource
 import com.w57736e.yafeed.presentation.screens.home.HomeScreen
 import com.w57736e.yafeed.presentation.screens.home.HomeViewModel
+import com.w57736e.yafeed.presentation.screens.news_detail.NewsDetailScreen
 import com.w57736e.yafeed.presentation.screens.news_list.NewsListScreen
 import com.w57736e.yafeed.presentation.screens.news_list.NewsListViewModel
 import com.w57736e.yafeed.presentation.screens.settings.SettingsScreen
@@ -47,6 +44,7 @@ class MainActivity : ComponentActivity() {
             if (currentSources.isEmpty()) {
                 repository.addSource("https://www.theverge.com/rss/index.xml", "The Verge")
                 repository.addSource("https://9to5google.com/feed/", "9to5Google")
+                repository.addSource("https://www.ithome.com/rss", "ITHome")
             }
         }
 
@@ -70,7 +68,7 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
             startDestination = "home"
         ) {
             composable("home") {
-                val uiState = homeViewModel.uiState.collectAsState().value
+                val uiState by homeViewModel.uiState.collectAsState()
                 HomeScreen(
                     viewModel = homeViewModel,
                     onSourceClick = { sourceId ->
@@ -95,9 +93,22 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                     viewModel = newsListViewModel,
                     url = url,
                     onArticleClick = { index ->
-                        // Navigate to detail
+                        navController.navigate("news_detail/$index")
                     }
                 )
+            }
+
+            composable(
+                route = "news_detail/{index}",
+                arguments = listOf(navArgument("index") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val index = backStackEntry.arguments?.getInt("index") ?: 0
+                val uiState by newsListViewModel.uiState.collectAsState()
+                val article = uiState.articles.getOrNull(index)
+                
+                if (article != null) {
+                    NewsDetailScreen(article = article)
+                }
             }
 
             composable("settings") {
@@ -109,16 +120,16 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
             }
 
             composable("settings_sources") {
-                val sources = homeViewModel.uiState.collectAsState().value.sources
+                val uiState by homeViewModel.uiState.collectAsState()
                 com.w57736e.yafeed.presentation.screens.settings.SourcesScreen(
-                    sources = sources,
+                    sources = uiState.sources,
                     onAddSource = { name, url -> /* TODO */ },
                     onDeleteSource = { source -> /* TODO */ }
                 )
             }
 
             composable("settings_ui") {
-                val uiState = homeViewModel.uiState.collectAsState().value
+                val uiState by homeViewModel.uiState.collectAsState()
                 com.w57736e.yafeed.presentation.screens.settings.UiSettingsScreen(
                     uiScale = uiState.uiScale,
                     showImages = true,

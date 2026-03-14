@@ -33,17 +33,25 @@ fun NewsListScreen(
                 Text(
                     "Latest News",
                     style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
             }
 
             if (uiState.isLoading) {
                 item {
-                    CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+                    // Wear M3 CircularProgressIndicator doesn't have a direct color param
+                    CircularProgressIndicator(
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
             } else if (uiState.error != null) {
                 item {
-                    Text("Error: ${uiState.error}", color = MaterialTheme.colorScheme.error)
+                    Text(
+                        "Error: ${uiState.error}", 
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
             } else {
                 items(uiState.articles.indices.toList()) { index ->
