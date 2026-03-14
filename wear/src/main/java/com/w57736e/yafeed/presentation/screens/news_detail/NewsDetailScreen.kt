@@ -10,13 +10,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.*
 import coil.compose.AsyncImage
 import com.w57736e.yafeed.domain.model.RssArticle
 import com.w57736e.yafeed.data.repository.DateUtils
-import dev.jeziellago.compose.markdowntext.MarkdownText
+import com.w57736e.yafeed.presentation.components.ImageViewer
+import com.w57736e.yafeed.presentation.components.ContentRenderer
 
 @Composable
 fun NewsDetailScreen(
@@ -25,7 +27,17 @@ fun NewsDetailScreen(
     val scrollState = rememberTransformingLazyColumnState()
     val formattedDate = remember(article.pubDate) { DateUtils.formatRssDateFull(article.pubDate) }
     val content = article.content ?: "No content available."
-    
+    var selectedImageUrl by remember { mutableStateOf<String?>(null) }
+
+    selectedImageUrl?.let { imageUrl ->
+        Dialog(onDismissRequest = { selectedImageUrl = null }) {
+            ImageViewer(
+                imageUrl = imageUrl,
+                onDismiss = { selectedImageUrl = null }
+            )
+        }
+    }
+
     ScreenScaffold(
         scrollState = scrollState,
         edgeButton = {
@@ -84,8 +96,8 @@ fun NewsDetailScreen(
                             .align(Alignment.BottomStart)
                             .padding(horizontal = 12.dp, vertical = 8.dp)
                     ) {
-                        MarkdownText(
-                            markdown = article.title,
+                        Text(
+                            text = article.title,
                             style = MaterialTheme.typography.titleMedium.copy(
                                 color = MaterialTheme.colorScheme.onSurface,
                                 shadow = androidx.compose.ui.graphics.Shadow(
@@ -113,15 +125,16 @@ fun NewsDetailScreen(
 
             // 正文 (添加水平 Padding)
             item {
-                MarkdownText(
-                    markdown = content,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp),
-                    style = MaterialTheme.typography.bodySmall.copy(
+                ContentRenderer(
+                    content = content,
+                    textStyle = MaterialTheme.typography.bodySmall.copy(
                         color = MaterialTheme.colorScheme.onSurface,
                         lineHeight = 18.sp
-                    )
+                    ),
+                    onImageClick = { url -> selectedImageUrl = url },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp)
                 )
             }
         }
