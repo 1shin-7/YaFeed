@@ -1,6 +1,8 @@
 package com.w57736e.yafeed.presentation.screens.news_list
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -10,6 +12,7 @@ import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material3.*
 import com.w57736e.yafeed.presentation.components.ArticleCard
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewsListScreen(
     viewModel: NewsListViewModel,
@@ -24,11 +27,15 @@ fun NewsListScreen(
     }
 
     ScreenScaffold(scrollState = scrollState) { contentPadding ->
-        ScalingLazyColumn(
-            state = scrollState,
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = contentPadding
+        PullToRefreshBox(
+            isRefreshing = uiState.isLoading,
+            onRefresh = { viewModel.refreshArticles() }
         ) {
+            ScalingLazyColumn(
+                state = scrollState,
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = contentPadding
+            ) {
             item {
                 Text(
                     uiState.source?.name ?: "Latest News",
@@ -62,6 +69,7 @@ fun NewsListScreen(
                     )
                 }
             }
+        }
         }
     }
 }

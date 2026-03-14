@@ -25,21 +25,27 @@ class NewsListViewModel(
 ) : ViewModel() {
 
     private val _sourceId = MutableStateFlow<Int?>(null)
-    
-    val uiState: StateFlow<NewsListUiState> = _sourceId.flatMapLatest { id ->
-        if (id == null) flowOf(NewsListUiState())
-        else {
-            combine(
-                repository.getCachedArticles(id),
-                flow { emit(repository.getSourceById(id)) }
-            ) { articles, source ->
-                NewsListUiState(
-                    articles = articles,
-                    source = source,
-                    isLoading = false
-                )
+    private val _isRefreshing = MutableStateFlow(false)
+
+    val uiState: StateFlow<NewsListUiState> = combine(
+        _sourceId.flatMapLatest { id ->
+            if (id == null) flowOf(NewsListUiState())
+            else {
+                combine(
+                    repository.getCachedArticles(id),
+                    flow { emit(repository.getSourceById(id)) }
+                ) { articles, source ->
+                    NewsListUiState(
+                        articles = articles,
+                        source = source,
+                        isLoading = false
+                    )
+                }
             }
-        }
+        },
+        _isRefreshing
+    ) { state, refreshing ->
+        state.copy(isLoading = refreshing)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), NewsListUiState())
 
     fun setSourceId(id: Int) {
@@ -50,12 +56,13 @@ class NewsListViewModel(
     fun refreshArticles() {
         val id = _sourceId.value ?: return
         if (!isNetworkAvailable(context)) {
-            // Error handled by showing cached data or toast
             return
         }
         viewModelScope.launch {
+            _isRefreshing.value = true
             val cacheSize = preferenceManager.maxCacheSize.first()
             repository.fetchAndCache(id, cacheSize)
+            _isRefreshing.value = false
         }
     }
 }

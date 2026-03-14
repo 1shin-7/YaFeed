@@ -5,6 +5,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.LayoutDirection
@@ -16,6 +18,7 @@ import androidx.wear.compose.material3.*
 import com.w57736e.yafeed.presentation.components.SourceCard
 import com.w57736e.yafeed.presentation.components.SourceGridItem
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
@@ -43,15 +46,19 @@ fun HomeScreen(
             }
         }
     ) { contentPadding ->
-        ScalingLazyColumn(
-            state = scrollState,
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(
-                top = contentPadding.calculateTopPadding(),
-                start = contentPadding.calculateStartPadding(LayoutDirection.Ltr),
-                end = contentPadding.calculateEndPadding(LayoutDirection.Ltr),
-            )
+        PullToRefreshBox(
+            isRefreshing = uiState.isLoading,
+            onRefresh = { viewModel.refreshAll() }
         ) {
+            ScalingLazyColumn(
+                state = scrollState,
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    top = contentPadding.calculateTopPadding(),
+                    start = contentPadding.calculateStartPadding(LayoutDirection.Ltr),
+                    end = contentPadding.calculateEndPadding(LayoutDirection.Ltr),
+                )
+            ) {
                 item {
                     Text(
                         "YaFeed",
@@ -107,4 +114,5 @@ fun HomeScreen(
                 }
             }
         }
+    }
 }
