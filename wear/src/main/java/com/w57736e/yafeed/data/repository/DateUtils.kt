@@ -18,7 +18,7 @@ object DateUtils {
 
     private fun parseToZonedDateTime(dateStr: String?): ZonedDateTime? {
         if (dateStr == null) return null
-        
+
         // 尝试所有可能的解析器
         for (formatter in formatters) {
             try {
@@ -27,19 +27,23 @@ object DateUtils {
                 continue
             }
         }
-        
-        // 如果标准解析器都失败了，且包含时区偏移但没有逗号（某些非标格式）
-        // 可以在这里添加自定义处理逻辑，目前先返回 null
+
         return null
     }
 
-    fun formatRssDate(dateStr: String?): String {
-        val zdt = parseToZonedDateTime(dateStr)
-        return zdt?.format(displayFormatter) ?: dateStr?.take(16) ?: ""
+    fun parseToTimestamp(dateStr: String?): Long? {
+        return parseToZonedDateTime(dateStr)?.toInstant()?.toEpochMilli()
     }
 
-    fun formatRssDateFull(dateStr: String?): String {
-        val zdt = parseToZonedDateTime(dateStr)
-        return zdt?.format(fullDisplayFormatter) ?: dateStr?.take(19) ?: ""
+    fun formatRssDate(timestamp: Long?): String {
+        if (timestamp == null) return ""
+        val zdt = ZonedDateTime.ofInstant(java.time.Instant.ofEpochMilli(timestamp), java.time.ZoneId.systemDefault())
+        return zdt.format(displayFormatter)
+    }
+
+    fun formatRssDateFull(timestamp: Long?): String {
+        if (timestamp == null) return ""
+        val zdt = ZonedDateTime.ofInstant(java.time.Instant.ofEpochMilli(timestamp), java.time.ZoneId.systemDefault())
+        return zdt.format(fullDisplayFormatter)
     }
 }

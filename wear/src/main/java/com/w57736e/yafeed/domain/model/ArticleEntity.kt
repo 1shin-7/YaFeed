@@ -15,7 +15,10 @@ import androidx.room.PrimaryKey
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index(value = ["sourceId"])]
+    indices = [
+        Index(value = ["sourceId"]),
+        Index(value = ["sourceId", "link"], unique = true)
+    ]
 )
 data class ArticleEntity(
     @PrimaryKey(autoGenerate = true)
@@ -24,7 +27,7 @@ data class ArticleEntity(
     val title: String,
     val link: String,
     val content: String?,
-    val pubDate: String?,
+    val pubDate: Long?,
     val imageUrl: String?,
     val author: String?,
     val fetchedAt: Long = System.currentTimeMillis()

@@ -6,13 +6,13 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ArticleDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertArticles(articles: List<ArticleEntity>)
 
-    @Query("SELECT * FROM cached_articles WHERE sourceId = :sourceId ORDER BY fetchedAt DESC")
+    @Query("SELECT * FROM cached_articles WHERE sourceId = :sourceId ORDER BY pubDate DESC")
     fun getArticlesBySource(sourceId: Int): Flow<List<ArticleEntity>>
 
-    @Query("DELETE FROM cached_articles WHERE sourceId = :sourceId AND id NOT IN (SELECT id FROM cached_articles WHERE sourceId = :sourceId ORDER BY fetchedAt DESC LIMIT :limit)")
+    @Query("DELETE FROM cached_articles WHERE sourceId = :sourceId AND id NOT IN (SELECT id FROM cached_articles WHERE sourceId = :sourceId ORDER BY pubDate DESC LIMIT :limit)")
     suspend fun pruneArticles(sourceId: Int, limit: Int)
 
     @Query("DELETE FROM cached_articles WHERE sourceId = :sourceId")

@@ -61,7 +61,7 @@ class RssRepository(
                     title = item.title ?: "No Title",
                     link = item.link ?: "",
                     content = item.content ?: item.description,
-                    pubDate = item.pubDate,
+                    pubDate = DateUtils.parseToTimestamp(item.pubDate),
                     imageUrl = item.image,
                     author = item.author
                 )
@@ -69,7 +69,7 @@ class RssRepository(
 
             // Save to DB
             articleDao.insertArticles(articles)
-            
+
             // Prune old articles
             articleDao.pruneArticles(sourceId, maxCacheSize)
 
@@ -101,7 +101,7 @@ class RssRepository(
                 title = item.title ?: "No Title",
                 link = item.link ?: "",
                 content = item.content ?: item.description,
-                pubDate = item.pubDate,
+                pubDate = DateUtils.parseToTimestamp(item.pubDate),
                 imageUrl = item.image,
                 author = item.author
             )
