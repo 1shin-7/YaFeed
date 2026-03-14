@@ -13,9 +13,11 @@ fun UiSettingsScreen(
     uiScale: Float,
     showImages: Boolean,
     updateInterval: Long,
+    maxCacheSize: Int,
     onUiScaleChange: (Float) -> Unit,
     onShowImagesChange: (Boolean) -> Unit,
-    onUpdateIntervalChange: (Long) -> Unit
+    onUpdateIntervalChange: (Long) -> Unit,
+    onMaxCacheSizeChange: (Int) -> Unit
 ) {
     val scrollState = rememberTransformingLazyColumnState()
     ScreenScaffold(scrollState = scrollState) {
@@ -35,6 +37,18 @@ fun UiSettingsScreen(
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                     label = { Text("Show Images") }
                 )
+            }
+
+            item {
+                Text(
+                    "Cache Size: $maxCacheSize",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(top = 12.dp)
+                )
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Button(onClick = { onMaxCacheSizeChange(maxCacheSize - 5) }, modifier = Modifier.weight(1f)) { Text("-5") }
+                    Button(onClick = { onMaxCacheSizeChange(maxCacheSize + 5) }, modifier = Modifier.weight(1f)) { Text("+5") }
+                }
             }
 
             item {

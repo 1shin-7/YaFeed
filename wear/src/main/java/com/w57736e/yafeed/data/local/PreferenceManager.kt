@@ -16,12 +16,14 @@ class PreferenceManager(private val context: Context) {
         val SHOW_IMAGES = booleanPreferencesKey("show_images")
         val UPDATE_INTERVAL = longPreferencesKey("update_interval")
         val LIST_VIEW_GRID = booleanPreferencesKey("list_view_grid")
+        val MAX_CACHE_SIZE = intPreferencesKey("max_cache_size")
     }
 
     val uiScale: Flow<Float> = dataStore.data.map { it[UI_SCALE] ?: 1.0f }
     val showImages: Flow<Boolean> = dataStore.data.map { it[SHOW_IMAGES] ?: true }
     val updateInterval: Flow<Long> = dataStore.data.map { it[UPDATE_INTERVAL] ?: 30L }
     val isGridView: Flow<Boolean> = dataStore.data.map { it[LIST_VIEW_GRID] ?: false }
+    val maxCacheSize: Flow<Int> = dataStore.data.map { it[MAX_CACHE_SIZE] ?: 20 }
 
     suspend fun setUiScale(scale: Float) {
         dataStore.edit { it[UI_SCALE] = scale }
@@ -33,6 +35,10 @@ class PreferenceManager(private val context: Context) {
 
     suspend fun setUpdateInterval(interval: Long) {
         dataStore.edit { it[UPDATE_INTERVAL] = interval }
+    }
+
+    suspend fun setMaxCacheSize(size: Int) {
+        dataStore.edit { it[MAX_CACHE_SIZE] = size }
     }
 
     suspend fun toggleViewMode() {

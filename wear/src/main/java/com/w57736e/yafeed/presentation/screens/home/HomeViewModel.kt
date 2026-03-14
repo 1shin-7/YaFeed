@@ -29,6 +29,10 @@ class HomeViewModel(
         HomeUiState(sources, isGrid, false, scale)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), HomeUiState())
 
+    init {
+        refreshAll()
+    }
+
     fun toggleViewMode() {
         viewModelScope.launch {
             preferenceManager.toggleViewMode()
@@ -38,8 +42,12 @@ class HomeViewModel(
     fun refreshAll() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            uiState.value.sources.forEach { source ->
-                repository.updateSourceInfo(source)
+            val cacheSize = preferenceManager.maxCacheSize.first()
+            val sources = uiState.value.sources.ifEmpty { 
+                repository.getAllSources().first() 
+            }
+            sources.forEach { source ->
+                repository.fetchAndCache(source.id, cacheSize)
             }
             _uiState.update { it.copy(isLoading = false) }
         }

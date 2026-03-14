@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
         val db = AppDatabase.getDatabase(this)
         val prefManager = PreferenceManager(this)
         val rssParser = RssParser()
-        val repository = RssRepository(db.sourceDao(), rssParser)
+        val repository = RssRepository(db.sourceDao(), db.articleDao(), rssParser)
 
         // Seed default source if empty
         lifecycleScope.launch {
@@ -58,9 +58,10 @@ class MainActivity : ComponentActivity() {
 fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
     val navController = rememberSwipeDismissableNavController()
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     
     val homeViewModel = remember { HomeViewModel(repository, prefManager) }
-    val newsListViewModel = remember { NewsListViewModel(repository, context) }
+    val newsListViewModel = remember { NewsListViewModel(repository, prefManager, context) }
 
     YaFeedTheme {
         SwipeDismissableNavHost(
@@ -68,15 +69,10 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
             startDestination = "home"
         ) {
             composable("home") {
-                val uiState by homeViewModel.uiState.collectAsState()
                 HomeScreen(
                     viewModel = homeViewModel,
                     onSourceClick = { sourceId ->
-                        val source = uiState.sources.find { it.id == sourceId }
-                        source?.let {
-                            val encodedUrl = URLEncoder.encode(it.url, StandardCharsets.UTF_8.toString())
-                            navController.navigate("news_list/$encodedUrl")
-                        }
+                        navController.navigate("news_list/$sourceId")
                     },
                     onSettingsClick = {
                         navController.navigate("settings")
@@ -85,13 +81,13 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
             }
             
             composable(
-                route = "news_list/{url}",
-                arguments = listOf(navArgument("url") { type = NavType.StringType })
+                route = "news_list/{sourceId}",
+                arguments = listOf(navArgument("sourceId") { type = NavType.IntType })
             ) { backStackEntry ->
-                val url = backStackEntry.arguments?.getString("url") ?: ""
+                val sourceId = backStackEntry.arguments?.getInt("sourceId") ?: 0
                 NewsListScreen(
                     viewModel = newsListViewModel,
-                    url = url,
+                    sourceId = sourceId,
                     onArticleClick = { index ->
                         navController.navigate("news_detail/$index")
                     }
@@ -130,13 +126,19 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
 
             composable("settings_ui") {
                 val uiState by homeViewModel.uiState.collectAsState()
+                val maxCacheSize by prefManager.maxCacheSize.collectAsState(20)
+                
                 com.w57736e.yafeed.presentation.screens.settings.UiSettingsScreen(
                     uiScale = uiState.uiScale,
                     showImages = true,
                     updateInterval = 30,
+                    maxCacheSize = maxCacheSize,
                     onUiScaleChange = { /* TODO */ },
                     onShowImagesChange = { /* TODO */ },
-                    onUpdateIntervalChange = { /* TODO */ }
+                    onUpdateIntervalChange = { /* TODO */ },
+                    onMaxCacheSizeChange = { size ->
+                        scope.launch { prefManager.setMaxCacheSize(size) }
+                    }
                 )
             }
 

@@ -3,13 +3,12 @@ package com.w57736e.yafeed.presentation.screens.news_list
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.w57736e.yafeed.data.local.PreferenceManager
 import com.w57736e.yafeed.data.repository.RssRepository
 import com.w57736e.yafeed.data.repository.isNetworkAvailable
 import com.w57736e.yafeed.domain.model.RssArticle
 import com.w57736e.yafeed.domain.model.RssSource
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 data class NewsListUiState(
@@ -21,25 +20,42 @@ data class NewsListUiState(
 
 class NewsListViewModel(
     private val repository: RssRepository,
+    private val preferenceManager: PreferenceManager,
     private val context: Context
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(NewsListUiState())
-    val uiState: StateFlow<NewsListUiState> = _uiState
+    private val _sourceId = MutableStateFlow<Int?>(null)
+    
+    val uiState: StateFlow<NewsListUiState> = _sourceId.flatMapLatest { id ->
+        if (id == null) flowOf(NewsListUiState())
+        else {
+            combine(
+                repository.getCachedArticles(id),
+                flow { emit(repository.getSourceById(id)) }
+            ) { articles, source ->
+                NewsListUiState(
+                    articles = articles,
+                    source = source,
+                    isLoading = false
+                )
+            }
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), NewsListUiState())
 
-    fun fetchArticles(url: String) {
+    fun setSourceId(id: Int) {
+        _sourceId.value = id
+        refreshArticles()
+    }
+
+    fun refreshArticles() {
+        val id = _sourceId.value ?: return
         if (!isNetworkAvailable(context)) {
-            _uiState.update { it.copy(isLoading = false, error = "No network connection. Check your Wi-Fi or Bluetooth.") }
+            // Error handled by showing cached data or toast
             return
         }
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, error = null) }
-            try {
-                val articles = repository.fetchArticles(url)
-                _uiState.update { it.copy(articles = articles, isLoading = false) }
-            } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = "Failed to load: ${e.localizedMessage}") }
-            }
+            val cacheSize = preferenceManager.maxCacheSize.first()
+            repository.fetchAndCache(id, cacheSize)
         }
     }
 }

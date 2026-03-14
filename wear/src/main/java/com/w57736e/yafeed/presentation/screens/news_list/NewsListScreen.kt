@@ -13,14 +13,14 @@ import com.w57736e.yafeed.presentation.components.ArticleCard
 @Composable
 fun NewsListScreen(
     viewModel: NewsListViewModel,
-    url: String,
+    sourceId: Int,
     onArticleClick: (Int) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberTransformingLazyColumnState()
 
-    LaunchedEffect(url) {
-        viewModel.fetchArticles(url)
+    LaunchedEffect(sourceId) {
+        viewModel.setSourceId(sourceId)
     }
 
     ScreenScaffold(scrollState = scrollState) {
@@ -31,21 +31,20 @@ fun NewsListScreen(
         ) {
             item {
                 Text(
-                    "Latest News",
+                    uiState.source?.name ?: "Latest News",
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
             }
 
-            if (uiState.isLoading) {
+            if (uiState.articles.isEmpty() && uiState.isLoading) {
                 item {
-                    // Wear M3 CircularProgressIndicator doesn't have a direct color param
                     CircularProgressIndicator(
                         modifier = Modifier.padding(16.dp)
                     )
                 }
-            } else if (uiState.error != null) {
+            } else if (uiState.articles.isEmpty() && uiState.error != null) {
                 item {
                     Text(
                         "Error: ${uiState.error}", 

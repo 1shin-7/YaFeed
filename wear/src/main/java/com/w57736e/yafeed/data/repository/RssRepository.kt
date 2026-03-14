@@ -1,13 +1,17 @@
 package com.w57736e.yafeed.data.repository
 
 import com.prof18.rssparser.RssParser
+import com.w57736e.yafeed.data.local.ArticleDao
 import com.w57736e.yafeed.data.local.SourceDao
+import com.w57736e.yafeed.domain.model.ArticleEntity
 import com.w57736e.yafeed.domain.model.RssArticle
 import com.w57736e.yafeed.domain.model.RssSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class RssRepository(
     private val sourceDao: SourceDao,
+    private val articleDao: ArticleDao,
     private val rssParser: RssParser
 ) {
     fun getAllSources(): Flow<List<RssSource>> = sourceDao.getAllSources()
@@ -21,6 +25,49 @@ class RssRepository(
         sourceDao.deleteSource(source)
     }
 
+    suspend fun getSourceById(id: Int): RssSource? = sourceDao.getSourceById(id)
+
+    fun getCachedArticles(sourceId: Int): Flow<List<RssArticle>> {
+        return articleDao.getArticlesBySource(sourceId).map { entities ->
+            entities.map { it.toDomain() }
+        }
+    }
+
+    suspend fun fetchAndCache(sourceId: Int, maxCacheSize: Int) {
+        val source = sourceDao.getSourceById(sourceId) ?: return
+        try {
+            val channel = rssParser.getRssChannel(source.url)
+            val articles = channel.items.map { item ->
+                ArticleEntity(
+                    sourceId = sourceId,
+                    title = item.title ?: "No Title",
+                    link = item.link ?: "",
+                    content = item.content ?: item.description,
+                    pubDate = item.pubDate,
+                    imageUrl = item.image,
+                    author = item.author
+                )
+            }
+
+            // Save to DB
+            articleDao.insertArticles(articles)
+            
+            // Prune old articles
+            articleDao.pruneArticles(sourceId, maxCacheSize)
+
+            // Update source metadata
+            val latestTitle = channel.items.firstOrNull()?.title
+            val updatedSource = source.copy(
+                latestTitle = latestTitle,
+                lastUpdate = System.currentTimeMillis()
+            )
+            sourceDao.updateSource(updatedSource)
+        } catch (e: Exception) {
+            // Log or handle error
+        }
+    }
+
+    // Legacy method for direct fetch if needed
     suspend fun fetchArticles(url: String): List<RssArticle> {
         val channel = rssParser.getRssChannel(url)
         return channel.items.map { item ->
@@ -32,19 +79,6 @@ class RssRepository(
                 imageUrl = item.image,
                 author = item.author
             )
-        }
-    }
-
-    suspend fun updateSourceInfo(source: RssSource) {
-        try {
-            val channel = rssParser.getRssChannel(source.url)
-            val updatedSource = source.copy(
-                latestTitle = channel.items.firstOrNull()?.title,
-                lastUpdate = System.currentTimeMillis()
-            )
-            sourceDao.updateSource(updatedSource)
-        } catch (e: Exception) {
-            // Log or handle error
         }
     }
 }
