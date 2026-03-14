@@ -30,7 +30,8 @@ import com.w57736e.yafeed.presentation.components.ContentRenderer
 @Composable
 fun NewsDetailScreen(
     article: RssArticle,
-    fontSize: Float = 1.0f
+    fontSize: Float = 1.0f,
+    showImages: Boolean = true
 ) {
     val scrollState = rememberTransformingLazyColumnState()
     val formattedDate = remember(article.pubDate) { DateUtils.formatRssDateFull(article.pubDate) }
@@ -93,7 +94,7 @@ fun NewsDetailScreen(
                         .height(180.dp)
                 ) {
                     // 1. 底层图片
-                    if (article.imageUrl != null) {
+                    if (article.imageUrl != null && showImages) {
                         AsyncImage(
                             model = article.imageUrl,
                             contentDescription = null,
@@ -225,7 +226,8 @@ fun NewsDetailScreen(
                     onImageClick = { url -> selectedImageUrl = url },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 12.dp)
+                        .padding(horizontal = 12.dp),
+                    showImages = showImages
                 )
             }
         }

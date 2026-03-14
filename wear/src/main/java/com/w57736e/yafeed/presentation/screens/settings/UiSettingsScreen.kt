@@ -36,7 +36,10 @@ fun UiSettingsScreen(
                     onCheckedChange = onShowImagesChange,
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                     label = {
-                        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                        ) {
                             Icon(Icons.Default.Image, contentDescription = null)
                             Text("Show Images")
                         }

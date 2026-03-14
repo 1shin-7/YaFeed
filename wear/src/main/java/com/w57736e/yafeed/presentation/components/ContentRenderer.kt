@@ -27,7 +27,8 @@ fun ContentRenderer(
     content: String,
     textStyle: TextStyle,
     onImageClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showImages: Boolean = true
 ) {
     val blocks = parseContent(content)
     val context = LocalContext.current
@@ -45,19 +46,21 @@ fun ContentRenderer(
                     }
                 }
                 BlockType.IMAGE -> {
-                    AsyncImage(
-                        model = ImageRequest.Builder(context)
-                            .data(block.content)
-                            .size(Size(540, 540))
-                            .build(),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(120.dp)
-                            .padding(vertical = 8.dp)
-                            .clickable { onImageClick(block.content) },
-                        contentScale = ContentScale.Crop
-                    )
+                    if (showImages) {
+                        AsyncImage(
+                            model = ImageRequest.Builder(context)
+                                .data(block.content)
+                                .size(Size(540, 540))
+                                .build(),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(120.dp)
+                                .padding(vertical = 8.dp)
+                                .clickable { onImageClick(block.content) },
+                            contentScale = ContentScale.Crop
+                        )
+                    }
                 }
             }
         }
