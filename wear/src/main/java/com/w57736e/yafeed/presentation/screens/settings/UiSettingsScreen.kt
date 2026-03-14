@@ -31,19 +31,16 @@ fun UiSettingsScreen(
             }
 
             item {
-                CheckboxButton(
+                SwitchButton(
                     checked = showImages,
                     onCheckedChange = onShowImagesChange,
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                    label = {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-                        ) {
-                            Icon(Icons.Default.Image, contentDescription = null)
-                            Text("Show Images")
-                        }
-                    }
+                    label = { Text("Show Images") },
+                    icon = { Icon(Icons.Default.Image, contentDescription = null) },
+                    colors = SwitchButtonDefaults.switchButtonColors(
+                        checkedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        checkedContentColor = MaterialTheme.colorScheme.onSurface
+                    )
                 )
             }
 

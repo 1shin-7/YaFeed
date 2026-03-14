@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.w57736e.yafeed.domain.model.ArticleEntity
 import com.w57736e.yafeed.domain.model.RssSource
 
-@Database(entities = [RssSource::class, ArticleEntity::class], version = 2, exportSchema = false)
+@Database(entities = [RssSource::class, ArticleEntity::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun sourceDao(): SourceDao
     abstract fun articleDao(): ArticleDao

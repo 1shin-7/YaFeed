@@ -13,6 +13,9 @@ import androidx.wear.compose.material3.AppScaffold
 import androidx.wear.compose.navigation.SwipeDismissableNavHost
 import androidx.wear.compose.navigation.composable
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.prof18.rssparser.RssParser
 import com.w57736e.yafeed.data.local.AppDatabase
 import com.w57736e.yafeed.data.local.PreferenceManager
@@ -25,10 +28,13 @@ import com.w57736e.yafeed.presentation.screens.news_list.NewsListViewModel
 import com.w57736e.yafeed.presentation.screens.settings.SettingsScreen
 import com.w57736e.yafeed.presentation.theme.YaFeedTheme
 import com.w57736e.yafeed.utils.BrowserHelper
+import com.w57736e.yafeed.utils.NotificationHelper
+import com.w57736e.yafeed.workers.RssRefreshWorker
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import java.util.concurrent.TimeUnit
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +61,20 @@ class MainActivity : ComponentActivity() {
             if (browsers.isNotEmpty() && prefManager.browserType.first() !in browsers) {
                 prefManager.setBrowserType(browsers.first())
             }
+
+            // Initialize notifications
+            NotificationHelper.createNotificationChannel(this@MainActivity)
+
+            // Schedule background refresh
+            val updateInterval = prefManager.updateInterval.first()
+            val workRequest = PeriodicWorkRequestBuilder<RssRefreshWorker>(
+                updateInterval, TimeUnit.MINUTES
+            ).build()
+            WorkManager.getInstance(this@MainActivity).enqueueUniquePeriodicWork(
+                "rss_refresh",
+                ExistingPeriodicWorkPolicy.KEEP,
+                workRequest
+            )
         }
 
         setContent {
@@ -149,6 +169,9 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                             repository.deleteSource(source)
                         }
                     },
+                    onEditSource = { sourceId ->
+                        navController.navigate("settings_edit_source/$sourceId")
+                    },
                     onNavigateToAddSource = { navController.navigate("settings_add_source") }
                 )
             }
@@ -159,6 +182,7 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                 val browserType by prefManager.browserType.collectAsState("webview")
                 val browserAvailable by prefManager.browserAvailable.collectAsState(false)
                 val availableBrowsers = remember { BrowserHelper.detectAvailableBrowsers(context) }
+                val notificationEnabled by prefManager.notificationEnabled.collectAsState(false)
 
                 com.w57736e.yafeed.presentation.screens.settings.GeneralSettingsScreen(
                     maxCacheSize = maxCacheSize,
@@ -166,6 +190,7 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                     browserType = browserType,
                     browserAvailable = browserAvailable,
                     availableBrowsers = availableBrowsers,
+                    notificationEnabled = notificationEnabled,
                     onMaxCacheSizeChange = { size ->
                         scope.launch { prefManager.setMaxCacheSize(size) }
                     },
@@ -174,6 +199,9 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                     },
                     onBrowserTypeChange = { type ->
                         scope.launch { prefManager.setBrowserType(type) }
+                    },
+                    onNotificationEnabledChange = { enabled ->
+                        scope.launch { prefManager.setNotificationEnabled(enabled) }
                     }
                 )
             }
@@ -196,7 +224,7 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
 
             composable("settings_add_source") {
                 com.w57736e.yafeed.presentation.screens.settings.AddSourceScreen(
-                    onAddSource = { url, name ->
+                    onAddSource = { url, name, notificationEnabled ->
                         scope.launch {
                             val parser = RssParser()
                             val finalName = if (name.isBlank()) {
@@ -209,11 +237,33 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                             } else {
                                 name
                             }
-                            repository.addSource(url, finalName)
+                            repository.addSource(url, finalName, notificationEnabled)
                         }
                     },
                     onNavigateBack = { navController.popBackStack() }
                 )
+            }
+
+            composable(
+                route = "settings_edit_source/{sourceId}",
+                arguments = listOf(navArgument("sourceId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val sourceId = backStackEntry.arguments?.getInt("sourceId") ?: 0
+                val source = remember(sourceId) {
+                    derivedStateOf {
+                        homeViewModel.uiState.value.sources.find { it.id == sourceId }
+                    }
+                }.value
+
+                source?.let {
+                    com.w57736e.yafeed.presentation.screens.settings.EditSourceScreen(
+                        source = it,
+                        onSave = { name, notificationEnabled ->
+                            repository.updateSource(sourceId, name, notificationEnabled)
+                        },
+                        onNavigateBack = { navController.popBackStack() }
+                    )
+                }
             }
 
             composable("settings_about") {

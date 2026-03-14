@@ -11,5 +11,6 @@ data class RssSource(
     val url: String,
     val faviconUrl: String? = null,
     val lastUpdate: Long = 0,
-    val latestTitle: String? = null
+    val latestTitle: String? = null,
+    val notificationEnabled: Boolean = true
 )

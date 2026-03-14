@@ -24,6 +24,7 @@ fun SourcesScreen(
     sources: List<RssSource>,
     onAddSource: (String, String) -> Unit,
     onDeleteSource: (RssSource) -> Unit,
+    onEditSource: (Int) -> Unit,
     onNavigateToAddSource: () -> Unit
 ) {
     val scrollState = rememberTransformingLazyColumnState()
@@ -100,7 +101,7 @@ fun SourcesScreen(
             items(sources) { source ->
                 SplitActionButton(
                     label = source.name,
-                    onContainerClick = {},
+                    onContainerClick = { onEditSource(source.id) },
                     onActionClick = { sourceToDelete = source },
                     actionIcon = {
                         Icon(

@@ -20,6 +20,7 @@ class PreferenceManager(private val context: Context) {
         val FONT_SIZE = floatPreferencesKey("font_size")
         val BROWSER_TYPE = stringPreferencesKey("browser_type")
         val BROWSER_AVAILABLE = booleanPreferencesKey("browser_available")
+        val NOTIFICATION_ENABLED = booleanPreferencesKey("notification_enabled")
     }
 
     val uiScale: Flow<Float> = dataStore.data.map { it[UI_SCALE] ?: 1.0f }
@@ -30,6 +31,7 @@ class PreferenceManager(private val context: Context) {
     val fontSize: Flow<Float> = dataStore.data.map { it[FONT_SIZE] ?: 14f }
     val browserType: Flow<String> = dataStore.data.map { it[BROWSER_TYPE] ?: "default" }
     val browserAvailable: Flow<Boolean> = dataStore.data.map { it[BROWSER_AVAILABLE] ?: false }
+    val notificationEnabled: Flow<Boolean> = dataStore.data.map { it[NOTIFICATION_ENABLED] ?: false }
 
     suspend fun setUiScale(scale: Float) {
         dataStore.edit { it[UI_SCALE] = scale }
@@ -57,6 +59,10 @@ class PreferenceManager(private val context: Context) {
 
     suspend fun setBrowserAvailable(available: Boolean) {
         dataStore.edit { it[BROWSER_AVAILABLE] = available }
+    }
+
+    suspend fun setNotificationEnabled(enabled: Boolean) {
+        dataStore.edit { it[NOTIFICATION_ENABLED] = enabled }
     }
 
     suspend fun toggleViewMode() {

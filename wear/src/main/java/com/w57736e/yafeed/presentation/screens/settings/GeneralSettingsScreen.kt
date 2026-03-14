@@ -1,6 +1,8 @@
 package com.w57736e.yafeed.presentation.screens.settings
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -15,9 +17,11 @@ fun GeneralSettingsScreen(
     browserType: String,
     browserAvailable: Boolean,
     availableBrowsers: List<String>,
+    notificationEnabled: Boolean,
     onMaxCacheSizeChange: (Int) -> Unit,
     onUpdateIntervalChange: (Long) -> Unit,
-    onBrowserTypeChange: (String) -> Unit
+    onBrowserTypeChange: (String) -> Unit,
+    onNotificationEnabledChange: (Boolean) -> Unit
 ) {
     val scrollState = rememberTransformingLazyColumnState()
     ScreenScaffold(scrollState = scrollState) {
@@ -28,6 +32,16 @@ fun GeneralSettingsScreen(
         ) {
             item {
                 Text("General Settings", style = MaterialTheme.typography.titleMedium)
+            }
+
+            item {
+                SwitchButton(
+                    checked = notificationEnabled,
+                    onCheckedChange = onNotificationEnabledChange,
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                    label = { Text("Notifications") },
+                    icon = { Icon(Icons.Default.Notifications, contentDescription = null) }
+                )
             }
 
             item {

@@ -17,10 +17,16 @@ class RssRepository(
 ) {
     fun getAllSources(): Flow<List<RssSource>> = sourceDao.getAllSources()
 
-    suspend fun addSource(url: String, name: String) {
+    suspend fun addSource(url: String, name: String, notificationEnabled: Boolean = true) {
         val faviconUrl = resolveFavicon(url)
-        val source = RssSource(name = name, url = url, faviconUrl = faviconUrl)
+        val source = RssSource(name = name, url = url, faviconUrl = faviconUrl, notificationEnabled = notificationEnabled)
         sourceDao.insertSource(source)
+    }
+
+    suspend fun updateSource(sourceId: Int, name: String, notificationEnabled: Boolean) {
+        val source = sourceDao.getSourceById(sourceId) ?: return
+        val updatedSource = source.copy(name = name, notificationEnabled = notificationEnabled)
+        sourceDao.updateSource(updatedSource)
     }
 
     suspend fun deleteSource(source: RssSource) {
