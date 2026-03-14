@@ -5,10 +5,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material3.Text
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import coil.size.Size
 
 data class ContentBlock(
     val type: BlockType,
@@ -27,6 +30,7 @@ fun ContentRenderer(
     modifier: Modifier = Modifier
 ) {
     val blocks = parseContent(content)
+    val context = LocalContext.current
 
     Column(modifier = modifier) {
         blocks.forEach { block ->
@@ -42,7 +46,10 @@ fun ContentRenderer(
                 }
                 BlockType.IMAGE -> {
                     AsyncImage(
-                        model = block.content,
+                        model = ImageRequest.Builder(context)
+                            .data(block.content)
+                            .size(Size(540, 540))
+                            .build(),
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxWidth()
