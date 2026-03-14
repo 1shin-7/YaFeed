@@ -101,9 +101,10 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                 val index = backStackEntry.arguments?.getInt("index") ?: 0
                 val uiState by newsListViewModel.uiState.collectAsState()
                 val article = uiState.articles.getOrNull(index)
-                
+                val fontSize by prefManager.fontSize.collectAsState(14f)
+
                 if (article != null) {
-                    NewsDetailScreen(article = article)
+                    NewsDetailScreen(article = article, fontSize = fontSize)
                 }
             }
 
@@ -144,11 +145,15 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
             }
 
             composable("settings_ui") {
+                val fontSize by prefManager.fontSize.collectAsState(14f)
+
                 com.w57736e.yafeed.presentation.screens.settings.UiSettingsScreen(
                     showImages = true,
-                    fontSize = 1.0f,
+                    fontSize = fontSize,
                     onShowImagesChange = { /* TODO */ },
-                    onFontSizeChange = { /* TODO */ }
+                    onFontSizeChange = { size ->
+                        scope.launch { prefManager.setFontSize(size) }
+                    }
                 )
             }
 

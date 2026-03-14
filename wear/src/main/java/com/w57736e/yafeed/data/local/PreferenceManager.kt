@@ -17,6 +17,7 @@ class PreferenceManager(private val context: Context) {
         val UPDATE_INTERVAL = longPreferencesKey("update_interval")
         val LIST_VIEW_GRID = booleanPreferencesKey("list_view_grid")
         val MAX_CACHE_SIZE = intPreferencesKey("max_cache_size")
+        val FONT_SIZE = floatPreferencesKey("font_size")
     }
 
     val uiScale: Flow<Float> = dataStore.data.map { it[UI_SCALE] ?: 1.0f }
@@ -24,6 +25,7 @@ class PreferenceManager(private val context: Context) {
     val updateInterval: Flow<Long> = dataStore.data.map { it[UPDATE_INTERVAL] ?: 30L }
     val isGridView: Flow<Boolean> = dataStore.data.map { it[LIST_VIEW_GRID] ?: false }
     val maxCacheSize: Flow<Int> = dataStore.data.map { it[MAX_CACHE_SIZE] ?: 20 }
+    val fontSize: Flow<Float> = dataStore.data.map { it[FONT_SIZE] ?: 14f }
 
     suspend fun setUiScale(scale: Float) {
         dataStore.edit { it[UI_SCALE] = scale }
@@ -39,6 +41,10 @@ class PreferenceManager(private val context: Context) {
 
     suspend fun setMaxCacheSize(size: Int) {
         dataStore.edit { it[MAX_CACHE_SIZE] = size }
+    }
+
+    suspend fun setFontSize(size: Float) {
+        dataStore.edit { it[FONT_SIZE] = size }
     }
 
     suspend fun toggleViewMode() {

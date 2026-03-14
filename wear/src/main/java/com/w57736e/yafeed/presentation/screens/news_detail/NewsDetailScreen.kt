@@ -29,7 +29,8 @@ import com.w57736e.yafeed.presentation.components.ContentRenderer
 
 @Composable
 fun NewsDetailScreen(
-    article: RssArticle
+    article: RssArticle,
+    fontSize: Float = 1.0f
 ) {
     val scrollState = rememberTransformingLazyColumnState()
     val formattedDate = remember(article.pubDate) { DateUtils.formatRssDateFull(article.pubDate) }
@@ -218,7 +219,8 @@ fun NewsDetailScreen(
                     content = content,
                     textStyle = MaterialTheme.typography.bodySmall.copy(
                         color = MaterialTheme.colorScheme.onSurface,
-                        lineHeight = 18.sp
+                        fontSize = fontSize.sp,
+                        lineHeight = (fontSize * 1.2f).sp
                     ),
                     onImageClick = { url -> selectedImageUrl = url },
                     modifier = Modifier

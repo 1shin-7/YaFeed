@@ -50,14 +50,16 @@ fun UiSettingsScreen(
                     horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "Font Size: ${"%.1f".format(fontSize)}x",
+                        "Font Size: ${"%.0f".format(fontSize)}sp",
                         style = MaterialTheme.typography.bodySmall
                     )
+                    Spacer(modifier = Modifier.height(8.dp))
                     Slider(
                         value = fontSize,
                         onValueChange = onFontSizeChange,
-                        valueRange = 0.8f..1.5f,
-                        steps = 6,
+                        valueRange = 7f..20f,
+                        steps = 12,
+                        segmented = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
