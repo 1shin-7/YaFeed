@@ -1,0 +1,60 @@
+package com.w57736e.yafeed.presentation.screens.news_list
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
+import androidx.wear.compose.foundation.lazy.items
+import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
+import androidx.wear.compose.material3.*
+import com.w57736e.yafeed.presentation.components.ArticleCard
+
+@Composable
+fun NewsListScreen(
+    viewModel: NewsListViewModel,
+    url: String,
+    onArticleClick: (Int) -> Unit
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val scrollState = rememberTransformingLazyColumnState()
+
+    LaunchedEffect(url) {
+        viewModel.fetchArticles(url)
+    }
+
+    ScreenScaffold(scrollState = scrollState) {
+        TransformingLazyColumn(
+            state = scrollState,
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(top = 24.dp, start = 12.dp, end = 12.dp, bottom = 24.dp)
+        ) {
+            item {
+                Text(
+                    "Latest News",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(bottom = 12.dp)
+                )
+            }
+
+            if (uiState.isLoading) {
+                item {
+                    CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+                }
+            } else if (uiState.error != null) {
+                item {
+                    Text("Error: ${uiState.error}", color = MaterialTheme.colorScheme.error)
+                }
+            } else {
+                items(uiState.articles.indices.toList()) { index ->
+                    val article = uiState.articles[index]
+                    ArticleCard(
+                        article = article,
+                        onClick = { onArticleClick(index) },
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
+            }
+        }
+    }
+}
