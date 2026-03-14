@@ -1,5 +1,6 @@
 package com.w57736e.yafeed.presentation.screens.settings
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -22,18 +23,24 @@ import com.w57736e.yafeed.presentation.components.SplitActionButton
 fun SourcesScreen(
     sources: List<RssSource>,
     onAddSource: (String, String) -> Unit,
-    onDeleteSource: (RssSource) -> Unit
+    onDeleteSource: (RssSource) -> Unit,
+    onNavigateToAddSource: () -> Unit
 ) {
     val scrollState = rememberTransformingLazyColumnState()
     var sourceToDelete by remember { mutableStateOf<RssSource?>(null) }
 
     sourceToDelete?.let { source ->
         Dialog(onDismissRequest = { sourceToDelete = null }) {
-            Column(
-                modifier = Modifier.fillMaxSize().padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.9f))
             ) {
+                Column(
+                    modifier = Modifier.fillMaxSize().padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+                ) {
                 Icon(
                     imageVector = Icons.Default.Warning,
                     contentDescription = null,
@@ -69,6 +76,7 @@ fun SourcesScreen(
                     }
                 }
             }
+            }
         }
     }
 
@@ -100,7 +108,7 @@ fun SourcesScreen(
 
             item {
                 EdgeButton(
-                    onClick = { /* Show add dialog */ },
+                    onClick = onNavigateToAddSource,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp)

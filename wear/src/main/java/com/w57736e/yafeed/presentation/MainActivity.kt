@@ -121,7 +121,12 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                 com.w57736e.yafeed.presentation.screens.settings.SourcesScreen(
                     sources = uiState.sources,
                     onAddSource = { name, url -> /* TODO */ },
-                    onDeleteSource = { source -> /* TODO */ }
+                    onDeleteSource = { source ->
+                        scope.launch {
+                            repository.deleteSource(source)
+                        }
+                    },
+                    onNavigateToAddSource = { navController.navigate("settings_add_source") }
                 )
             }
 
@@ -144,6 +149,28 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                     fontSize = 1.0f,
                     onShowImagesChange = { /* TODO */ },
                     onFontSizeChange = { /* TODO */ }
+                )
+            }
+
+            composable("settings_add_source") {
+                com.w57736e.yafeed.presentation.screens.settings.AddSourceScreen(
+                    onAddSource = { url, name ->
+                        scope.launch {
+                            val parser = RssParser()
+                            val finalName = if (name.isBlank()) {
+                                try {
+                                    val channel = parser.getRssChannel(url)
+                                    channel.title ?: "Unknown"
+                                } catch (e: Exception) {
+                                    "Unknown"
+                                }
+                            } else {
+                                name
+                            }
+                            repository.addSource(url, finalName)
+                        }
+                    },
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
 
