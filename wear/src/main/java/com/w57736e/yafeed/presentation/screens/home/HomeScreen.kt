@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -35,10 +36,17 @@ fun HomeScreen(
                 onClick = { viewModel.toggleViewMode() },
                 buttonSize = EdgeButtonSize.Small
             ) {
-                Icon(
-                    imageVector = if (uiState.isGridView) Icons.Default.Menu else Icons.Default.Apps,
-                    contentDescription = null
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        if (uiState.isGridView) "List" else "Grid",
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                    Icon(
+                        imageVector = if (uiState.isGridView) Icons.Default.Menu else Icons.Default.Apps,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
             }
         }
     ) { contentPadding ->
@@ -91,7 +99,7 @@ fun HomeScreen(
                         SourceCard(
                             source = source,
                             onClick = { onSourceClick(source.id) },
-                            modifier = Modifier.padding(bottom = 8.dp)
+                            modifier = Modifier.padding(bottom = 4.dp)
                         )
                     }
                 }
