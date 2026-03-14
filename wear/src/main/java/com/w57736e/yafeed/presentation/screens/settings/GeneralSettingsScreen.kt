@@ -12,15 +12,19 @@ import androidx.wear.compose.material3.*
 fun GeneralSettingsScreen(
     maxCacheSize: Int,
     updateInterval: Long,
+    browserType: String,
+    browserAvailable: Boolean,
+    availableBrowsers: List<String>,
     onMaxCacheSizeChange: (Int) -> Unit,
-    onUpdateIntervalChange: (Long) -> Unit
+    onUpdateIntervalChange: (Long) -> Unit,
+    onBrowserTypeChange: (String) -> Unit
 ) {
     val scrollState = rememberTransformingLazyColumnState()
     ScreenScaffold(scrollState = scrollState) {
         TransformingLazyColumn(
             state = scrollState,
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(top = 24.dp, start = 12.dp, end = 12.dp, bottom = 24.dp)
+            contentPadding = PaddingValues(top = 24.dp, bottom = 24.dp)
         ) {
             item {
                 Text("General Settings", style = MaterialTheme.typography.titleMedium)
@@ -109,6 +113,39 @@ fun GeneralSettingsScreen(
                     ) {
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
                             Text("60")
+                        }
+                    }
+                }
+            }
+
+            if (browserAvailable && availableBrowsers.size > 1) {
+                item {
+                    Text(
+                        "Browser",
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 8.dp),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                }
+
+                item {
+                    ButtonGroup(modifier = Modifier.fillMaxWidth()) {
+                        availableBrowsers.forEach { browser ->
+                            FilledTonalButton(
+                                onClick = { onBrowserTypeChange(browser) },
+                                modifier = Modifier.weight(1f),
+                                colors = if (browserType == browser) ButtonDefaults.filledTonalButtonColors()
+                                       else ButtonDefaults.filledTonalButtonColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
+                            ) {
+                                Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
+                                    Text(when (browser) {
+                                        "default" -> "Default"
+                                        "samsung" -> "Samsung"
+                                        "chrome" -> "Chrome"
+                                        else -> browser
+                                    })
+                                }
+                            }
                         }
                     }
                 }

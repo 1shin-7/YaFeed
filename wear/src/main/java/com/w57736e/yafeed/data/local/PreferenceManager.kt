@@ -18,6 +18,8 @@ class PreferenceManager(private val context: Context) {
         val LIST_VIEW_GRID = booleanPreferencesKey("list_view_grid")
         val MAX_CACHE_SIZE = intPreferencesKey("max_cache_size")
         val FONT_SIZE = floatPreferencesKey("font_size")
+        val BROWSER_TYPE = stringPreferencesKey("browser_type")
+        val BROWSER_AVAILABLE = booleanPreferencesKey("browser_available")
     }
 
     val uiScale: Flow<Float> = dataStore.data.map { it[UI_SCALE] ?: 1.0f }
@@ -26,6 +28,8 @@ class PreferenceManager(private val context: Context) {
     val isGridView: Flow<Boolean> = dataStore.data.map { it[LIST_VIEW_GRID] ?: false }
     val maxCacheSize: Flow<Int> = dataStore.data.map { it[MAX_CACHE_SIZE] ?: 20 }
     val fontSize: Flow<Float> = dataStore.data.map { it[FONT_SIZE] ?: 14f }
+    val browserType: Flow<String> = dataStore.data.map { it[BROWSER_TYPE] ?: "default" }
+    val browserAvailable: Flow<Boolean> = dataStore.data.map { it[BROWSER_AVAILABLE] ?: false }
 
     suspend fun setUiScale(scale: Float) {
         dataStore.edit { it[UI_SCALE] = scale }
@@ -45,6 +49,14 @@ class PreferenceManager(private val context: Context) {
 
     suspend fun setFontSize(size: Float) {
         dataStore.edit { it[FONT_SIZE] = size }
+    }
+
+    suspend fun setBrowserType(type: String) {
+        dataStore.edit { it[BROWSER_TYPE] = type }
+    }
+
+    suspend fun setBrowserAvailable(available: Boolean) {
+        dataStore.edit { it[BROWSER_AVAILABLE] = available }
     }
 
     suspend fun toggleViewMode() {

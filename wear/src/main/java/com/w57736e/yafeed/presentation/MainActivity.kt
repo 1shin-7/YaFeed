@@ -24,6 +24,7 @@ import com.w57736e.yafeed.presentation.screens.news_list.NewsListScreen
 import com.w57736e.yafeed.presentation.screens.news_list.NewsListViewModel
 import com.w57736e.yafeed.presentation.screens.settings.SettingsScreen
 import com.w57736e.yafeed.presentation.theme.YaFeedTheme
+import com.w57736e.yafeed.utils.BrowserHelper
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.net.URLEncoder
@@ -46,6 +47,13 @@ class MainActivity : ComponentActivity() {
                 repository.addSource("https://www.theverge.com/rss/index.xml", "The Verge")
                 repository.addSource("https://9to5google.com/feed/", "9to5Google")
                 repository.addSource("https://www.ithome.com/rss", "ITHome")
+            }
+
+            // Detect available browsers
+            val browsers = BrowserHelper.detectAvailableBrowsers(this@MainActivity)
+            prefManager.setBrowserAvailable(browsers.isNotEmpty())
+            if (browsers.isNotEmpty() && prefManager.browserType.first() !in browsers) {
+                prefManager.setBrowserType(browsers.first())
             }
         }
 
@@ -105,9 +113,20 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                 val article = uiState.articles.getOrNull(index)
                 val fontSize by prefManager.fontSize.collectAsState(14f)
                 val showImages by prefManager.showImages.collectAsState(true)
+                val browserAvailable by prefManager.browserAvailable.collectAsState(false)
+                val browserType by prefManager.browserType.collectAsState("webview")
 
                 if (article != null) {
-                    NewsDetailScreen(article = article, fontSize = fontSize, showImages = showImages)
+                    NewsDetailScreen(
+                        article = article,
+                        fontSize = fontSize,
+                        showImages = showImages,
+                        browserAvailable = browserAvailable,
+                        browserType = browserType,
+                        onOpenInBrowser = { url, type ->
+                            BrowserHelper.openInBrowser(context, url, type)
+                        }
+                    )
                 }
             }
 
@@ -136,14 +155,26 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
 
             composable("settings_general") {
                 val maxCacheSize by prefManager.maxCacheSize.collectAsState(20)
+                val updateInterval by prefManager.updateInterval.collectAsState(30)
+                val browserType by prefManager.browserType.collectAsState("webview")
+                val browserAvailable by prefManager.browserAvailable.collectAsState(false)
+                val availableBrowsers = remember { BrowserHelper.detectAvailableBrowsers(context) }
 
                 com.w57736e.yafeed.presentation.screens.settings.GeneralSettingsScreen(
                     maxCacheSize = maxCacheSize,
-                    updateInterval = 30,
+                    updateInterval = updateInterval,
+                    browserType = browserType,
+                    browserAvailable = browserAvailable,
+                    availableBrowsers = availableBrowsers,
                     onMaxCacheSizeChange = { size ->
                         scope.launch { prefManager.setMaxCacheSize(size) }
                     },
-                    onUpdateIntervalChange = { /* TODO */ }
+                    onUpdateIntervalChange = { interval ->
+                        scope.launch { prefManager.setUpdateInterval(interval) }
+                    },
+                    onBrowserTypeChange = { type ->
+                        scope.launch { prefManager.setBrowserType(type) }
+                    }
                 )
             }
 
