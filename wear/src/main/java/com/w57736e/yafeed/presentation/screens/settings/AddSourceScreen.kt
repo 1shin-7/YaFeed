@@ -50,7 +50,7 @@ fun AddSourceScreen(
         TransformingLazyColumn(
             state = scrollState,
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(top = 24.dp, bottom = 64.dp)
+            contentPadding = PaddingValues(top = 24.dp, start = 12.dp, end = 12.dp, bottom = 64.dp)
         ) {
             item {
                 Text("Add RSS Source", style = MaterialTheme.typography.titleMedium)

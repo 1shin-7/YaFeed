@@ -15,7 +15,7 @@ fun AboutScreen() {
         TransformingLazyColumn(
             state = scrollState,
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(top = 24.dp, bottom = 24.dp)
+            contentPadding = PaddingValues(top = 24.dp, start = 12.dp, end = 12.dp, bottom = 24.dp)
         ) {
             item {
                 Text("About YaFeed", style = MaterialTheme.typography.titleMedium)

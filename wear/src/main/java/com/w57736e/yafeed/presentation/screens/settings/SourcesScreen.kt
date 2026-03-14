@@ -80,11 +80,18 @@ fun SourcesScreen(
         }
     }
 
-    ScreenScaffold(scrollState = scrollState) {
+    ScreenScaffold(
+        scrollState = scrollState,
+        edgeButton = {
+            EdgeButton(onClick = onNavigateToAddSource) {
+                Text("Add Source")
+            }
+        }
+    ) {
         TransformingLazyColumn(
             state = scrollState,
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(top = 24.dp)
+            contentPadding = PaddingValues(top = 24.dp, start = 12.dp, end = 12.dp, bottom = 24.dp)
         ) {
             item {
                 Text("News Sources", style = MaterialTheme.typography.titleMedium)
@@ -102,19 +109,8 @@ fun SourcesScreen(
                             tint = MaterialTheme.colorScheme.onErrorContainer
                         )
                     },
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).padding(start = 12.dp, end = 12.dp)
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
                 )
-            }
-
-            item {
-                EdgeButton(
-                    onClick = onNavigateToAddSource,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp)
-                ) {
-                    Text("Add Source")
-                }
             }
         }
     }
