@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.foundation)
+    implementation("androidx.compose.material3:material3:1.3.1")
     
     // Wear OS Material 3 & Navigation
     implementation(libs.androidx.wear.compose.material3)

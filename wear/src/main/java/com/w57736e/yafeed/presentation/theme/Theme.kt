@@ -1,9 +1,12 @@
 package com.w57736e.yafeed.presentation.theme
 
+import android.os.Build
+import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.wear.compose.material3.ColorScheme
 import androidx.wear.compose.material3.MaterialTheme
-import androidx.compose.ui.graphics.Color
 
 private val YaFeedColorScheme = ColorScheme(
     primary = Color(0xFFD0BCFF),
@@ -25,8 +28,31 @@ private val YaFeedColorScheme = ColorScheme(
 fun YaFeedTheme(
     content: @Composable () -> Unit
 ) {
+    val context = LocalContext.current
+    val colorScheme = when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            val dynamicScheme = androidx.compose.material3.dynamicDarkColorScheme(context)
+            ColorScheme(
+                primary = dynamicScheme.primary,
+                onPrimary = dynamicScheme.onPrimary,
+                secondary = dynamicScheme.secondary,
+                onSecondary = dynamicScheme.onSecondary,
+                background = dynamicScheme.background,
+                onBackground = dynamicScheme.onBackground,
+                surfaceContainer = dynamicScheme.surfaceContainer,
+                onSurface = dynamicScheme.onSurface,
+                onSurfaceVariant = dynamicScheme.onSurfaceVariant,
+                outline = dynamicScheme.outline,
+                outlineVariant = dynamicScheme.outlineVariant,
+                error = dynamicScheme.error,
+                onError = dynamicScheme.onError
+            )
+        }
+        else -> YaFeedColorScheme
+    }
+
     MaterialTheme(
-        colorScheme = YaFeedColorScheme,
+        colorScheme = colorScheme,
         content = content
     )
 }
