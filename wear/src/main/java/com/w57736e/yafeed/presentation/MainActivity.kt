@@ -75,6 +75,13 @@ class MainActivity : ComponentActivity() {
                 ExistingPeriodicWorkPolicy.KEEP,
                 workRequest
             )
+
+            // Initial refresh on startup
+            val sources = repository.getAllSources().first()
+            val cacheSize = prefManager.maxCacheSize.first()
+            sources.forEach { source ->
+                repository.fetchAndCache(source.id, cacheSize)
+            }
         }
 
         setContent {
