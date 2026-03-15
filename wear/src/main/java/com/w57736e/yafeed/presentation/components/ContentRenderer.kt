@@ -14,6 +14,8 @@ import androidx.wear.compose.material3.Text
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.size.Size
+import com.w57736e.yafeed.image.ImageUrlTransformer
+import com.w57736e.yafeed.utils.ScreenUtils
 
 data class ContentBlock(
     val type: BlockType,
@@ -51,7 +53,7 @@ fun ContentRenderer(
                     if (showImages) {
                         AsyncImage(
                             model = ImageRequest.Builder(context)
-                                .data(block.content)
+                                .data(ImageUrlTransformer.applyThumbnail(block.content, ScreenUtils.getContentImageWidth()))
                                 .size(Size(300, 300))
                                 .build(),
                             contentDescription = null,

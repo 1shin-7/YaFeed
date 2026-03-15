@@ -27,8 +27,10 @@ import com.w57736e.yafeed.presentation.screens.news_list.NewsListScreen
 import com.w57736e.yafeed.presentation.screens.news_list.NewsListViewModel
 import com.w57736e.yafeed.presentation.screens.settings.SettingsScreen
 import com.w57736e.yafeed.presentation.theme.YaFeedTheme
+import com.w57736e.yafeed.image.CoilImageLoaderFactory
 import com.w57736e.yafeed.utils.BrowserHelper
 import com.w57736e.yafeed.utils.NotificationHelper
+import com.w57736e.yafeed.utils.ScreenUtils
 import com.w57736e.yafeed.workers.RssRefreshWorker
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -40,6 +42,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        // Initialize screen width for dynamic image sizing
+        ScreenUtils.initialize(this)
+
+        // Configure global Coil ImageLoader with custom headers
+        coil.Coil.setImageLoader(CoilImageLoaderFactory.create(this))
 
         val db = AppDatabase.getDatabase(this)
         val prefManager = PreferenceManager(this)
@@ -148,6 +156,7 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                 val showImages by prefManager.showImages.collectAsState(true)
                 val browserAvailable by prefManager.browserAvailable.collectAsState(false)
                 val browserType by prefManager.browserType.collectAsState("webview")
+                val useOriginalImagePreview by prefManager.useOriginalImagePreview.collectAsState(false)
 
                 if (article != null) {
                     NewsDetailScreen(
@@ -156,6 +165,7 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                         showImages = showImages,
                         browserAvailable = browserAvailable,
                         browserType = browserType,
+                        useOriginalImagePreview = useOriginalImagePreview,
                         onOpenInBrowser = { url, type ->
                             BrowserHelper.openInBrowser(context, url, type)
                         }
@@ -222,15 +232,20 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
             composable("settings_ui") {
                 val fontSize by prefManager.fontSize.collectAsState(14f)
                 val showImages by prefManager.showImages.collectAsState(true)
+                val useOriginalImagePreview by prefManager.useOriginalImagePreview.collectAsState(false)
 
                 com.w57736e.yafeed.presentation.screens.settings.UiSettingsScreen(
                     showImages = showImages,
                     fontSize = fontSize,
+                    useOriginalImagePreview = useOriginalImagePreview,
                     onShowImagesChange = { show ->
                         scope.launch { prefManager.setShowImages(show) }
                     },
                     onFontSizeChange = { size ->
                         scope.launch { prefManager.setFontSize(size) }
+                    },
+                    onUseOriginalImagePreviewChange = { enabled ->
+                        scope.launch { prefManager.setUseOriginalImagePreview(enabled) }
                     }
                 )
             }

@@ -25,6 +25,8 @@ import com.w57736e.yafeed.domain.model.RssArticle
 import com.w57736e.yafeed.data.repository.DateUtils
 import com.w57736e.yafeed.presentation.components.ImageViewer
 import com.w57736e.yafeed.presentation.components.ContentRenderer
+import com.w57736e.yafeed.image.ImageUrlTransformer
+import com.w57736e.yafeed.utils.ScreenUtils
 
 @Composable
 fun NewsDetailScreen(
@@ -33,6 +35,7 @@ fun NewsDetailScreen(
     showImages: Boolean = true,
     browserAvailable: Boolean = false,
     browserType: String = "webview",
+    useOriginalImagePreview: Boolean = false,
     onOpenInBrowser: (String, String) -> Unit = { _, _ -> }
 ) {
     val scrollState = rememberTransformingLazyColumnState()
@@ -43,8 +46,13 @@ fun NewsDetailScreen(
 
     selectedImageUrl?.let { imageUrl ->
         Dialog(onDismissRequest = { selectedImageUrl = null }) {
+            val displayUrl = if (useOriginalImagePreview) {
+                imageUrl
+            } else {
+                ImageUrlTransformer.applyThumbnail(imageUrl, ScreenUtils.getHeroImageWidth()) ?: imageUrl
+            }
             ImageViewer(
-                imageUrl = imageUrl,
+                imageUrl = displayUrl,
                 onDismiss = { selectedImageUrl = null }
             )
         }
@@ -129,7 +137,7 @@ fun NewsDetailScreen(
                     if (article.imageUrl != null && showImages) {
                         AsyncImage(
                             model = coil.request.ImageRequest.Builder(androidx.compose.ui.platform.LocalContext.current)
-                                .data(article.imageUrl)
+                                .data(ImageUrlTransformer.applyThumbnail(article.imageUrl, ScreenUtils.getHeroImageWidth()))
                                 .size(coil.size.Size(400, 400))
                                 .build(),
                             contentDescription = null,

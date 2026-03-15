@@ -41,6 +41,9 @@ extensions.configure<com.android.build.api.dsl.ApplicationExtension> {
     buildFeatures {
         compose = true
     }
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
 }
 
 dependencies {

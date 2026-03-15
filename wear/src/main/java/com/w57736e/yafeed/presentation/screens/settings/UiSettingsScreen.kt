@@ -17,7 +17,9 @@ fun UiSettingsScreen(
     showImages: Boolean,
     fontSize: Float,
     onShowImagesChange: (Boolean) -> Unit,
-    onFontSizeChange: (Float) -> Unit
+    onFontSizeChange: (Float) -> Unit,
+    useOriginalImagePreview: Boolean = false,
+    onUseOriginalImagePreviewChange: (Boolean) -> Unit = {}
 ) {
     val scrollState = rememberTransformingLazyColumnState()
     ScreenScaffold(scrollState = scrollState) {
@@ -37,6 +39,19 @@ fun UiSettingsScreen(
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                     label = { Text("Show Images") },
                     icon = { Icon(Icons.Default.Image, contentDescription = null) },
+                    colors = SwitchButtonDefaults.switchButtonColors(
+                        checkedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        checkedContentColor = MaterialTheme.colorScheme.onSurface
+                    )
+                )
+            }
+
+            item {
+                SwitchButton(
+                    checked = useOriginalImagePreview,
+                    onCheckedChange = onUseOriginalImagePreviewChange,
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                    label = { Text("预览使用原图") },
                     colors = SwitchButtonDefaults.switchButtonColors(
                         checkedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                         checkedContentColor = MaterialTheme.colorScheme.onSurface

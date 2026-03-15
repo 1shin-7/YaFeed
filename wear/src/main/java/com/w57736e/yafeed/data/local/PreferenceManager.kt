@@ -21,6 +21,7 @@ class PreferenceManager(private val context: Context) {
         val BROWSER_TYPE = stringPreferencesKey("browser_type")
         val BROWSER_AVAILABLE = booleanPreferencesKey("browser_available")
         val NOTIFICATION_ENABLED = booleanPreferencesKey("notification_enabled")
+        val USE_ORIGINAL_IMAGE_PREVIEW = booleanPreferencesKey("use_original_image_preview")
         val LAST_MODIFIED = longPreferencesKey("last_modified")
     }
 
@@ -33,6 +34,7 @@ class PreferenceManager(private val context: Context) {
     val browserType: Flow<String> = dataStore.data.map { it[BROWSER_TYPE] ?: "default" }
     val browserAvailable: Flow<Boolean> = dataStore.data.map { it[BROWSER_AVAILABLE] ?: false }
     val notificationEnabled: Flow<Boolean> = dataStore.data.map { it[NOTIFICATION_ENABLED] ?: false }
+    val useOriginalImagePreview: Flow<Boolean> = dataStore.data.map { it[USE_ORIGINAL_IMAGE_PREVIEW] ?: false }
     val lastModified: Flow<Long> = dataStore.data.map { it[LAST_MODIFIED] ?: 0L }
 
     suspend fun setUiScale(scale: Float) {
@@ -65,6 +67,10 @@ class PreferenceManager(private val context: Context) {
 
     suspend fun setNotificationEnabled(enabled: Boolean) {
         dataStore.edit { it[NOTIFICATION_ENABLED] = enabled; it[LAST_MODIFIED] = System.currentTimeMillis() }
+    }
+
+    suspend fun setUseOriginalImagePreview(enabled: Boolean) {
+        dataStore.edit { it[USE_ORIGINAL_IMAGE_PREVIEW] = enabled; it[LAST_MODIFIED] = System.currentTimeMillis() }
     }
 
     suspend fun setListViewGrid(grid: Boolean) {
