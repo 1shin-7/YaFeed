@@ -69,7 +69,7 @@ dependencies {
     implementation(libs.rss.parser)
     
     // Markdown
-    implementation(libs.compose.markdown)
+    implementation(libs.multiplatform.markdown.renderer.android)
     
     // Image Loading
     implementation(libs.coil.compose)

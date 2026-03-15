@@ -8,6 +8,7 @@ espressoCore = "3.7.0"
 appcompat = "1.7.1"
 kotlinxCoroutinesPlayServices = "1.10.2"
 material3 = "1.4.0"
+multiplatformMarkdownRendererAndroid = "0.39.2"
 playServicesWearable = "19.0.0"
 composeBom = "2026.03.00"
 composeMaterial = "1.5.6"
@@ -15,7 +16,6 @@ wearComposeMaterial3 = "1.6.0-rc01"
 wearComposeNavigation = "1.6.0-rc01"
 wearComposeFoundation = "1.6.0-rc01"
 rssParser = "6.1.4"
-composeMarkdown = "0.6.0"
 coil = "2.7.0"
 room = "2.8.4"
 datastore = "1.2.1"
@@ -43,6 +43,7 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutinesPlayServices" }
+multiplatform-markdown-renderer-android = { module = "com.mikepenz:multiplatform-markdown-renderer-android", version.ref = "multiplatformMarkdownRendererAndroid" }
 play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
@@ -57,7 +58,6 @@ androidx-wear-compose-material3 = { group = "androidx.wear.compose", name = "com
 androidx-wear-compose-navigation = { group = "androidx.wear.compose", name = "compose-navigation", version.ref = "wearComposeNavigation" }
 androidx-wear-compose-foundation = { group = "androidx.wear.compose", name = "compose-foundation", version.ref = "wearComposeFoundation" }
 rss-parser = { group = "com.prof18.rssparser", name = "rssparser", version.ref = "rssParser" }
-compose-markdown = { group = "com.github.jeziellago", name = "compose-markdown", version.ref = "composeMarkdown" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }

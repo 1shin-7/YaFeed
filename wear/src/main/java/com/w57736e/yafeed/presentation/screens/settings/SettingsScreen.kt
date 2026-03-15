@@ -2,6 +2,7 @@ package com.w57736e.yafeed.presentation.screens.settings
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.RssFeed
@@ -19,7 +20,9 @@ fun SettingsScreen(
     onSourcesClick: () -> Unit,
     onGeneralClick: () -> Unit,
     onUiSettingsClick: () -> Unit,
-    onAboutClick: () -> Unit
+    onDebugClick: () -> Unit,
+    onAboutClick: () -> Unit,
+    debugModeEnabled: Boolean
 ) {
     val scrollState = rememberScalingLazyListState()
     ScreenScaffold(
@@ -86,7 +89,7 @@ fun SettingsScreen(
             item {
                 Button(
                     onClick = onUiSettingsClick,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                         contentColor = MaterialTheme.colorScheme.onSurface
@@ -95,6 +98,23 @@ fun SettingsScreen(
                     Icon(Icons.Default.Palette, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("UI Settings")
+                }
+            }
+
+            if (debugModeEnabled) {
+                item {
+                    Button(
+                        onClick = onDebugClick,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        )
+                    ) {
+                        Icon(Icons.Default.BugReport, contentDescription = null)
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Debug")
+                    }
                 }
             }
         }

@@ -1,5 +1,7 @@
 package com.w57736e.yafeed.presentation.screens.settings
 
+import android.widget.Toast
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Code
@@ -7,6 +9,8 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
@@ -14,8 +18,11 @@ import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.*
 
 @Composable
-fun AboutScreen() {
+fun AboutScreen(onDebugModeEnabled: () -> Unit) {
+    var tapCount by remember { mutableIntStateOf(0) }
     val scrollState = rememberTransformingLazyColumnState()
+    val context = LocalContext.current
+
     ScreenScaffold(scrollState = scrollState) {
         TransformingLazyColumn(
             state = scrollState,
@@ -42,7 +49,17 @@ fun AboutScreen() {
                     Text(
                         "v1.0.302",
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.pointerInput(Unit) {
+                            detectTapGestures {
+                                tapCount++
+                                if (tapCount >= 5) {
+                                    onDebugModeEnabled()
+                                    Toast.makeText(context, "Debug mode enabled", Toast.LENGTH_SHORT).show()
+                                    tapCount = 0
+                                }
+                            }
+                        }
                     )
                 }
             }

@@ -109,7 +109,8 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
     val navController = rememberSwipeDismissableNavController()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    
+    var debugModeEnabled by remember { mutableStateOf(false) }
+
     val homeViewModel = remember { HomeViewModel(repository, prefManager) }
     val newsListViewModel = remember { NewsListViewModel(repository, prefManager, context) }
 
@@ -178,7 +179,9 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                     onSourcesClick = { navController.navigate("settings_sources") },
                     onGeneralClick = { navController.navigate("settings_general") },
                     onUiSettingsClick = { navController.navigate("settings_ui") },
-                    onAboutClick = { navController.navigate("settings_about") }
+                    onDebugClick = { navController.navigate("settings_debug") },
+                    onAboutClick = { navController.navigate("settings_about") },
+                    debugModeEnabled = debugModeEnabled
                 )
             }
 
@@ -295,7 +298,19 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
             }
 
             composable("settings_about") {
-                com.w57736e.yafeed.presentation.screens.settings.AboutScreen()
+                com.w57736e.yafeed.presentation.screens.settings.AboutScreen(
+                    onDebugModeEnabled = { debugModeEnabled = true }
+                )
+            }
+
+            composable("settings_debug") {
+                com.w57736e.yafeed.presentation.screens.debug.DebugMenuScreen(
+                    onMarkdownTestClick = { navController.navigate("debug_markdown_test") }
+                )
+            }
+
+            composable("debug_markdown_test") {
+                com.w57736e.yafeed.presentation.screens.debug.MarkdownDebugScreen()
             }
         }
         }
