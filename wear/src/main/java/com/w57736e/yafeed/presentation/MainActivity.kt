@@ -305,12 +305,17 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
 
             composable("settings_debug") {
                 com.w57736e.yafeed.presentation.screens.debug.DebugMenuScreen(
-                    onMarkdownTestClick = { navController.navigate("debug_markdown_test") }
+                    onMarkdownTestClick = { navController.navigate("debug_markdown_test") },
+                    onMarkdownAstClick = { navController.navigate("debug_markdown_ast") }
                 )
             }
 
             composable("debug_markdown_test") {
                 com.w57736e.yafeed.presentation.screens.debug.MarkdownDebugScreen()
+            }
+
+            composable("debug_markdown_ast") {
+                com.w57736e.yafeed.presentation.screens.debug.MarkdownAstDebugScreen()
             }
         }
         }

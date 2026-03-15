@@ -11,7 +11,10 @@ import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material3.*
 
 @Composable
-fun DebugMenuScreen(onMarkdownTestClick: () -> Unit) {
+fun DebugMenuScreen(
+    onMarkdownTestClick: () -> Unit,
+    onMarkdownAstClick: () -> Unit
+) {
     val scrollState = rememberScalingLazyListState()
 
     ScreenScaffold(scrollState = scrollState) {
@@ -40,6 +43,21 @@ fun DebugMenuScreen(onMarkdownTestClick: () -> Unit) {
                     Icon(Icons.Default.Article, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Markdown Test")
+                }
+            }
+
+            item {
+                Button(
+                    onClick = onMarkdownAstClick,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    )
+                ) {
+                    Icon(Icons.Default.Article, contentDescription = null)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("Markdown AST")
                 }
             }
         }

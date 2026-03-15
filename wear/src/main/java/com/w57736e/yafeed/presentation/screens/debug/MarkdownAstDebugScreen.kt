@@ -1,26 +1,22 @@
 package com.w57736e.yafeed.presentation.screens.debug
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material3.ScreenScaffold
-import com.w57736e.yafeed.markdown.WearMarkdown
+import androidx.wear.compose.material3.Text
+import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
+import org.intellij.markdown.parser.MarkdownParser
 
 @Composable
-fun MarkdownDebugScreen() {
+fun MarkdownAstDebugScreen() {
     val scrollState = rememberScalingLazyListState()
-
-    ScreenScaffold(scrollState = scrollState) {
-        WearMarkdown(
-            content = MARKDOWN_TEST_CONTENT,
-            modifier = Modifier.fillMaxSize(),
-            state = scrollState
-        )
-    }
-}
-
-private const val MARKDOWN_TEST_CONTENT = """
+    val markdown = """
 # ATX Heading 1
 ## ATX Heading 2
 ### ATX Heading 3
@@ -111,4 +107,33 @@ fun main() {
 </div>
 
 Inline HTML: <strong>bold</strong> <em>italic</em> <code>code</code>
-"""
+""".trimIndent()
+
+    val flavour = GFMFlavourDescriptor()
+    val parser = MarkdownParser(flavour)
+    val tree = parser.buildMarkdownTreeFromString(markdown)
+
+    val nodes = mutableListOf<String>()
+    fun traverse(node: org.intellij.markdown.ast.ASTNode, depth: Int = 0) {
+        val indent = "  ".repeat(depth)
+        val text = markdown.substring(node.startOffset, node.endOffset).take(30).replace("\n", "\\n")
+        nodes.add("$indent${node.type} [$text]")
+        node.children.forEach { traverse(it, depth + 1) }
+    }
+    traverse(tree)
+
+    ScreenScaffold(scrollState = scrollState) {
+        ScalingLazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            state = scrollState
+        ) {
+            items(nodes.size) { index ->
+                Text(
+                    text = nodes[index],
+                    fontSize = 10.sp,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                )
+            }
+        }
+    }
+}
