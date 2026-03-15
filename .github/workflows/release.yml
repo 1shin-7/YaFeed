@@ -1,0 +1,38 @@
+name: Release Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Build Mobile Release APK
+        run: ./gradlew :mobile:assembleRelease
+
+      - name: Build Wear Release APK
+        run: ./gradlew :wear:assembleRelease
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            mobile/build/outputs/apk/release/*.apk
+            wear/build/outputs/apk/release/*.apk
+          generate_release_notes: true
+          draft: false
+          prerelease: false
