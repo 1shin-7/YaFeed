@@ -23,3 +23,6 @@ local.properties
 .agents/
 .claude/
 skills-lock.json
+
+# Libs for search ref
+libs_/
