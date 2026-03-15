@@ -84,8 +84,7 @@ class WearDataListenerService : WearableListenerService() {
                 }
 
                 val database = AppDatabase.getDatabase(applicationContext)
-                val repository = RssSourceRepository(database.sourceDao())
-                repository.syncSources(sources)
+                database.sourceDao().insertAll(sources)
             }
         }
     }

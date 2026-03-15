@@ -1,5 +1,6 @@
 package com.w57736e.yafeed.sync
 
+import android.util.Log
 import com.google.android.gms.wearable.DataEvent
 import com.google.android.gms.wearable.DataEventBuffer
 import com.google.android.gms.wearable.DataMapItem
@@ -19,8 +20,10 @@ class MobileDataListenerService : WearableListenerService() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override fun onDataChanged(dataEvents: DataEventBuffer) {
+        Log.d("WearSync", "Received ${dataEvents.count} data events")
         dataEvents.forEach { event ->
             if (event.type == DataEvent.TYPE_CHANGED) {
+                Log.d("WearSync", "Event type: ${event.type}, path: ${event.dataItem.uri.path}")
                 when {
                     event.dataItem.uri.path?.startsWith("/settings/preferences/") == true -> {
                         handleSettingsSync(event)
@@ -35,59 +38,72 @@ class MobileDataListenerService : WearableListenerService() {
 
     private fun handleSettingsSync(event: DataEvent) {
         scope.launch {
-            val dataMap = DataMapItem.fromDataItem(event.dataItem).dataMap
-            val deviceId = dataMap.getString("deviceId", "")
+            try {
+                Log.d("WearSync", "Handling settings sync...")
+                val dataMap = DataMapItem.fromDataItem(event.dataItem).dataMap
+                val deviceId = dataMap.getString("deviceId", "")
 
-            if (deviceId == "mobile") {
-                val preferenceManager = PreferenceManager(applicationContext)
-                val remoteTimestamp = dataMap.getLong("lastModified", 0)
-                val localTimestamp = preferenceManager.lastModified.first()
+                if (deviceId == "mobile") {
+                    val preferenceManager = PreferenceManager(applicationContext)
+                    val remoteTimestamp = dataMap.getLong("lastModified", 0)
+                    val localTimestamp = preferenceManager.lastModified.first()
 
-                if (remoteTimestamp < localTimestamp) {
-                    return@launch
+                    if (remoteTimestamp < localTimestamp) {
+                        Log.d("WearSync", "Skipping settings sync - local is newer")
+                        return@launch
+                    }
+
+                    preferenceManager.setUiScale(dataMap.getFloat("uiScale", 1.0f))
+                    preferenceManager.setShowImages(dataMap.getBoolean("showImages", true))
+                    preferenceManager.setUpdateInterval(dataMap.getInt("updateInterval", 30).toLong())
+                    preferenceManager.setListViewGrid(dataMap.getBoolean("listViewGrid", false))
+                    preferenceManager.setMaxCacheSize(dataMap.getInt("maxCacheSize", 20))
+                    preferenceManager.setFontSize(dataMap.getFloat("fontSize", 14.0f))
+                    preferenceManager.setBrowserType(dataMap.getString("browserType", "default") ?: "default")
+                    preferenceManager.setBrowserAvailable(dataMap.getBoolean("browserAvailable", false))
+                    preferenceManager.setNotificationEnabled(dataMap.getBoolean("notificationEnabled", false))
+                    Log.d("WearSync", "Settings synced successfully")
                 }
-
-                preferenceManager.setUiScale(dataMap.getFloat("uiScale", 1.0f))
-                preferenceManager.setShowImages(dataMap.getBoolean("showImages", true))
-                preferenceManager.setUpdateInterval(dataMap.getInt("updateInterval", 30).toLong())
-                preferenceManager.setListViewGrid(dataMap.getBoolean("listViewGrid", false))
-                preferenceManager.setMaxCacheSize(dataMap.getInt("maxCacheSize", 20))
-                preferenceManager.setFontSize(dataMap.getFloat("fontSize", 14.0f))
-                preferenceManager.setBrowserType(dataMap.getString("browserType", "default") ?: "default")
-                preferenceManager.setBrowserAvailable(dataMap.getBoolean("browserAvailable", false))
-                preferenceManager.setNotificationEnabled(dataMap.getBoolean("notificationEnabled", false))
+            } catch (e: Exception) {
+                Log.e("WearSync", "Failed to handle settings sync", e)
             }
         }
     }
 
     private fun handleSourcesSync(event: DataEvent) {
         scope.launch {
-            val dataMap = DataMapItem.fromDataItem(event.dataItem).dataMap
-            val deviceId = dataMap.getString("deviceId", "")
+            try {
+                Log.d("WearSync", "Handling sources sync...")
+                val dataMap = DataMapItem.fromDataItem(event.dataItem).dataMap
+                val deviceId = dataMap.getString("deviceId", "")
 
-            if (deviceId == "mobile") {
-                val sourcesJson = dataMap.getString("sources", "[]")
-                val jsonArray = JSONArray(sourcesJson)
-                val sources = mutableListOf<RssSource>()
+                if (deviceId == "mobile") {
+                    val sourcesJson = dataMap.getString("sources", "[]")
+                    val jsonArray = JSONArray(sourcesJson)
+                    val sources = mutableListOf<RssSource>()
 
-                for (i in 0 until jsonArray.length()) {
-                    val obj = jsonArray.getJSONObject(i)
-                    sources.add(
-                        RssSource(
-                            id = obj.getInt("id"),
-                            name = obj.getString("name"),
-                            url = obj.getString("url"),
-                            faviconUrl = obj.getString("faviconUrl").takeIf { it.isNotBlank() },
-                            notificationEnabled = obj.getBoolean("notificationEnabled"),
-                            order = obj.getInt("order"),
-                            lastModified = obj.getLong("lastModified")
+                    for (i in 0 until jsonArray.length()) {
+                        val obj = jsonArray.getJSONObject(i)
+                        sources.add(
+                            RssSource(
+                                id = obj.getInt("id"),
+                                name = obj.getString("name"),
+                                url = obj.getString("url"),
+                                faviconUrl = obj.getString("faviconUrl").takeIf { it.isNotBlank() },
+                                notificationEnabled = obj.getBoolean("notificationEnabled"),
+                                order = obj.getInt("order"),
+                                lastModified = obj.getLong("lastModified")
+                            )
                         )
-                    )
-                }
+                    }
 
-                val database = AppDatabase.getDatabase(applicationContext)
-                val repository = RssRepository(database.sourceDao(), database.articleDao(), com.prof18.rssparser.RssParser())
-                repository.syncSources(sources)
+                    val database = AppDatabase.getDatabase(applicationContext)
+                    val repository = RssRepository(database.sourceDao(), database.articleDao(), com.prof18.rssparser.RssParser())
+                    repository.syncSources(sources)
+                    Log.d("WearSync", "Synced ${sources.size} sources successfully")
+                }
+            } catch (e: Exception) {
+                Log.e("WearSync", "Failed to handle sources sync", e)
             }
         }
     }

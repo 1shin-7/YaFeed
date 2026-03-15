@@ -33,14 +33,15 @@ class MainActivity : ComponentActivity() {
 
         val database = AppDatabase.getDatabase(this)
         val preferenceManager = PreferenceManager(this)
-        val sourcesViewModel = SourcesViewModel(RssSourceRepository(database.sourceDao()))
-        val settingsViewModel = SettingsViewModel(SettingsRepository(preferenceManager))
+        val wearSyncManager = com.w57736e.yafeed.sync.WearSyncManager(this)
+        val sourcesViewModel = SourcesViewModel(RssSourceRepository(database.sourceDao(), wearSyncManager))
+        val settingsViewModel = SettingsViewModel(SettingsRepository(preferenceManager, wearSyncManager))
         val connectionManager = WearConnectionManager(this)
 
         lifecycleScope.launch {
             while (isActive) {
                 connectionManager.checkConnection()
-                delay(5000)
+                delay(10000)
             }
         }
 
