@@ -1,11 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
 }
 
-android {
+extensions.configure<com.android.build.api.dsl.ApplicationExtension> {
     namespace = "com.w57736e.yafeed"
     compileSdk {
         version = release(36)
@@ -48,7 +47,7 @@ dependencies {
     implementation(libs.play.services.wearable)
 
     // Coroutines for Play Services
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+    implementation(libs.kotlinx.coroutines.play.services)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
@@ -56,8 +55,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material.icons.extended)
-    implementation(libs.androidx.compose.foundation)
-    implementation("androidx.compose.material3:material3:1.3.1")
+    implementation(libs.androidx.material3)
     
     // Wear OS Material 3 & Navigation
     implementation(libs.androidx.wear.compose.material3)
@@ -82,7 +80,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
 
     // WorkManager
-    implementation("androidx.work:work-runtime-ktx:2.9.0")
+    implementation(libs.androidx.work.runtime.ktx)
 
     implementation(libs.androidx.wear.tooling.preview)
     implementation(libs.androidx.activity.compose)

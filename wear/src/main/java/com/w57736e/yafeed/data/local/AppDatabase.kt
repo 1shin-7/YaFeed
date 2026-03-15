@@ -23,7 +23,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "yafeed_database"
                 )
-                .fallbackToDestructiveMigration() // For development simplicity
+                .fallbackToDestructiveMigration(true) // For development simplicity
                 .build()
                 INSTANCE = instance
                 instance

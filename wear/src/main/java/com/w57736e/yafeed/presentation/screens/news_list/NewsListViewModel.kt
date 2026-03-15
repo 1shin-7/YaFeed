@@ -8,6 +8,7 @@ import com.w57736e.yafeed.data.repository.RssRepository
 import com.w57736e.yafeed.data.repository.isNetworkAvailable
 import com.w57736e.yafeed.domain.model.RssArticle
 import com.w57736e.yafeed.domain.model.RssSource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -18,6 +19,7 @@ data class NewsListUiState(
     val error: String? = null
 )
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class NewsListViewModel(
     private val repository: RssRepository,
     private val preferenceManager: PreferenceManager,
