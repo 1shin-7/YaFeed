@@ -47,7 +47,7 @@ fun AboutScreen(onDebugModeEnabled: () -> Unit) {
                         textAlign = TextAlign.Center
                     )
                     Text(
-                        "v1.0.302",
+                        "v1.2.1",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.pointerInput(Unit) {
