@@ -60,8 +60,11 @@ fun NewsListScreen(
                     )
                 }
             } else {
-                items(uiState.articles.indices.toList()) { index ->
-                    val article = uiState.articles[index]
+                items(
+                    items = uiState.articles,
+                    key = { it.link ?: it.title }
+                ) { article ->
+                    val index = uiState.articles.indexOf(article)
                     ArticleCard(
                         article = article,
                         onClick = { onArticleClick(index) },

@@ -55,32 +55,38 @@ class MainActivity : ComponentActivity() {
                 repository.addSource("https://www.ithome.com/rss", "ITHome")
             }
 
-            // Detect available browsers
-            val browsers = BrowserHelper.detectAvailableBrowsers(this@MainActivity)
-            prefManager.setBrowserAvailable(browsers.isNotEmpty())
-            if (browsers.isNotEmpty() && prefManager.browserType.first() !in browsers) {
-                prefManager.setBrowserType(browsers.first())
+            // Parallelize independent operations
+            launch {
+                val browsers = BrowserHelper.detectAvailableBrowsers(this@MainActivity)
+                prefManager.setBrowserAvailable(browsers.isNotEmpty())
+                if (browsers.isNotEmpty() && prefManager.browserType.first() !in browsers) {
+                    prefManager.setBrowserType(browsers.first())
+                }
             }
 
-            // Initialize notifications
-            NotificationHelper.createNotificationChannel(this@MainActivity)
+            launch {
+                NotificationHelper.createNotificationChannel(this@MainActivity)
+            }
 
-            // Schedule background refresh
-            val updateInterval = prefManager.updateInterval.first()
-            val workRequest = PeriodicWorkRequestBuilder<RssRefreshWorker>(
-                updateInterval, TimeUnit.MINUTES
-            ).build()
-            WorkManager.getInstance(this@MainActivity).enqueueUniquePeriodicWork(
-                "rss_refresh",
-                ExistingPeriodicWorkPolicy.KEEP,
-                workRequest
-            )
+            launch {
+                val updateInterval = prefManager.updateInterval.first()
+                val workRequest = PeriodicWorkRequestBuilder<RssRefreshWorker>(
+                    updateInterval, TimeUnit.MINUTES
+                ).build()
+                WorkManager.getInstance(this@MainActivity).enqueueUniquePeriodicWork(
+                    "rss_refresh",
+                    ExistingPeriodicWorkPolicy.KEEP,
+                    workRequest
+                )
+            }
 
-            // Initial refresh on startup
-            val sources = repository.getAllSources().first()
-            val cacheSize = prefManager.maxCacheSize.first()
-            sources.forEach { source ->
-                repository.fetchAndCache(source.id, cacheSize)
+            // Initial refresh in background (non-blocking)
+            launch(kotlinx.coroutines.Dispatchers.IO) {
+                val sources = repository.getAllSources().first()
+                val cacheSize = prefManager.maxCacheSize.first()
+                sources.forEach { source ->
+                    repository.fetchAndCache(source.id, cacheSize)
+                }
             }
         }
 

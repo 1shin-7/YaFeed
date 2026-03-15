@@ -2,13 +2,13 @@ package com.w57736e.yafeed.presentation.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material3.*
 import com.w57736e.yafeed.data.repository.DateUtils
 import com.w57736e.yafeed.domain.model.RssArticle
-import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @Composable
 fun ArticleCard(
@@ -16,19 +16,26 @@ fun ArticleCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val formattedDate = DateUtils.formatRssDate(article.pubDate)
+    val formattedDate = remember(article.pubDate) { DateUtils.formatRssDate(article.pubDate) }
     val author = article.author ?: "Unknown"
+    val cleanTitle = remember(article.title) {
+        article.title
+            .replace("&amp;", "&")
+            .replace("&lt;", "<")
+            .replace("&gt;", ">")
+            .replace("&quot;", "\"")
+            .replace("&#39;", "'")
+    }
 
     TitleCard(
         onClick = onClick,
         title = {
-            // 使用 MarkdownText 处理标题，以防标题包含 HTML 实体
-            MarkdownText(
-                markdown = article.title,
+            Text(
+                text = cleanTitle,
                 maxLines = 2,
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface
             )
         },
         subtitle = {

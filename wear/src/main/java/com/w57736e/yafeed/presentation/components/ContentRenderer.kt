@@ -32,7 +32,7 @@ fun ContentRenderer(
     modifier: Modifier = Modifier,
     showImages: Boolean = true
 ) {
-    val blocks = parseContent(content)
+    val blocks = androidx.compose.runtime.remember(content) { parseContent(content) }
     val context = LocalContext.current
 
     Column(modifier = modifier) {
@@ -52,7 +52,7 @@ fun ContentRenderer(
                         AsyncImage(
                             model = ImageRequest.Builder(context)
                                 .data(block.content)
-                                .size(Size(540, 540))
+                                .size(Size(300, 300))
                                 .build(),
                             contentDescription = null,
                             modifier = Modifier

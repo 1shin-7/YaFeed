@@ -128,7 +128,10 @@ fun NewsDetailScreen(
                     // 1. 底层图片
                     if (article.imageUrl != null && showImages) {
                         AsyncImage(
-                            model = article.imageUrl,
+                            model = coil.request.ImageRequest.Builder(androidx.compose.ui.platform.LocalContext.current)
+                                .data(article.imageUrl)
+                                .size(coil.size.Size(400, 400))
+                                .build(),
                             contentDescription = null,
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop
