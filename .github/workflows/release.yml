@@ -55,6 +55,10 @@ jobs:
           cd wear/build/outputs/apk/release
           mv wear-release.apk yafeed-wear-release.apk
 
+      - uses: release-drafter/release-drafter@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: softprops/action-gh-release@v2
         with:
           files: |
