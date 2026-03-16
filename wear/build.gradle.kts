@@ -1,7 +1,17 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+}
+
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties()
+val useKeystore = keystorePropertiesFile.exists()
+
+if (useKeystore) {
+    keystoreProperties.load(keystorePropertiesFile.inputStream())
 }
 
 extensions.configure<com.android.build.api.dsl.ApplicationExtension> {
@@ -15,8 +25,19 @@ extensions.configure<com.android.build.api.dsl.ApplicationExtension> {
         minSdk = 28
         targetSdk = 36
         versionCode = 1
-        versionName = "1.2.1"
+        versionName = "1.3.1"
 
+    }
+
+    signingConfigs {
+        if (useKeystore) {
+            create("release") {
+                storeFile = file(keystoreProperties["storeFile"] as String)
+                storePassword = keystoreProperties["storePassword"] as String
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+            }
+        }
     }
 
     buildTypes {
@@ -27,15 +48,9 @@ extensions.configure<com.android.build.api.dsl.ApplicationExtension> {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-        }
-    }
-
-    splits {
-        abi {
-            isEnable = true
-            reset()
-            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-            isUniversalApk = true
+            if (useKeystore) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
 

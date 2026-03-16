@@ -26,3 +26,8 @@ skills-lock.json
 
 # Libs for search ref
 libs_/
+
+# Signing
+keystore.properties
+*.jks
+*.keystore
