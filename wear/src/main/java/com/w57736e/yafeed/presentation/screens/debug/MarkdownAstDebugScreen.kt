@@ -3,6 +3,7 @@ package com.w57736e.yafeed.presentation.screens.debug
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -109,25 +110,31 @@ fun main() {
 Inline HTML: <strong>bold</strong> <em>italic</em> <code>code</code>
 """.trimIndent()
 
-    val flavour = GFMFlavourDescriptor()
-    val parser = MarkdownParser(flavour)
-    val tree = parser.buildMarkdownTreeFromString(markdown)
+    val nodes = remember {
+        val flavour = GFMFlavourDescriptor()
+        val parser = MarkdownParser(flavour)
+        val tree = parser.buildMarkdownTreeFromString(markdown)
 
-    val nodes = mutableListOf<String>()
-    fun traverse(node: org.intellij.markdown.ast.ASTNode, depth: Int = 0) {
-        val indent = "  ".repeat(depth)
-        val text = markdown.substring(node.startOffset, node.endOffset).take(30).replace("\n", "\\n")
-        nodes.add("$indent${node.type} [$text]")
-        node.children.forEach { traverse(it, depth + 1) }
+        val nodeList = mutableListOf<String>()
+        fun traverse(node: org.intellij.markdown.ast.ASTNode, depth: Int = 0) {
+            val indent = "  ".repeat(depth)
+            val text = markdown.substring(node.startOffset, node.endOffset).take(30).replace("\n", "\\n")
+            nodeList.add("$indent${node.type} [$text]")
+            node.children.forEach { traverse(it, depth + 1) }
+        }
+        traverse(tree)
+        nodeList
     }
-    traverse(tree)
 
     ScreenScaffold(scrollState = scrollState) {
         ScalingLazyColumn(
             modifier = Modifier.fillMaxSize(),
             state = scrollState
         ) {
-            items(nodes.size) { index ->
+            items(
+                count = nodes.size,
+                key = { it }
+            ) { index ->
                 Text(
                     text = nodes[index],
                     fontSize = 10.sp,

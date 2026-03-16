@@ -28,6 +28,7 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScalingLazyListState()
+    val chunkedSources = remember(uiState.sources) { uiState.sources.chunked(2) }
 
     ScreenScaffold(
         scrollState = scrollState,
@@ -73,8 +74,10 @@ fun HomeScreen(
 
                 if (uiState.isGridView) {
                     // Manual 2-column grid in TransformingLazyColumn
-                    val chunkedSources = uiState.sources.chunked(2)
-                    items(chunkedSources) { rowSources ->
+                    items(
+                        items = chunkedSources,
+                        key = { it.firstOrNull()?.id ?: 0 }
+                    ) { rowSources ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -95,7 +98,10 @@ fun HomeScreen(
                         }
                     }
                 } else {
-                    items(uiState.sources) { source ->
+                    items(
+                        items = uiState.sources,
+                        key = { it.id }
+                    ) { source ->
                         SourceCard(
                             source = source,
                             onClick = { onSourceClick(source.id) },

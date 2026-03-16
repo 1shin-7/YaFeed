@@ -64,10 +64,12 @@ fun NewsListScreen(
                     items = uiState.articles,
                     key = { it.link ?: it.title }
                 ) { article ->
-                    val index = uiState.articles.indexOf(article)
                     ArticleCard(
                         article = article,
-                        onClick = { onArticleClick(index) },
+                        onClick = {
+                            val index = uiState.articles.indexOf(article)
+                            onArticleClick(index)
+                        },
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                 }

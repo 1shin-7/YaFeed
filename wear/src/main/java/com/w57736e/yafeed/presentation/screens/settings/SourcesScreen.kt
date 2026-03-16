@@ -98,7 +98,10 @@ fun SourcesScreen(
                 Text("News Sources", style = MaterialTheme.typography.titleMedium)
             }
 
-            items(sources) { source ->
+            items(
+                items = sources,
+                key = { it.id }
+            ) { source ->
                 SplitActionButton(
                     label = source.name,
                     onContainerClick = { onEditSource(source.id) },

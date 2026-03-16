@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -20,8 +21,11 @@ fun SourceCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-    val updateTime = if (source.lastUpdate > 0) timeFormat.format(Date(source.lastUpdate)) else ""
+    val updateTime = remember(source.lastUpdate) {
+        if (source.lastUpdate > 0) {
+            SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(source.lastUpdate))
+        } else ""
+    }
 
     AppCard(
         onClick = onClick,
