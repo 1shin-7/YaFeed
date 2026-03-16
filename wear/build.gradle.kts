@@ -25,7 +25,7 @@ extensions.configure<com.android.build.api.dsl.ApplicationExtension> {
         minSdk = 28
         targetSdk = 36
         versionCode = 1
-        versionName = "1.3.1"
+        versionName = "1.4.0"
 
     }
 
