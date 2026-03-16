@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">YaFeed</string>
+
+    <!-- Common -->
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="delete">删除</string>
+    <string name="save">保存</string>
+    <string name="add">添加</string>
+    <string name="edit">编辑</string>
+    <string name="view">查看</string>
+
+    <!-- Home -->
+    <string name="settings">设置</string>
+    <string name="list">列表</string>
+    <string name="grid">网格</string>
+
+    <!-- News -->
+    <string name="latest_news">最新消息</string>
+    <string name="no_updates">暂无更新</string>
+    <string name="error_prefix">错误：%s</string>
+
+    <!-- Settings -->
+    <string name="about">关于</string>
+    <string name="news_sources">新闻源</string>
+    <string name="general">常规</string>
+    <string name="ui_settings">界面设置</string>
+    <string name="debug">调试</string>
+
+    <!-- Source Management -->
+    <string name="add_source">添加源</string>
+    <string name="add_rss_source">添加 RSS 源</string>
+    <string name="edit_source">编辑源</string>
+    <string name="delete_source_title">删除 %s？</string>
+    <string name="url">URL</string>
+    <string name="name">名称</string>
+    <string name="name_optional">名称（可选）</string>
+    <string name="notifications">通知</string>
+
+    <!-- General Settings -->
+    <string name="general_settings">常规设置</string>
+
+    <!-- UI Settings -->
+    <string name="show_images">显示图片</string>
+    <string name="use_original_image_preview">预览使用原图</string>
+
+    <!-- Debug -->
+    <string name="markdown_test">Markdown 测试</string>
+    <string name="markdown_ast">Markdown AST</string>
+
+    <!-- Browser -->
+    <string name="no_browser_available">暂无可用浏览器</string>
+    <string name="cannot_open">无法跳转</string>
+
+    <!-- News Detail -->
+    <string name="no_content_available">暂无内容。</string>
+</resources>

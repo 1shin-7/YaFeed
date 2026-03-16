@@ -10,10 +10,12 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material3.*
+import com.w57736e.yafeed.R
 
 @Composable
 fun SettingsScreen(
@@ -33,7 +35,7 @@ fun SettingsScreen(
                 buttonSize = EdgeButtonSize.Small
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("About", style = MaterialTheme.typography.labelSmall)
+                    Text(stringResource(R.string.about), style = MaterialTheme.typography.labelSmall)
                     Icon(
                         Icons.Default.Info,
                         contentDescription = null,
@@ -50,7 +52,7 @@ fun SettingsScreen(
         ) {
             item {
                 Text(
-                    "Settings",
+                    stringResource(R.string.settings),
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
@@ -67,7 +69,7 @@ fun SettingsScreen(
                 ) {
                     Icon(Icons.Default.RssFeed, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("News Sources")
+                    Text(stringResource(R.string.news_sources))
                 }
             }
 
@@ -82,7 +84,7 @@ fun SettingsScreen(
                 ) {
                     Icon(Icons.Default.Settings, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("General")
+                    Text(stringResource(R.string.general))
                 }
             }
 
@@ -97,7 +99,7 @@ fun SettingsScreen(
                 ) {
                     Icon(Icons.Default.Palette, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("UI Settings")
+                    Text(stringResource(R.string.ui_settings))
                 }
             }
 
@@ -113,7 +115,7 @@ fun SettingsScreen(
                     ) {
                         Icon(Icons.Default.BugReport, contentDescription = null)
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Debug")
+                        Text(stringResource(R.string.debug))
                     }
                 }
             }

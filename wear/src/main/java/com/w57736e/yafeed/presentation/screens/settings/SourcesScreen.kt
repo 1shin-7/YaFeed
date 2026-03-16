@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -16,6 +17,7 @@ import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.*
+import com.w57736e.yafeed.R
 import com.w57736e.yafeed.domain.model.RssSource
 import com.w57736e.yafeed.presentation.components.SplitActionButton
 
@@ -85,7 +87,7 @@ fun SourcesScreen(
         scrollState = scrollState,
         edgeButton = {
             EdgeButton(onClick = onNavigateToAddSource) {
-                Text("Add Source")
+                Text(stringResource(R.string.add_source))
             }
         }
     ) {
@@ -95,7 +97,7 @@ fun SourcesScreen(
             contentPadding = PaddingValues(top = 24.dp, start = 12.dp, end = 12.dp, bottom = 24.dp)
         ) {
             item {
-                Text("News Sources", style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.news_sources), style = MaterialTheme.typography.titleMedium)
             }
 
             items(

@@ -6,9 +6,11 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.*
+import com.w57736e.yafeed.R
 
 @Composable
 fun GeneralSettingsScreen(
@@ -31,7 +33,7 @@ fun GeneralSettingsScreen(
             contentPadding = PaddingValues(top = 24.dp, start = 12.dp, end = 12.dp, bottom = 24.dp)
         ) {
             item {
-                Text("General Settings", style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.general_settings), style = MaterialTheme.typography.titleMedium)
             }
 
             item {
@@ -39,7 +41,7 @@ fun GeneralSettingsScreen(
                     checked = notificationEnabled,
                     onCheckedChange = onNotificationEnabledChange,
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                    label = { Text("Notifications") },
+                    label = { Text(stringResource(R.string.notifications)) },
                     icon = { Icon(Icons.Default.Notifications, contentDescription = null) }
                 )
             }

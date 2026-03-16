@@ -6,9 +6,11 @@ import androidx.compose.material.icons.filled.Article
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material3.*
+import com.w57736e.yafeed.R
 
 @Composable
 fun DebugMenuScreen(
@@ -42,7 +44,7 @@ fun DebugMenuScreen(
                 ) {
                     Icon(Icons.Default.Article, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("Markdown Test")
+                    Text(stringResource(R.string.markdown_test))
                 }
             }
 
@@ -57,7 +59,7 @@ fun DebugMenuScreen(
                 ) {
                     Icon(Icons.Default.Article, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("Markdown AST")
+                    Text(stringResource(R.string.markdown_ast))
                 }
             }
         }

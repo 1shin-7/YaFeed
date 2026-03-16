@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -21,6 +22,7 @@ import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.*
 import coil.compose.AsyncImage
+import com.w57736e.yafeed.R
 import com.w57736e.yafeed.domain.model.RssArticle
 import com.w57736e.yafeed.data.repository.DateUtils
 import com.w57736e.yafeed.presentation.components.ImageViewer
@@ -40,7 +42,7 @@ fun NewsDetailScreen(
 ) {
     val scrollState = rememberTransformingLazyColumnState()
     val formattedDate = remember(article.pubDate) { DateUtils.formatRssDateFull(article.pubDate) }
-    val content = article.content ?: "No content available."
+    val content = article.content ?: stringResource(R.string.no_content_available)
     var selectedImageUrl by remember { mutableStateOf<String?>(null) }
     var showNoBrowserDialog by remember { mutableStateOf(false) }
 
@@ -72,15 +74,15 @@ fun NewsDetailScreen(
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Text(
-                        "暂无可用浏览器",
+                        stringResource(R.string.no_browser_available),
                         style = MaterialTheme.typography.titleMedium
                     )
                     Text(
-                        "无法跳转",
+                        stringResource(R.string.cannot_open),
                         style = MaterialTheme.typography.bodySmall
                     )
                     Button(onClick = { showNoBrowserDialog = false }) {
-                        Text("确定")
+                        Text(stringResource(R.string.ok))
                     }
                 }
             }
@@ -109,7 +111,7 @@ fun NewsDetailScreen(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        "View",
+                        stringResource(R.string.view),
                         style = MaterialTheme.typography.labelSmall
                     )
                 }

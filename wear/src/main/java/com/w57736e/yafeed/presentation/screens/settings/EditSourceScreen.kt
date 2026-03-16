@@ -8,10 +8,12 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.*
+import com.w57736e.yafeed.R
 import com.w57736e.yafeed.domain.model.RssSource
 import kotlinx.coroutines.launch
 
@@ -53,12 +55,12 @@ fun EditSourceScreen(
             contentPadding = PaddingValues(top = 24.dp, start = 12.dp, end = 12.dp, bottom = 64.dp)
         ) {
             item {
-                Text("Edit Source", style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.edit_source), style = MaterialTheme.typography.titleMedium)
             }
 
             item {
                 Column(modifier = Modifier.fillMaxWidth().padding(top = 12.dp)) {
-                    Text("Name", style = MaterialTheme.typography.labelSmall)
+                    Text(stringResource(R.string.name), style = MaterialTheme.typography.labelSmall)
                     Spacer(modifier = Modifier.height(4.dp))
                     Box(
                         modifier = Modifier
@@ -84,7 +86,7 @@ fun EditSourceScreen(
 
             item {
                 Column(modifier = Modifier.fillMaxWidth().padding(top = 12.dp)) {
-                    Text("URL", style = MaterialTheme.typography.labelSmall)
+                    Text(stringResource(R.string.url), style = MaterialTheme.typography.labelSmall)
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         source.url,
@@ -99,7 +101,7 @@ fun EditSourceScreen(
                     checked = notificationEnabled,
                     onCheckedChange = { notificationEnabled = it },
                     modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
-                    label = { Text("Notifications") },
+                    label = { Text(stringResource(R.string.notifications)) },
                     icon = { Icon(Icons.Default.Notifications, contentDescription = null) }
                 )
             }

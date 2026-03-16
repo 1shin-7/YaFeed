@@ -8,9 +8,11 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.*
+import com.w57736e.yafeed.R
 
 @Composable
 fun UiSettingsScreen(
@@ -29,7 +31,7 @@ fun UiSettingsScreen(
             contentPadding = PaddingValues(top = 24.dp, start = 12.dp, end = 12.dp, bottom = 24.dp)
         ) {
             item {
-                Text("UI Settings", style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.ui_settings), style = MaterialTheme.typography.titleMedium)
             }
 
             item {
@@ -37,7 +39,7 @@ fun UiSettingsScreen(
                     checked = showImages,
                     onCheckedChange = onShowImagesChange,
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                    label = { Text("Show Images") },
+                    label = { Text(stringResource(R.string.show_images)) },
                     icon = { Icon(Icons.Default.Image, contentDescription = null) },
                     colors = SwitchButtonDefaults.switchButtonColors(
                         checkedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -51,7 +53,7 @@ fun UiSettingsScreen(
                     checked = useOriginalImagePreview,
                     onCheckedChange = onUseOriginalImagePreviewChange,
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                    label = { Text("预览使用原图") },
+                    label = { Text(stringResource(R.string.use_original_image_preview)) },
                     colors = SwitchButtonDefaults.switchButtonColors(
                         checkedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                         checkedContentColor = MaterialTheme.colorScheme.onSurface

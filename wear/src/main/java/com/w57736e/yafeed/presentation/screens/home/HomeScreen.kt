@@ -10,12 +10,14 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material3.*
+import com.w57736e.yafeed.R
 import com.w57736e.yafeed.presentation.components.SourceCard
 import com.w57736e.yafeed.presentation.components.SourceGridItem
 
@@ -39,7 +41,7 @@ fun HomeScreen(
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        if (uiState.isGridView) "List" else "Grid",
+                        if (uiState.isGridView) stringResource(R.string.list) else stringResource(R.string.grid),
                         style = MaterialTheme.typography.labelSmall
                     )
                     Icon(
@@ -119,7 +121,7 @@ fun HomeScreen(
                     ) {
                         Icon(Icons.Default.Settings, contentDescription = null)
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Settings")
+                        Text(stringResource(R.string.settings))
                     }
                 }
             }

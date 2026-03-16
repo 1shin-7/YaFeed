@@ -1,10 +1,57 @@
 <resources>
     <string name="app_name">YaFeed</string>
-    <!--
-    This string is used for square devices and overridden by hello_world in
-    values-round/strings.xml for round devices.
-    -->
-    <string name="hello_world">From the Square world,\nHello, %1$s!</string>
-    <string name="tile_label">Example tile</string>
-    <string name="complication_label">Example complication</string>
+
+    <!-- Common -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="save">Save</string>
+    <string name="add">Add</string>
+    <string name="edit">Edit</string>
+    <string name="view">View</string>
+
+    <!-- Home -->
+    <string name="settings">Settings</string>
+    <string name="list">List</string>
+    <string name="grid">Grid</string>
+
+    <!-- News -->
+    <string name="latest_news">Latest News</string>
+    <string name="no_updates">No updates</string>
+    <string name="error_prefix">Error: %s</string>
+
+    <!-- Settings -->
+    <string name="about">About</string>
+    <string name="news_sources">News Sources</string>
+    <string name="general">General</string>
+    <string name="ui_settings">UI Settings</string>
+    <string name="debug">Debug</string>
+
+    <!-- Source Management -->
+    <string name="add_source">Add Source</string>
+    <string name="add_rss_source">Add RSS Source</string>
+    <string name="edit_source">Edit Source</string>
+    <string name="delete_source_title">Delete %s?</string>
+    <string name="url">URL</string>
+    <string name="name">Name</string>
+    <string name="name_optional">Name (Optional)</string>
+    <string name="notifications">Notifications</string>
+
+    <!-- General Settings -->
+    <string name="general_settings">General Settings</string>
+
+    <!-- UI Settings -->
+    <string name="show_images">Show Images</string>
+    <string name="use_original_image_preview">Use Original Image Preview</string>
+
+    <!-- Debug -->
+    <string name="markdown_test">Markdown Test</string>
+    <string name="markdown_ast">Markdown AST</string>
+
+    <!-- Browser -->
+    <string name="no_browser_available">No browser available</string>
+    <string name="cannot_open">Cannot open</string>
+
+    <!-- News Detail -->
+    <string name="no_content_available">No content available.</string>
 </resources>

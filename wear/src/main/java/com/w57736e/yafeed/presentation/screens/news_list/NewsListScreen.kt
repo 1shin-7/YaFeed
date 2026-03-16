@@ -5,11 +5,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material3.*
+import com.w57736e.yafeed.R
 import com.w57736e.yafeed.presentation.components.ArticleCard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,7 +40,7 @@ fun NewsListScreen(
             ) {
                 item {
                     Text(
-                        uiState.source?.name ?: "Latest News",
+                        uiState.source?.name ?: stringResource(R.string.latest_news),
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(bottom = 12.dp)
@@ -54,7 +56,7 @@ fun NewsListScreen(
             } else if (uiState.articles.isEmpty() && uiState.error != null) {
                 item {
                     Text(
-                        "Error: ${uiState.error}", 
+                        stringResource(R.string.error_prefix, uiState.error ?: ""),
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodySmall
                     )

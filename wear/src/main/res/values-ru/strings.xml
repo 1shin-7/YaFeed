@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">YaFeed</string>
+
+    <!-- Common -->
+    <string name="ok">ОК</string>
+    <string name="cancel">Отмена</string>
+    <string name="delete">Удалить</string>
+    <string name="save">Сохранить</string>
+    <string name="add">Добавить</string>
+    <string name="edit">Изменить</string>
+    <string name="view">Просмотр</string>
+
+    <!-- Home -->
+    <string name="settings">Настройки</string>
+    <string name="list">Список</string>
+    <string name="grid">Сетка</string>
+
+    <!-- News -->
+    <string name="latest_news">Последние новости</string>
+    <string name="no_updates">Нет обновлений</string>
+    <string name="error_prefix">Ошибка: %s</string>
+
+    <!-- Settings -->
+    <string name="about">О программе</string>
+    <string name="news_sources">Источники новостей</string>
+    <string name="general">Общие</string>
+    <string name="ui_settings">Настройки интерфейса</string>
+    <string name="debug">Отладка</string>
+
+    <!-- Source Management -->
+    <string name="add_source">Добавить источник</string>
+    <string name="add_rss_source">Добавить RSS-источник</string>
+    <string name="edit_source">Изменить источник</string>
+    <string name="delete_source_title">Удалить %s?</string>
+    <string name="url">URL</string>
+    <string name="name">Название</string>
+    <string name="name_optional">Название (необязательно)</string>
+    <string name="notifications">Уведомления</string>
+
+    <!-- General Settings -->
+    <string name="general_settings">Общие настройки</string>
+
+    <!-- UI Settings -->
+    <string name="show_images">Показывать изображения</string>
+    <string name="use_original_image_preview">Использовать оригинальное изображение для предпросмотра</string>
+
+    <!-- Debug -->
+    <string name="markdown_test">Тест Markdown</string>
+    <string name="markdown_ast">Markdown AST</string>
+
+    <!-- Browser -->
+    <string name="no_browser_available">Браузер недоступен</string>
+    <string name="cannot_open">Невозможно открыть</string>
+
+    <!-- News Detail -->
+    <string name="no_content_available">Контент недоступен.</string>
+</resources>
