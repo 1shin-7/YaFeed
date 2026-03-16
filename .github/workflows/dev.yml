@@ -52,47 +52,14 @@ jobs:
       - uses: actions/upload-artifact@v6
         if: always()
         with:
-          name: yafeed-mobile-debug-arm64-v8a
-          path: mobile/build/outputs/apk/debug/yafeed-mobile-debug-*arm64-v8a*.apk
+          name: yafeed-mobile-debug
+          path: mobile/build/outputs/apk/debug/yafeed-mobile-debug-*.apk
           retention-days: 7
-          if-no-files-found: ignore
 
       - uses: actions/upload-artifact@v6
         if: always()
         with:
-          name: yafeed-mobile-debug-armeabi-v7a
-          path: mobile/build/outputs/apk/debug/yafeed-mobile-debug-*armeabi-v7a*.apk
+          name: yafeed-wear-debug
+          path: wear/build/outputs/apk/debug/yafeed-wear-debug-*.apk
           retention-days: 7
-          if-no-files-found: ignore
 
-      - uses: actions/upload-artifact@v6
-        if: always()
-        with:
-          name: yafeed-mobile-debug-universal
-          path: mobile/build/outputs/apk/debug/yafeed-mobile-debug-*universal*.apk
-          retention-days: 7
-          if-no-files-found: ignore
-
-      - uses: actions/upload-artifact@v6
-        if: always()
-        with:
-          name: yafeed-wear-debug-arm64-v8a
-          path: wear/build/outputs/apk/debug/yafeed-wear-debug-*arm64-v8a*.apk
-          retention-days: 7
-          if-no-files-found: ignore
-
-      - uses: actions/upload-artifact@v6
-        if: always()
-        with:
-          name: yafeed-wear-debug-armeabi-v7a
-          path: wear/build/outputs/apk/debug/yafeed-wear-debug-*armeabi-v7a*.apk
-          retention-days: 7
-          if-no-files-found: ignore
-
-      - uses: actions/upload-artifact@v6
-        if: always()
-        with:
-          name: yafeed-wear-debug-universal
-          path: wear/build/outputs/apk/debug/yafeed-wear-debug-*universal*.apk
-          retention-days: 7
-          if-no-files-found: ignore
