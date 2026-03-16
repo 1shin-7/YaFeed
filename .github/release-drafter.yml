@@ -1,0 +1,50 @@
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+categories:
+  - title: '✨ Features'
+    labels:
+      - 'feature'
+    collapse-after: 5
+    commits:
+      - ':sparkles: feat:'
+      - ':tada: initial:'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'bug'
+    collapse-after: 5
+    commits:
+      - ':bug: fix:'
+  - title: '⚡ Performance'
+    labels:
+      - 'performance'
+    collapse-after: 5
+    commits:
+      - ':zap: perf:'
+  - title: '🔧 Configuration'
+    labels:
+      - 'chore'
+    collapse-after: 5
+    commits:
+      - ':wrench:'
+      - ':bookmark: chore:'
+  - title: '👷 CI/CD'
+    collapse-after: 5
+    commits:
+      - ':construction_worker: ci:'
+  - title: '🎨 Style'
+    collapse-after: 5
+    commits:
+      - ':art: style:'
+  - title: '⬆️ Dependencies'
+    collapse-after: 5
+    commits:
+      - ':arrow_up:'
+commitish:
+  pattern: '^:([\w_]+):\s+(\w+):\s+(.+)$'
+  title: '$3'
+change-template: '- $TITLE'
+template: |
+  ## What's Changed
+
+  $CHANGES
+
