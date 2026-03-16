@@ -30,16 +30,12 @@ jobs:
       - name: Rename Mobile APKs
         run: |
           cd mobile/build/outputs/apk/debug
-          for file in *.apk; do
-            mv "$file" "yafeed-mobile-debug-${file}"
-          done
+          mv mobile-debug.apk yafeed-mobile-debug.apk
 
       - name: Rename Wear APKs
         run: |
           cd wear/build/outputs/apk/debug
-          for file in *.apk; do
-            mv "$file" "yafeed-wear-debug-${file}"
-          done
+          mv wear-debug.apk yafeed-wear-debug.apk
 
       - name: Upload Mobile APKs
         run: |

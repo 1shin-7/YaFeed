@@ -48,16 +48,12 @@ jobs:
       - name: Rename Mobile APKs
         run: |
           cd mobile/build/outputs/apk/release
-          for file in *.apk; do
-            mv "$file" "yafeed-mobile-${file}"
-          done
+          mv mobile-release.apk yafeed-mobile-release.apk
 
       - name: Rename Wear APKs
         run: |
           cd wear/build/outputs/apk/release
-          for file in *.apk; do
-            mv "$file" "yafeed-wear-${file}"
-          done
+          mv wear-release.apk yafeed-wear-release.apk
 
       - uses: softprops/action-gh-release@v2
         with:
