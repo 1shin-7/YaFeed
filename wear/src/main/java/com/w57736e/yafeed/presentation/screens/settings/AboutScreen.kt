@@ -1,5 +1,6 @@
 package com.w57736e.yafeed.presentation.screens.settings
 
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -22,6 +23,13 @@ fun AboutScreen(onDebugModeEnabled: () -> Unit) {
     var tapCount by remember { mutableIntStateOf(0) }
     val scrollState = rememberTransformingLazyColumnState()
     val context = LocalContext.current
+    val versionName = remember {
+        try {
+            context.packageManager.getPackageInfo(context.packageName, 0).versionName
+        } catch (e: Exception) {
+            "Unknown"
+        }
+    }
 
     ScreenScaffold(scrollState = scrollState) {
         TransformingLazyColumn(
@@ -47,7 +55,7 @@ fun AboutScreen(onDebugModeEnabled: () -> Unit) {
                         textAlign = TextAlign.Center
                     )
                     Text(
-                        "v1.4.0",
+                        "v$versionName",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.pointerInput(Unit) {
@@ -60,6 +68,11 @@ fun AboutScreen(onDebugModeEnabled: () -> Unit) {
                                 }
                             }
                         }
+                    )
+                    Text(
+                        "Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
