@@ -29,24 +29,17 @@ class NewsListViewModel(
     private val _sourceId = MutableStateFlow<Int?>(null)
     private val _isRefreshing = MutableStateFlow(false)
 
-    val uiState: StateFlow<NewsListUiState> = combine(
-        _sourceId.flatMapLatest { id ->
-            if (id == null) flowOf(NewsListUiState())
-            else {
-                combine(
-                    repository.getCachedArticles(id),
-                    flow { emit(repository.getSourceById(id)) }
-                ) { articles, source ->
-                    NewsListUiState(
-                        articles = articles,
-                        source = source,
-                        isLoading = false
-                    )
-                }
+    val uiState: StateFlow<NewsListUiState> = _sourceId.flatMapLatest { id ->
+        if (id == null) flowOf(NewsListUiState())
+        else {
+            flow {
+                val isOnline = isNetworkAvailable(context)
+                val articles = repository.getArticlesForDisplay(id, isOnline)
+                val source = repository.getSourceById(id)
+                emit(NewsListUiState(articles = articles, source = source, isLoading = false))
             }
-        },
-        _isRefreshing
-    ) { state, refreshing ->
+        }
+    }.combine(_isRefreshing) { state, refreshing ->
         state.copy(isLoading = refreshing)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), NewsListUiState())
 

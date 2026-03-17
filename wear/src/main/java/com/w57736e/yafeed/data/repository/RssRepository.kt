@@ -7,6 +7,7 @@ import com.w57736e.yafeed.domain.model.ArticleEntity
 import com.w57736e.yafeed.domain.model.RssArticle
 import com.w57736e.yafeed.domain.model.RssSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.net.URI
 
@@ -42,6 +43,29 @@ class RssRepository(
     fun getCachedArticles(sourceId: Int): Flow<List<RssArticle>> {
         return articleDao.getArticlesBySource(sourceId).map { entities ->
             entities.map { it.toDomain() }
+        }
+    }
+
+    suspend fun getArticlesForDisplay(sourceId: Int, isOnline: Boolean): List<RssArticle> {
+        return if (isOnline) {
+            try {
+                val source = sourceDao.getSourceById(sourceId) ?: return getCachedArticles(sourceId).map { it }.first()
+                val channel = rssParser.getRssChannel(source.url)
+                channel.items.map { item ->
+                    RssArticle(
+                        title = item.title ?: "No Title",
+                        link = item.link ?: "",
+                        content = item.content ?: item.description,
+                        pubDate = DateUtils.parseToTimestamp(item.pubDate),
+                        imageUrl = item.image,
+                        author = item.author
+                    )
+                }
+            } catch (e: Exception) {
+                getCachedArticles(sourceId).map { it }.first()
+            }
+        } else {
+            getCachedArticles(sourceId).map { it }.first()
         }
     }
 
