@@ -44,8 +44,11 @@ class NewsListViewModel(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), NewsListUiState())
 
     fun setSourceId(id: Int) {
+        val isNewSource = _sourceId.value != id
         _sourceId.value = id
-        refreshArticles()
+        if (isNewSource) {
+            refreshArticles()
+        }
     }
 
     fun refreshArticles() {
