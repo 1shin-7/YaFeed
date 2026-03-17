@@ -24,8 +24,8 @@ extensions.configure<com.android.build.api.dsl.ApplicationExtension> {
         applicationId = "com.w57736e.yafeed"
         minSdk = 28
         targetSdk = 36
-        versionCode = 2
-        versionName = "1.4.1"
+        versionCode = 3
+        versionName = "1.4.3"
 
     }
 
