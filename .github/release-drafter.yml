@@ -39,9 +39,6 @@ categories:
     collapse-after: 5
     commits:
       - ':arrow_up:'
-commitish:
-  pattern: '^:([\w_]+):\s+(\w+):\s+(.+)$'
-  title: '$3'
 change-template: '- $TITLE'
 template: |
   ## What's Changed
