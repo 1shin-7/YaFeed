@@ -3,6 +3,7 @@ package com.w57736e.yafeed.presentation.screens.debug
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Article
+import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -15,7 +16,8 @@ import com.w57736e.yafeed.R
 @Composable
 fun DebugMenuScreen(
     onMarkdownTestClick: () -> Unit,
-    onMarkdownAstClick: () -> Unit
+    onMarkdownAstClick: () -> Unit,
+    onNavigateToConnectionDebug: () -> Unit
 ) {
     val scrollState = rememberScalingLazyListState()
 
@@ -60,6 +62,21 @@ fun DebugMenuScreen(
                     Icon(Icons.Default.Article, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(stringResource(R.string.markdown_ast))
+                }
+            }
+
+            item {
+                Button(
+                    onClick = onNavigateToConnectionDebug,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    )
+                ) {
+                    Icon(Icons.Default.PhoneAndroid, contentDescription = null)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(stringResource(R.string.connection_debug))
                 }
             }
         }

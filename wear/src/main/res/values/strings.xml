@@ -47,6 +47,15 @@
     <!-- Debug -->
     <string name="markdown_test">Markdown Test</string>
     <string name="markdown_ast">Markdown AST</string>
+    <string name="connection_debug">Connection Debug</string>
+    <string name="connection_status">Connection Status</string>
+    <string name="manual_sync">Manual Sync</string>
+    <string name="test_actions">Test Actions</string>
+    <string name="sync_history">Sync History</string>
+    <string name="sync_settings">Sync Settings</string>
+    <string name="sync_sources">Sync Sources</string>
+    <string name="open_page_on_phone">Open Page on Phone</string>
+    <string name="request_text_input">Request Text Input</string>
 
     <!-- Browser -->
     <string name="no_browser_available">No browser available</string>

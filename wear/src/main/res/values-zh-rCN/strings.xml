@@ -48,6 +48,15 @@
     <!-- Debug -->
     <string name="markdown_test">Markdown 测试</string>
     <string name="markdown_ast">Markdown AST</string>
+    <string name="connection_debug">连接调试</string>
+    <string name="connection_status">连接状态</string>
+    <string name="manual_sync">手动同步</string>
+    <string name="test_actions">测试操作</string>
+    <string name="sync_history">同步历史</string>
+    <string name="sync_settings">同步设置</string>
+    <string name="sync_sources">同步源</string>
+    <string name="open_page_on_phone">在手机上打开页面</string>
+    <string name="request_text_input">请求文本输入</string>
 
     <!-- Browser -->
     <string name="no_browser_available">暂无可用浏览器</string>

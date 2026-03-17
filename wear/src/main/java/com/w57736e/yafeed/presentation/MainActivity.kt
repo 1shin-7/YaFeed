@@ -26,6 +26,11 @@ import com.w57736e.yafeed.presentation.screens.news_detail.NewsDetailScreen
 import com.w57736e.yafeed.presentation.screens.news_list.NewsListScreen
 import com.w57736e.yafeed.presentation.screens.news_list.NewsListViewModel
 import com.w57736e.yafeed.presentation.screens.settings.SettingsScreen
+import com.w57736e.yafeed.presentation.screens.debug.WearConnectionDebugScreen
+import com.w57736e.yafeed.presentation.screens.debug.WearConnectionDebugViewModel
+import com.w57736e.yafeed.sync.MobileSyncManager
+import com.w57736e.yafeed.sync.WearConnectionStateManager
+import com.w57736e.yafeed.sync.WearMessageHandler
 import com.w57736e.yafeed.presentation.theme.YaFeedTheme
 import com.w57736e.yafeed.image.CoilImageLoaderFactory
 import com.w57736e.yafeed.utils.BrowserHelper
@@ -113,6 +118,13 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
 
     val homeViewModel = remember { HomeViewModel(repository, prefManager) }
     val newsListViewModel = remember { NewsListViewModel(repository, prefManager, context) }
+
+    val connectionManager = remember { WearConnectionStateManager(context) }
+    val syncManager = remember { MobileSyncManager(context, connectionManager) }
+    val messageHandler = remember { WearMessageHandler(context) }
+    val connectionDebugViewModel = remember {
+        WearConnectionDebugViewModel(connectionManager, syncManager, messageHandler, prefManager, repository)
+    }
 
     YaFeedTheme {
         AppScaffold {
@@ -306,7 +318,8 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
             composable("settings_debug") {
                 com.w57736e.yafeed.presentation.screens.debug.DebugMenuScreen(
                     onMarkdownTestClick = { navController.navigate("debug_markdown_test") },
-                    onMarkdownAstClick = { navController.navigate("debug_markdown_ast") }
+                    onMarkdownAstClick = { navController.navigate("debug_markdown_ast") },
+                    onNavigateToConnectionDebug = { navController.navigate("connection_debug") }
                 )
             }
 
@@ -316,6 +329,10 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
 
             composable("debug_markdown_ast") {
                 com.w57736e.yafeed.presentation.screens.debug.MarkdownAstDebugScreen()
+            }
+
+            composable("connection_debug") {
+                WearConnectionDebugScreen(viewModel = connectionDebugViewModel)
             }
         }
         }
