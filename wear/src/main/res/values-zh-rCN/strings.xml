@@ -55,4 +55,8 @@
 
     <!-- News Detail -->
     <string name="no_content_available">暂无内容。</string>
+
+    <!-- Wear OS Components -->
+    <string name="complication_label">YaFeed</string>
+    <string name="tile_label">YaFeed</string>
 </resources>
