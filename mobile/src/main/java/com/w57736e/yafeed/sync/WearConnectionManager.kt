@@ -12,6 +12,29 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.tasks.await
 
+enum class ConnectionStatus {
+    DISCONNECTED, SEARCHING, CONNECTED
+}
+
+data class ConnectedNode(
+    val id: String,
+    val displayName: String,
+    val isNearby: Boolean
+)
+
+data class ConnectionState(
+    val status: ConnectionStatus,
+    val nodes: List<ConnectedNode>,
+    val lastCheckTime: Long
+)
+
+data class SyncEvent(
+    val timestamp: Long,
+    val type: String,
+    val success: Boolean,
+    val message: String
+)
+
 class WearConnectionManager(context: Context) {
     private val capabilityClient: CapabilityClient = Wearable.getCapabilityClient(context)
     private val nodeClient: NodeClient = Wearable.getNodeClient(context)
