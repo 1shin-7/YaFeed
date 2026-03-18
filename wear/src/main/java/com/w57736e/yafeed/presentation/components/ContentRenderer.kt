@@ -59,11 +59,10 @@ fun ContentRenderer(
                             contentDescription = null,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(120.dp)
                                 .padding(vertical = 8.dp)
                                 .clip(RoundedCornerShape(4.dp))
                                 .clickable { onImageClick(block.content) },
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.FillWidth
                         )
                     }
                 }

@@ -21,7 +21,7 @@ fun WearHtmlImage(src: String, alt: String) {
             .data(transformedUrl)
             .build(),
         contentDescription = alt,
-        modifier = Modifier.fillMaxWidth().height(200.dp),
-        contentScale = ContentScale.Fit
+        modifier = Modifier.fillMaxWidth(),
+        contentScale = ContentScale.FillWidth
     )
 }

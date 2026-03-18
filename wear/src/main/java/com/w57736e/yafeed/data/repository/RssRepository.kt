@@ -1,5 +1,6 @@
 package com.w57736e.yafeed.data.repository
 
+import android.util.Log
 import com.prof18.rssparser.RssParser
 import com.w57736e.yafeed.data.local.ArticleDao
 import com.w57736e.yafeed.data.local.FavoriteDao
@@ -19,6 +20,9 @@ class RssRepository(
     private val favoriteDao: FavoriteDao,
     private val rssParser: RssParser
 ) {
+    companion object {
+        private const val TAG = "RssRepository"
+    }
     fun getAllSources(): Flow<List<RssSource>> = sourceDao.getAllSources()
 
     suspend fun addSource(url: String, name: String, notificationEnabled: Boolean = true) {
@@ -69,6 +73,7 @@ class RssRepository(
                     )
                 }
             } catch (e: Exception) {
+                Log.e(TAG, "Failed to fetch articles for source $sourceId: ${e.message}", e)
                 getCachedArticles(sourceId).map { it }.first()
             }
         } else {
@@ -124,26 +129,31 @@ class RssRepository(
             )
             sourceDao.updateSource(updatedSource)
         } catch (e: Exception) {
-            // Log or handle error
+            Log.e(TAG, "Failed to fetch and cache for source ${source.url}: ${e.message}", e)
         }
     }
 
     // Legacy method for direct fetch if needed
     suspend fun fetchArticles(url: String): List<RssArticle> {
-        val channel = rssParser.getRssChannel(url)
-        return channel.items.map { item ->
-            val title = item.title ?: "No Title"
-            val timestamp = DateUtils.parseToTimestamp(item.pubDate)
-            RssArticle(
-                title = title,
-                link = item.link ?: "",
-                content = item.content ?: item.description,
-                pubDate = timestamp,
-                imageUrl = item.image,
-                author = item.author,
-                cleanTitle = cleanHtmlEntities(title),
-                formattedDate = DateUtils.formatRssDate(timestamp)
-            )
+        return try {
+            val channel = rssParser.getRssChannel(url)
+            channel.items.map { item ->
+                val title = item.title ?: "No Title"
+                val timestamp = DateUtils.parseToTimestamp(item.pubDate)
+                RssArticle(
+                    title = title,
+                    link = item.link ?: "",
+                    content = item.content ?: item.description,
+                    pubDate = timestamp,
+                    imageUrl = item.image,
+                    author = item.author,
+                    cleanTitle = cleanHtmlEntities(title),
+                    formattedDate = DateUtils.formatRssDate(timestamp)
+                )
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to fetch articles from $url: ${e.message}", e)
+            emptyList()
         }
     }
 

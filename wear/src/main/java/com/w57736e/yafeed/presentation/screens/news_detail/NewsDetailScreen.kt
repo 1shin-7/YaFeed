@@ -61,13 +61,8 @@ fun NewsDetailScreen(
 
     selectedImageUrl?.let { imageUrl ->
         Dialog(onDismissRequest = { selectedImageUrl = null }) {
-            val displayUrl = if (useOriginalImagePreview) {
-                imageUrl
-            } else {
-                ImageUrlTransformer.applyThumbnail(imageUrl, ScreenUtils.getHeroImageWidth()) ?: imageUrl
-            }
             ImageViewer(
-                imageUrl = displayUrl,
+                imageUrl = imageUrl,
                 onDismiss = { selectedImageUrl = null }
             )
         }
