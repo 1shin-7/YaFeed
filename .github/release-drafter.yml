@@ -28,14 +28,20 @@ categories:
       - ':wrench:'
       - ':bookmark: chore:'
   - title: '👷 CI/CD'
+    labels:
+      - 'ci'
     collapse-after: 5
     commits:
       - ':construction_worker: ci:'
   - title: '🎨 Style'
+    labels:
+      - 'style'
     collapse-after: 5
     commits:
       - ':art: style:'
   - title: '⬆️ Dependencies'
+    labels:
+      - 'dependencies'
     collapse-after: 5
     commits:
       - ':arrow_up:'
