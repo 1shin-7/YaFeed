@@ -64,11 +64,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: softprops/action-gh-release@v2
+      - name: Create Release
+        uses: mikepenz/action-gh-release@v0.2.0-a03
         with:
           body: ${{ steps.build_changelog.outputs.changelog }}
           files: |
             mobile/build/outputs/apk/release/yafeed-mobile-*.apk
             wear/build/outputs/apk/release/yafeed-wear-*.apk
-          draft: false
-          prerelease: false
