@@ -1,0 +1,58 @@
+{
+  "categories": [
+    {
+      "title": "## ✨ Features",
+      "labels": ["feature"]
+    },
+    {
+      "title": "## 🐛 Bug Fixes",
+      "labels": ["bug"]
+    },
+    {
+      "title": "## ⚡ Performance",
+      "labels": ["performance"]
+    },
+    {
+      "title": "## 🌐 Internationalization",
+      "labels": ["i18n"]
+    },
+    {
+      "title": "## 🔧 Configuration",
+      "labels": ["chore"]
+    },
+    {
+      "title": "## 👷 CI/CD",
+      "labels": ["ci"]
+    }
+  ],
+  "label_extractor": [
+    {
+      "pattern": ":sparkles: feat:|:tada: initial:",
+      "target": "feature"
+    },
+    {
+      "pattern": ":bug: fix:",
+      "target": "bug"
+    },
+    {
+      "pattern": ":zap: perf:",
+      "target": "performance"
+    },
+    {
+      "pattern": ":globe_with_meridians: i18n:",
+      "target": "i18n"
+    },
+    {
+      "pattern": ":wrench:|:bookmark: chore:",
+      "target": "chore"
+    },
+    {
+      "pattern": ":construction_worker: ci:",
+      "target": "ci"
+    }
+  ],
+  "template": "${{CHANGELOG}}",
+  "pr_template": "- ${{TITLE}} (${{MERGE_SHA}})",
+  "empty_template": "- No changes",
+  "trim_values": true
+}

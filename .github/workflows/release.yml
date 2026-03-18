@@ -56,15 +56,19 @@ jobs:
           cd wear/build/outputs/apk/release
           mv wear-release.apk yafeed-wear-release.apk
 
-      - uses: release-drafter/release-drafter@v7
+      - name: Build Changelog
+        id: build_changelog
+        uses: mikepenz/release-changelog-builder-action@v6
+        with:
+          configuration: .github/changelog-config.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: softprops/action-gh-release@v2
         with:
+          body: ${{ steps.build_changelog.outputs.changelog }}
           files: |
             mobile/build/outputs/apk/release/yafeed-mobile-*.apk
             wear/build/outputs/apk/release/yafeed-wear-*.apk
-          generate_release_notes: true
           draft: false
           prerelease: false
