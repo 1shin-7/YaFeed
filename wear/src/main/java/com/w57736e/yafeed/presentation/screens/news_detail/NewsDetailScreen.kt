@@ -24,7 +24,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.*
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.w57736e.yafeed.R
 import com.w57736e.yafeed.data.repository.RssRepository
 import com.w57736e.yafeed.domain.model.RssArticle
@@ -32,6 +32,7 @@ import com.w57736e.yafeed.domain.model.RssSource
 import com.w57736e.yafeed.data.repository.DateUtils
 import com.w57736e.yafeed.presentation.components.ImageViewer
 import com.w57736e.yafeed.presentation.components.ContentRenderer
+import com.w57736e.yafeed.presentation.components.ParticleBox
 import com.w57736e.yafeed.image.ImageUrlTransformer
 import com.w57736e.yafeed.utils.ScreenUtils
 import kotlinx.coroutines.launch
@@ -145,14 +146,20 @@ fun NewsDetailScreen(
                 ) {
                     // 1. 底层图片
                     if (article.imageUrl != null && showImages) {
-                        AsyncImage(
+                        SubcomposeAsyncImage(
                             model = coil.request.ImageRequest.Builder(androidx.compose.ui.platform.LocalContext.current)
                                 .data(ImageUrlTransformer.applyThumbnail(article.imageUrl, ScreenUtils.getHeroImageWidth()))
                                 .size(coil.size.Size(400, 400))
                                 .build(),
                             contentDescription = null,
                             modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            loading = {
+                                ParticleBox(
+                                    modifier = Modifier.fillMaxSize(),
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
                         )
                     } else {
                         // 无图时的保底背景色

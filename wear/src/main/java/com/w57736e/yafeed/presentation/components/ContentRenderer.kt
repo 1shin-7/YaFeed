@@ -10,8 +10,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import coil.size.Size
 import com.w57736e.yafeed.image.ImageUrlTransformer
@@ -51,7 +52,7 @@ fun ContentRenderer(
                 }
                 BlockType.IMAGE -> {
                     if (showImages) {
-                        AsyncImage(
+                        SubcomposeAsyncImage(
                             model = ImageRequest.Builder(context)
                                 .data(ImageUrlTransformer.applyThumbnail(block.content, ScreenUtils.getContentImageWidth()))
                                 .size(Size(300, 300))
@@ -62,7 +63,16 @@ fun ContentRenderer(
                                 .padding(vertical = 8.dp)
                                 .clip(RoundedCornerShape(4.dp))
                                 .clickable { onImageClick(block.content) },
-                            contentScale = ContentScale.FillWidth
+                            contentScale = ContentScale.FillWidth,
+                            loading = {
+                                ShimmerBox(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(100.dp),
+                                    baseColor = MaterialTheme.colorScheme.surfaceContainer,
+                                    highlightColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                                )
+                            }
                         )
                     }
                 }
