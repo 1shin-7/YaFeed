@@ -17,7 +17,8 @@ import androidx.room.PrimaryKey
     ],
     indices = [
         Index(value = ["sourceId"]),
-        Index(value = ["sourceId", "link"], unique = true)
+        Index(value = ["sourceId", "link"], unique = true),
+        Index(value = ["pubDate"])
     ]
 )
 data class ArticleEntity(
@@ -32,12 +33,22 @@ data class ArticleEntity(
     val author: String?,
     val fetchedAt: Long = System.currentTimeMillis()
 ) {
-    fun toDomain() = RssArticle(
-        title = title,
-        link = link,
-        content = content,
-        pubDate = pubDate,
-        imageUrl = imageUrl,
-        author = author
-    )
+    fun toDomain(): RssArticle {
+        val cleanTitle = title
+            .replace("&amp;", "&")
+            .replace("&lt;", "<")
+            .replace("&gt;", ">")
+            .replace("&quot;", "\"")
+            .replace("&#39;", "'")
+        return RssArticle(
+            title = title,
+            link = link,
+            content = content,
+            pubDate = pubDate,
+            imageUrl = imageUrl,
+            author = author,
+            cleanTitle = cleanTitle,
+            formattedDate = com.w57736e.yafeed.data.repository.DateUtils.formatRssDate(pubDate)
+        )
+    }
 }

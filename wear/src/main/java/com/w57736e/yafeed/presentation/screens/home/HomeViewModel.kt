@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.w57736e.yafeed.data.local.PreferenceManager
 import com.w57736e.yafeed.data.repository.RssRepository
 import com.w57736e.yafeed.domain.model.RssSource
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -48,8 +50,10 @@ class HomeViewModel(
             val sources = uiState.value.sources.ifEmpty {
                 repository.getAllSources().first()
             }
-            sources.forEach { source ->
-                repository.fetchAndCache(source.id, cacheSize)
+            sources.chunked(3).forEach { chunk ->
+                chunk.map { source ->
+                    async { repository.fetchAndCache(source.id, cacheSize) }
+                }.awaitAll()
             }
             _isRefreshing.value = false
         }

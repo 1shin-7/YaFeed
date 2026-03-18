@@ -7,5 +7,7 @@ data class RssArticle(
     val pubDate: Long?,
     val imageUrl: String?,
     val author: String? = null,
-    val categories: List<String>? = null
+    val categories: List<String>? = null,
+    val cleanTitle: String = title,
+    val formattedDate: String = ""
 )

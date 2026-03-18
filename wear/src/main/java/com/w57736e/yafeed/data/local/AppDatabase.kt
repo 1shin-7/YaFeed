@@ -8,7 +8,7 @@ import com.w57736e.yafeed.domain.model.ArticleEntity
 import com.w57736e.yafeed.domain.model.FavoriteArticle
 import com.w57736e.yafeed.domain.model.RssSource
 
-@Database(entities = [RssSource::class, ArticleEntity::class, FavoriteArticle::class], version = 7, exportSchema = false)
+@Database(entities = [RssSource::class, ArticleEntity::class, FavoriteArticle::class], version = 8, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun sourceDao(): SourceDao
     abstract fun articleDao(): ArticleDao

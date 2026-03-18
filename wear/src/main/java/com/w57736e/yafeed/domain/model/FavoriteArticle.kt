@@ -6,7 +6,10 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "favorite_articles",
-    indices = [Index(value = ["link"], unique = true)]
+    indices = [
+        Index(value = ["link"], unique = true),
+        Index(value = ["savedAt"])
+    ]
 )
 data class FavoriteArticle(
     @PrimaryKey(autoGenerate = true)
@@ -22,12 +25,22 @@ data class FavoriteArticle(
     val savedAt: Long = System.currentTimeMillis(),
     val localImagePath: String? = null
 ) {
-    fun toRssArticle() = RssArticle(
-        title = title,
-        link = link,
-        content = content,
-        pubDate = pubDate,
-        imageUrl = imageUrl,
-        author = author
-    )
+    fun toRssArticle(): RssArticle {
+        val cleanTitle = title
+            .replace("&amp;", "&")
+            .replace("&lt;", "<")
+            .replace("&gt;", ">")
+            .replace("&quot;", "\"")
+            .replace("&#39;", "'")
+        return RssArticle(
+            title = title,
+            link = link,
+            content = content,
+            pubDate = pubDate,
+            imageUrl = imageUrl,
+            author = author,
+            cleanTitle = cleanTitle,
+            formattedDate = com.w57736e.yafeed.data.repository.DateUtils.formatRssDate(pubDate)
+        )
+    }
 }

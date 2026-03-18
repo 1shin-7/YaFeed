@@ -55,13 +55,17 @@ class RssRepository(
                 val source = sourceDao.getSourceById(sourceId) ?: return getCachedArticles(sourceId).map { it }.first()
                 val channel = rssParser.getRssChannel(source.url)
                 channel.items.map { item ->
+                    val title = item.title ?: "No Title"
+                    val timestamp = DateUtils.parseToTimestamp(item.pubDate)
                     RssArticle(
-                        title = item.title ?: "No Title",
+                        title = title,
                         link = item.link ?: "",
                         content = item.content ?: item.description,
-                        pubDate = DateUtils.parseToTimestamp(item.pubDate),
+                        pubDate = timestamp,
                         imageUrl = item.image,
-                        author = item.author
+                        author = item.author,
+                        cleanTitle = cleanHtmlEntities(title),
+                        formattedDate = DateUtils.formatRssDate(timestamp)
                     )
                 }
             } catch (e: Exception) {
@@ -128,15 +132,28 @@ class RssRepository(
     suspend fun fetchArticles(url: String): List<RssArticle> {
         val channel = rssParser.getRssChannel(url)
         return channel.items.map { item ->
+            val title = item.title ?: "No Title"
+            val timestamp = DateUtils.parseToTimestamp(item.pubDate)
             RssArticle(
-                title = item.title ?: "No Title",
+                title = title,
                 link = item.link ?: "",
                 content = item.content ?: item.description,
-                pubDate = DateUtils.parseToTimestamp(item.pubDate),
+                pubDate = timestamp,
                 imageUrl = item.image,
-                author = item.author
+                author = item.author,
+                cleanTitle = cleanHtmlEntities(title),
+                formattedDate = DateUtils.formatRssDate(timestamp)
             )
         }
+    }
+
+    private fun cleanHtmlEntities(text: String): String {
+        return text
+            .replace("&amp;", "&")
+            .replace("&lt;", "<")
+            .replace("&gt;", ">")
+            .replace("&quot;", "\"")
+            .replace("&#39;", "'")
     }
 
     // Favorites

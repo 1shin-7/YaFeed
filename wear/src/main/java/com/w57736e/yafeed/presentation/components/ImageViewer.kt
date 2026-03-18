@@ -27,6 +27,14 @@ fun ImageViewer(
     var offset by remember { mutableStateOf(Offset.Zero) }
     val scope = rememberCoroutineScope()
 
+    DisposableEffect(Unit) {
+        onDispose {
+            scope.launch {
+                scale.snapTo(1f)
+            }
+        }
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -52,7 +60,7 @@ fun ImageViewer(
                 .pointerInput(Unit) {
                     detectTransformGestures { _, pan, zoom, _ ->
                         scope.launch {
-                            scale.snapTo((scale.value * zoom).coerceIn(1f, 4f))
+                            scale.snapTo((scale.value * zoom).coerceIn(1f, 2f))
                         }
 
                         val newOffset = offset + pan

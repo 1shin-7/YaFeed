@@ -2,12 +2,10 @@ package com.w57736e.yafeed.presentation.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material3.*
-import com.w57736e.yafeed.data.repository.DateUtils
 import com.w57736e.yafeed.domain.model.RssArticle
 
 @Composable
@@ -16,22 +14,13 @@ fun ArticleCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val formattedDate = remember(article.pubDate) { DateUtils.formatRssDate(article.pubDate) }
     val author = article.author ?: "Unknown"
-    val cleanTitle = remember(article.title) {
-        article.title
-            .replace("&amp;", "&")
-            .replace("&lt;", "<")
-            .replace("&gt;", ">")
-            .replace("&quot;", "\"")
-            .replace("&#39;", "'")
-    }
 
     TitleCard(
         onClick = onClick,
         title = {
             Text(
-                text = cleanTitle,
+                text = article.cleanTitle,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.titleSmall,
@@ -44,7 +33,7 @@ fun ArticleCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    author, 
+                    author,
                     style = MaterialTheme.typography.labelSmall,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -53,7 +42,7 @@ fun ArticleCard(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    formattedDate, 
+                    article.formattedDate,
                     style = MaterialTheme.typography.labelSmall,
                     maxLines = 1,
                     color = MaterialTheme.colorScheme.onSurfaceVariant

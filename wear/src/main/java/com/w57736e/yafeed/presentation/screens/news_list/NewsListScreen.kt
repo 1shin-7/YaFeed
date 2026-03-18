@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
-import androidx.wear.compose.foundation.lazy.items
+import androidx.wear.compose.foundation.lazy.itemsIndexed
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material3.*
 import com.w57736e.yafeed.R
@@ -62,16 +62,13 @@ fun NewsListScreen(
                     )
                 }
             } else {
-                items(
+                itemsIndexed(
                     items = uiState.articles,
-                    key = { it.link ?: it.title }
-                ) { article ->
+                    key = { _, article -> article.link ?: article.title }
+                ) { index, article ->
                     ArticleCard(
                         article = article,
-                        onClick = {
-                            val index = uiState.articles.indexOf(article)
-                            onArticleClick(index)
-                        },
+                        onClick = { onArticleClick(index) },
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                 }
