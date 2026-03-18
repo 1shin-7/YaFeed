@@ -22,7 +22,7 @@ data class FavoriteArticle(
     val author: String?,
     val sourceName: String,
     val sourceUrl: String,
-    val savedAt: Long = System.currentTimeMillis(),
+    val savedAt: Long = 0,
     val localImagePath: String? = null
 ) {
     fun toRssArticle(): RssArticle {

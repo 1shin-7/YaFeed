@@ -10,6 +10,7 @@ import com.w57736e.yafeed.domain.model.FavoriteArticle
 import com.w57736e.yafeed.domain.model.RssArticle
 import com.w57736e.yafeed.domain.model.RssSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.net.URI
@@ -27,13 +28,13 @@ class RssRepository(
 
     suspend fun addSource(url: String, name: String, notificationEnabled: Boolean = true) {
         val faviconUrl = resolveFavicon(url)
-        val source = RssSource(name = name, url = url, faviconUrl = faviconUrl, notificationEnabled = notificationEnabled)
+        val source = RssSource(name = name, url = url, faviconUrl = faviconUrl, notificationEnabled = notificationEnabled, lastModified = System.currentTimeMillis())
         sourceDao.insertSource(source)
     }
 
     suspend fun updateSource(sourceId: Int, name: String, notificationEnabled: Boolean) {
         val source = sourceDao.getSourceById(sourceId) ?: return
-        val updatedSource = source.copy(name = name, notificationEnabled = notificationEnabled)
+        val updatedSource = source.copy(name = name, notificationEnabled = notificationEnabled, lastModified = System.currentTimeMillis())
         sourceDao.updateSource(updatedSource)
     }
 
@@ -48,9 +49,11 @@ class RssRepository(
     }
 
     fun getCachedArticles(sourceId: Int): Flow<List<RssArticle>> {
-        return articleDao.getArticlesBySource(sourceId).map { entities ->
-            entities.map { it.toDomain() }
-        }
+        return articleDao.getArticlesBySource(sourceId)
+            .distinctUntilChanged()
+            .map { entities ->
+                entities.map { it.toDomain() }
+            }
     }
 
     suspend fun getArticlesForDisplay(sourceId: Int, isOnline: Boolean): List<RssArticle> {
@@ -103,7 +106,8 @@ class RssRepository(
                     content = item.content ?: item.description,
                     pubDate = DateUtils.parseToTimestamp(item.pubDate),
                     imageUrl = item.image,
-                    author = item.author
+                    author = item.author,
+                    fetchedAt = System.currentTimeMillis()
                 )
             }
 
@@ -125,7 +129,8 @@ class RssRepository(
             val updatedSource = source.copy(
                 latestTitle = latestTitle,
                 lastUpdate = System.currentTimeMillis(),
-                faviconUrl = resolvedFavicon
+                faviconUrl = resolvedFavicon,
+                lastModified = System.currentTimeMillis()
             )
             sourceDao.updateSource(updatedSource)
         } catch (e: Exception) {
@@ -187,7 +192,8 @@ class RssRepository(
             imageUrl = article.imageUrl,
             author = article.author,
             sourceName = source.name,
-            sourceUrl = source.url
+            sourceUrl = source.url,
+            savedAt = System.currentTimeMillis()
         )
         favoriteDao.insertFavorite(favorite)
     }
@@ -206,6 +212,7 @@ class RssRepository(
     }
 
     fun getAllFavorites(): Flow<List<FavoriteArticle>> = favoriteDao.getAllFavorites()
+        .distinctUntilChanged()
 
     fun isFavorite(link: String): Flow<Boolean> = favoriteDao.isFavorite(link)
 

@@ -31,7 +31,7 @@ data class ArticleEntity(
     val pubDate: Long?,
     val imageUrl: String?,
     val author: String?,
-    val fetchedAt: Long = System.currentTimeMillis()
+    val fetchedAt: Long = 0
 ) {
     fun toDomain(): RssArticle {
         val cleanTitle = title
