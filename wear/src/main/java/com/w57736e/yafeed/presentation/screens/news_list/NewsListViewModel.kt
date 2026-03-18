@@ -32,11 +32,13 @@ class NewsListViewModel(
     val uiState: StateFlow<NewsListUiState> = _sourceId.flatMapLatest { id ->
         if (id == null) flowOf(NewsListUiState())
         else {
-            combine(
-                repository.getCachedArticles(id),
-                flow { emit(repository.getSourceById(id)) }
-            ) { articles, source ->
-                NewsListUiState(articles = articles, source = source, isLoading = false)
+            flow {
+                val isOnline = isNetworkAvailable(context)
+                val articles = repository.getArticlesForDisplay(id, isOnline)
+                val source = repository.getSourceById(id)
+                emit(NewsListUiState(articles = articles, source = source, isLoading = false))
+            }.catch { error ->
+                emit(NewsListUiState(error = error.message, isLoading = false))
             }
         }
     }.combine(_isRefreshing) { state, refreshing ->
