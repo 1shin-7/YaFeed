@@ -189,7 +189,7 @@ fun NewsDetailScreen(
                             .padding(horizontal = 12.dp, vertical = 8.dp)
                     ) {
                         Text(
-                            text = article.title,
+                            text = article.cleanTitle,
                             style = MaterialTheme.typography.titleMedium.copy(
                                 color = MaterialTheme.colorScheme.onSurface,
                                 shadow = androidx.compose.ui.graphics.Shadow(

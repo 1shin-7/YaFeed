@@ -158,12 +158,23 @@ class RssRepository(
     }
 
     private fun cleanHtmlEntities(text: String): String {
-        return text
+        var result = text
             .replace("&amp;", "&")
             .replace("&lt;", "<")
             .replace("&gt;", ">")
             .replace("&quot;", "\"")
-            .replace("&#39;", "'")
+
+        val numericEntityRegex = Regex("&#(\\d+);")
+        result = numericEntityRegex.replace(result) { matchResult ->
+            val code = matchResult.groupValues[1].toIntOrNull()
+            if (code != null && code in 1..0x10FFFF) {
+                code.toChar().toString()
+            } else {
+                matchResult.value
+            }
+        }
+
+        return result
     }
 
     // Favorites
