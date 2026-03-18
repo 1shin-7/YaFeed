@@ -1,5 +1,6 @@
 package com.w57736e.yafeed.presentation.screens.favorites
 
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
