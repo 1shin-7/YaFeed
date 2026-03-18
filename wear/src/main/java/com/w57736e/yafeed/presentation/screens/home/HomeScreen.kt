@@ -11,6 +11,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -30,7 +31,7 @@ fun HomeScreen(
     onSettingsClick: () -> Unit,
     onFavoritesClick: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val scrollState = rememberScalingLazyListState()
     val chunkedSources = remember(uiState.sources) { uiState.sources.chunked(2) }
 
@@ -80,7 +81,7 @@ fun HomeScreen(
                     // Manual 2-column grid in TransformingLazyColumn
                     items(
                         items = chunkedSources,
-                        key = { it.firstOrNull()?.id ?: 0 }
+                        key = { row -> row.joinToString("-") { it.id.toString() } }
                     ) { rowSources ->
                         Row(
                             modifier = Modifier
@@ -123,7 +124,7 @@ fun HomeScreen(
                     ) {
                         Icon(Icons.Default.Favorite, contentDescription = null)
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Favorites")
+                        Text(stringResource(R.string.favorites))
                     }
                 }
 

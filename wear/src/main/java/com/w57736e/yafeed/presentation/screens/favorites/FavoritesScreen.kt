@@ -7,11 +7,14 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material3.*
+import com.w57736e.yafeed.R
 import com.w57736e.yafeed.presentation.components.ArticleCard
 
 @Composable
@@ -19,7 +22,7 @@ fun FavoritesScreen(
     viewModel: FavoritesViewModel,
     onArticleClick: (String) -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val scrollState = rememberScalingLazyListState(initialCenterItemIndex = 0)
 
     ScreenScaffold(scrollState = scrollState) { contentPadding ->
@@ -47,7 +50,7 @@ fun FavoritesScreen(
                             PrimaryActionButton(
                                 onClick = { viewModel.deleteFavorite(favorite) },
                                 icon = { Icon(Icons.Default.Delete, contentDescription = null) },
-                                text = { Text("Delete") },
+                                text = { Text(stringResource(R.string.delete)) },
                                 modifier = Modifier.fillMaxHeight()
                             )
                         },
@@ -70,7 +73,7 @@ fun FavoritesScreen(
                     contentAlignment = Alignment.BottomCenter
                 ) {
                     Button(onClick = { viewModel.undoDelete() }) {
-                        Text("Undo")
+                        Text(stringResource(R.string.undo))
                     }
                 }
             }

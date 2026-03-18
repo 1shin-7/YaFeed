@@ -6,6 +6,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.itemsIndexed
@@ -21,7 +22,7 @@ fun NewsListScreen(
     sourceId: Int,
     onArticleClick: (Int) -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val scrollState = rememberScalingLazyListState()
 
     LaunchedEffect(sourceId) {
@@ -64,7 +65,7 @@ fun NewsListScreen(
             } else {
                 itemsIndexed(
                     items = uiState.articles,
-                    key = { _, article -> article.link ?: article.title }
+                    key = { _, article -> article.link }
                 ) { index, article ->
                     ArticleCard(
                         article = article,
