@@ -13,6 +13,105 @@
     </issue>
 
     <issue
+        id="MissingTranslation"
+        message="&quot;undo&quot; is not translated in &quot;ru&quot; (Russian), &quot;ja&quot; (Japanese), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;undo&quot;>Undo&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;favorites&quot; is not translated in &quot;ru&quot; (Russian), &quot;ja&quot; (Japanese), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;favorites&quot;>Favorites&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="16"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;favorite&quot; is not translated in &quot;ru&quot; (Russian), &quot;ja&quot; (Japanese), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;favorite&quot;>Favorite&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="17"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;unfavorite&quot; is not translated in &quot;ru&quot; (Russian), &quot;ja&quot; (Japanese), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;unfavorite&quot;>Unfavorite&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="18"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;save_images_on_favorite&quot; is not translated in &quot;ru&quot; (Russian), &quot;ja&quot; (Japanese), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;save_images_on_favorite&quot;>Save images on favorite&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="46"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;save_images_description&quot; is not translated in &quot;ru&quot; (Russian), &quot;ja&quot; (Japanese), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;save_images_description&quot;>Download images for offline viewing&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="47"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;cache_size&quot; is not translated in &quot;ru&quot; (Russian), &quot;ja&quot; (Japanese), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;cache_size&quot;>Cache Size: %d&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="48"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;update_interval&quot; is not translated in &quot;ru&quot; (Russian), &quot;ja&quot; (Japanese), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;update_interval&quot;>Update Interval(min)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="49"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;font_size&quot; is not translated in &quot;ru&quot; (Russian), &quot;ja&quot; (Japanese), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;font_size&quot;>Font Size: %ssp&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="54"
+            column="13"/>
+    </issue>
+
+    <issue
         id="ObsoleteSdkInt"
         message="Unnecessary; `SDK_INT` is always >= 28"
         errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {"
@@ -21,6 +120,13 @@
             file="src/main/java/com/w57736e/yafeed/utils/NotificationHelper.kt"
             line="20"
             column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="This folder configuration (`v26`) is unnecessary; `minSdkVersion` is 28. Merge all the resources in this folder into `mipmap-anydpi`.">
+        <location
+            file="src/main/res/mipmap-anydpi-v26"/>
     </issue>
 
     <issue
@@ -36,6 +142,17 @@
 
     <issue
         id="UnusedResources"
+        message="The resource `R.color.ic_launcher_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;ic_launcher_background&quot;>#1E1C22&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="3"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
         message="The resource `R.mipmap.ic_launcher_round` appears to be unused">
         <location
             file="src/main/res/mipmap-hdpi/ic_launcher_round.webp"/>
@@ -43,13 +160,113 @@
 
     <issue
         id="UnusedResources"
-        message="The resource `R.string.hello_world` appears to be unused"
-        errorLine1="    &lt;string name=&quot;hello_world&quot;>From the Square world,\nHello, %1$s!&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        message="The resource `R.string.cancel` appears to be unused"
+        errorLine1="    &lt;string name=&quot;cancel&quot;>Cancel&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="7"
+            line="6"
             column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.save` appears to be unused"
+        errorLine1="    &lt;string name=&quot;save&quot;>Save&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="9"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.add` appears to be unused"
+        errorLine1="    &lt;string name=&quot;add&quot;>Add&lt;/string>"
+        errorLine2="            ~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="10"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.edit` appears to be unused"
+        errorLine1="    &lt;string name=&quot;edit&quot;>Edit&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="11"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.no_updates` appears to be unused"
+        errorLine1="    &lt;string name=&quot;no_updates&quot;>No updates&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="24"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.delete_source_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;delete_source_title&quot;>Delete %s?&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="38"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="IconDuplicates"
+        message="The following unrelated icon files have identical contents: ic_launcher.webp, ic_launcher_round.webp">
+        <location
+            file="src/main/res/mipmap-hdpi/ic_launcher_round.webp"/>
+        <location
+            file="src/main/res/mipmap-hdpi/ic_launcher.webp"/>
+    </issue>
+
+    <issue
+        id="IconDuplicates"
+        message="The following unrelated icon files have identical contents: ic_launcher.webp, ic_launcher_round.webp">
+        <location
+            file="src/main/res/mipmap-mdpi/ic_launcher_round.webp"/>
+        <location
+            file="src/main/res/mipmap-mdpi/ic_launcher.webp"/>
+    </issue>
+
+    <issue
+        id="IconDuplicates"
+        message="The following unrelated icon files have identical contents: ic_launcher.webp, ic_launcher_round.webp">
+        <location
+            file="src/main/res/mipmap-xhdpi/ic_launcher_round.webp"/>
+        <location
+            file="src/main/res/mipmap-xhdpi/ic_launcher.webp"/>
+    </issue>
+
+    <issue
+        id="IconDuplicates"
+        message="The following unrelated icon files have identical contents: ic_launcher.webp, ic_launcher_round.webp">
+        <location
+            file="src/main/res/mipmap-xxhdpi/ic_launcher_round.webp"/>
+        <location
+            file="src/main/res/mipmap-xxhdpi/ic_launcher.webp"/>
+    </issue>
+
+    <issue
+        id="IconDuplicates"
+        message="The following unrelated icon files have identical contents: ic_launcher.webp, ic_launcher_round.webp">
+        <location
+            file="src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp"/>
+        <location
+            file="src/main/res/mipmap-xxxhdpi/ic_launcher.webp"/>
     </issue>
 
     <issue

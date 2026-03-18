@@ -6,10 +6,14 @@
     <string name="ok">ОК</string>
     <string name="cancel">Отмена</string>
     <string name="delete">Удалить</string>
+    <string name="undo">Отменить</string>
     <string name="save">Сохранить</string>
     <string name="add">Добавить</string>
     <string name="edit">Изменить</string>
     <string name="view">Просмотр</string>
+    <string name="favorites">Избранное</string>
+    <string name="favorite">Избранное</string>
+    <string name="unfavorite">Удалить из избранного</string>
 
     <!-- Home -->
     <string name="settings">Настройки</string>
@@ -40,10 +44,15 @@
 
     <!-- General Settings -->
     <string name="general_settings">Общие настройки</string>
+    <string name="save_images_on_favorite">Сохранять изображения при добавлении в избранное</string>
+    <string name="save_images_description">Загружать изображения для просмотра офлайн</string>
+    <string name="cache_size">Размер кэша: %d</string>
+    <string name="update_interval">Интервал обновления (мин)</string>
 
     <!-- UI Settings -->
     <string name="show_images">Показывать изображения</string>
     <string name="use_original_image_preview">Использовать оригинальное изображение для предпросмотра</string>
+    <string name="font_size">Размер шрифта: %ssp</string>
 
     <!-- Debug -->
     <string name="markdown_test">Тест Markdown</string>

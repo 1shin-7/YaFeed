@@ -6,10 +6,14 @@
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
     <string name="delete">删除</string>
+    <string name="undo">撤销</string>
     <string name="save">保存</string>
     <string name="add">添加</string>
     <string name="edit">编辑</string>
     <string name="view">查看</string>
+    <string name="favorites">收藏</string>
+    <string name="favorite">收藏</string>
+    <string name="unfavorite">取消收藏</string>
 
     <!-- Home -->
     <string name="settings">设置</string>
@@ -40,10 +44,15 @@
 
     <!-- General Settings -->
     <string name="general_settings">常规设置</string>
+    <string name="save_images_on_favorite">收藏时保存图片</string>
+    <string name="save_images_description">下载图片以供离线查看</string>
+    <string name="cache_size">缓存大小：%d</string>
+    <string name="update_interval">更新间隔（分钟）</string>
 
     <!-- UI Settings -->
     <string name="show_images">显示图片</string>
     <string name="use_original_image_preview">预览使用原图</string>
+    <string name="font_size">字体大小：%ssp</string>
 
     <!-- Debug -->
     <string name="markdown_test">Markdown 测试</string>

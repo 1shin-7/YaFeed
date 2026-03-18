@@ -6,10 +6,14 @@
     <string name="ok">OK</string>
     <string name="cancel">キャンセル</string>
     <string name="delete">削除</string>
+    <string name="undo">元に戻す</string>
     <string name="save">保存</string>
     <string name="add">追加</string>
     <string name="edit">編集</string>
     <string name="view">表示</string>
+    <string name="favorites">お気に入り</string>
+    <string name="favorite">お気に入り</string>
+    <string name="unfavorite">お気に入り解除</string>
 
     <!-- Home -->
     <string name="settings">設定</string>
@@ -40,10 +44,15 @@
 
     <!-- General Settings -->
     <string name="general_settings">一般設定</string>
+    <string name="save_images_on_favorite">お気に入り時に画像を保存</string>
+    <string name="save_images_description">オフライン表示用に画像をダウンロード</string>
+    <string name="cache_size">キャッシュサイズ：%d</string>
+    <string name="update_interval">更新間隔（分）</string>
 
     <!-- UI Settings -->
     <string name="show_images">画像を表示</string>
     <string name="use_original_image_preview">元の画像でプレビュー</string>
+    <string name="font_size">フォントサイズ：%ssp</string>
 
     <!-- Debug -->
     <string name="markdown_test">Markdownテスト</string>
