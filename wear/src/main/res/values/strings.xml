@@ -5,10 +5,14 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
+    <string name="undo">Undo</string>
     <string name="save">Save</string>
     <string name="add">Add</string>
     <string name="edit">Edit</string>
     <string name="view">View</string>
+    <string name="favorites">Favorites</string>
+    <string name="favorite">Favorite</string>
+    <string name="unfavorite">Unfavorite</string>
 
     <!-- Home -->
     <string name="settings">Settings</string>
@@ -39,10 +43,15 @@
 
     <!-- General Settings -->
     <string name="general_settings">General Settings</string>
+    <string name="save_images_on_favorite">Save images on favorite</string>
+    <string name="save_images_description">Download images for offline viewing</string>
+    <string name="cache_size">Cache Size: %d</string>
+    <string name="update_interval">Update Interval(min)</string>
 
     <!-- UI Settings -->
     <string name="show_images">Show Images</string>
     <string name="use_original_image_preview">Use Original Image Preview</string>
+    <string name="font_size">Font Size: %ssp</string>
 
     <!-- Debug -->
     <string name="markdown_test">Markdown Test</string>
