@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.RssFeed
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -243,6 +244,24 @@ fun NewsDetailScreen(
                                 )
                             }
                         }
+                        source?.let { src ->
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    Icons.Default.RssFeed,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(14.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    src.name,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
                         article.categories?.takeIf { it.isNotEmpty() }?.let { categories ->
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -288,18 +307,6 @@ fun NewsDetailScreen(
                 )
             }
 
-            // Source info
-            if (source != null) {
-                item {
-                    Text(
-                        "From: ${source.name}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
-                    )
-                }
-            }
-
             // Favorite button
             if (repository != null && source != null) {
                 item {
@@ -311,7 +318,7 @@ fun NewsDetailScreen(
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 16.dp)
+                            .padding(start = 12.dp, end = 12.dp, top = 12.dp)
                     ) {
                         Icon(
                             if (isFavorited) Icons.Default.Favorite else Icons.Default.FavoriteBorder,

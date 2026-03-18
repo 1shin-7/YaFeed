@@ -19,14 +19,15 @@ fun FavoritesScreen(
     onArticleClick: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val scrollState = rememberScalingLazyListState()
+    val scrollState = rememberScalingLazyListState(initialCenterItemIndex = 0)
 
     ScreenScaffold(scrollState = scrollState) { contentPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
             ScalingLazyColumn(
                 state = scrollState,
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = contentPadding
+                contentPadding = contentPadding,
+                autoCentering = if (uiState.favorites.isEmpty()) null else androidx.wear.compose.foundation.lazy.AutoCenteringParams()
             ) {
                 item {
                     Text(
@@ -45,7 +46,8 @@ fun FavoritesScreen(
                             PrimaryActionButton(
                                 onClick = { viewModel.deleteFavorite(favorite) },
                                 icon = { Icon(Icons.Default.Delete, contentDescription = null) },
-                                text = { Text("Delete") }
+                                text = { Text("Delete") },
+                                modifier = Modifier.fillMaxHeight()
                             )
                         },
                         onSwipePrimaryAction = { viewModel.deleteFavorite(favorite) },
