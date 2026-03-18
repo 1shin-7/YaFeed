@@ -2,8 +2,10 @@ package com.w57736e.yafeed.data.repository
 
 import com.prof18.rssparser.RssParser
 import com.w57736e.yafeed.data.local.ArticleDao
+import com.w57736e.yafeed.data.local.FavoriteDao
 import com.w57736e.yafeed.data.local.SourceDao
 import com.w57736e.yafeed.domain.model.ArticleEntity
+import com.w57736e.yafeed.domain.model.FavoriteArticle
 import com.w57736e.yafeed.domain.model.RssArticle
 import com.w57736e.yafeed.domain.model.RssSource
 import kotlinx.coroutines.flow.Flow
@@ -14,6 +16,7 @@ import java.net.URI
 class RssRepository(
     private val sourceDao: SourceDao,
     private val articleDao: ArticleDao,
+    private val favoriteDao: FavoriteDao,
     private val rssParser: RssParser
 ) {
     fun getAllSources(): Flow<List<RssSource>> = sourceDao.getAllSources()
@@ -135,4 +138,38 @@ class RssRepository(
             )
         }
     }
+
+    // Favorites
+    suspend fun addFavorite(article: RssArticle, source: RssSource) {
+        val favorite = FavoriteArticle(
+            title = article.title,
+            link = article.link,
+            content = article.content,
+            pubDate = article.pubDate,
+            imageUrl = article.imageUrl,
+            author = article.author,
+            sourceName = source.name,
+            sourceUrl = source.url
+        )
+        favoriteDao.insertFavorite(favorite)
+    }
+
+    suspend fun deleteFavorite(favorite: FavoriteArticle) {
+        favoriteDao.deleteFavorite(favorite)
+    }
+
+    suspend fun toggleFavorite(article: RssArticle, source: RssSource) {
+        val existing = favoriteDao.getFavoriteByLink(article.link)
+        if (existing != null) {
+            favoriteDao.deleteFavorite(existing)
+        } else {
+            addFavorite(article, source)
+        }
+    }
+
+    fun getAllFavorites(): Flow<List<FavoriteArticle>> = favoriteDao.getAllFavorites()
+
+    fun isFavorite(link: String): Flow<Boolean> = favoriteDao.isFavorite(link)
+
+    suspend fun getFavoriteByLink(link: String): FavoriteArticle? = favoriteDao.getFavoriteByLink(link)
 }

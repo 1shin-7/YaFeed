@@ -20,10 +20,12 @@ fun GeneralSettingsScreen(
     browserAvailable: Boolean,
     availableBrowsers: List<String>,
     notificationEnabled: Boolean,
+    saveImagesOnFavorite: Boolean = false,
     onMaxCacheSizeChange: (Int) -> Unit,
     onUpdateIntervalChange: (Long) -> Unit,
     onBrowserTypeChange: (String) -> Unit,
-    onNotificationEnabledChange: (Boolean) -> Unit
+    onNotificationEnabledChange: (Boolean) -> Unit,
+    onSaveImagesOnFavoriteChange: (Boolean) -> Unit = {}
 ) {
     val scrollState = rememberTransformingLazyColumnState()
     ScreenScaffold(scrollState = scrollState) {
@@ -43,6 +45,16 @@ fun GeneralSettingsScreen(
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                     label = { Text(stringResource(R.string.notifications)) },
                     icon = { Icon(Icons.Default.Notifications, contentDescription = null) }
+                )
+            }
+
+            item {
+                SwitchButton(
+                    checked = saveImagesOnFavorite,
+                    onCheckedChange = onSaveImagesOnFavoriteChange,
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                    label = { Text("Save images on favorite") },
+                    secondaryLabel = { Text("Download images for offline viewing") }
                 )
             }
 

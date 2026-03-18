@@ -98,7 +98,7 @@ class MobileDataListenerService : WearableListenerService() {
                     }
 
                     val database = AppDatabase.getDatabase(applicationContext)
-                    val repository = RssRepository(database.sourceDao(), database.articleDao(), com.prof18.rssparser.RssParser())
+                    val repository = RssRepository(database.sourceDao(), database.articleDao(), database.favoriteDao(), com.prof18.rssparser.RssParser())
                     repository.syncSources(sources)
                     Log.d("WearSync", "Synced ${sources.size} sources successfully")
                 }

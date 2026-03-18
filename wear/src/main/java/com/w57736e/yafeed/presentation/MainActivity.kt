@@ -22,6 +22,8 @@ import com.w57736e.yafeed.data.local.PreferenceManager
 import com.w57736e.yafeed.data.repository.RssRepository
 import com.w57736e.yafeed.presentation.screens.home.HomeScreen
 import com.w57736e.yafeed.presentation.screens.home.HomeViewModel
+import com.w57736e.yafeed.presentation.screens.favorites.FavoritesScreen
+import com.w57736e.yafeed.presentation.screens.favorites.FavoritesViewModel
 import com.w57736e.yafeed.presentation.screens.news_detail.NewsDetailScreen
 import com.w57736e.yafeed.presentation.screens.news_list.NewsListScreen
 import com.w57736e.yafeed.presentation.screens.news_list.NewsListViewModel
@@ -39,6 +41,7 @@ import com.w57736e.yafeed.utils.ScreenUtils
 import com.w57736e.yafeed.workers.RssRefreshWorker
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.net.URLDecoder
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
@@ -57,7 +60,7 @@ class MainActivity : ComponentActivity() {
         val db = AppDatabase.getDatabase(this)
         val prefManager = PreferenceManager(this)
         val rssParser = RssParser()
-        val repository = RssRepository(db.sourceDao(), db.articleDao(), rssParser)
+        val repository = RssRepository(db.sourceDao(), db.articleDao(), db.favoriteDao(), rssParser)
 
         // Seed default source if empty
         lifecycleScope.launch {
@@ -118,6 +121,7 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
 
     val homeViewModel = remember { HomeViewModel(repository, prefManager) }
     val newsListViewModel = remember { NewsListViewModel(repository, prefManager, context) }
+    val favoritesViewModel = remember { FavoritesViewModel(repository) }
 
     val connectionManager = remember { WearConnectionStateManager(context) }
     val syncManager = remember { MobileSyncManager(context, connectionManager) }
@@ -140,10 +144,63 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                     },
                     onSettingsClick = {
                         navController.navigate("settings")
+                    },
+                    onFavoritesClick = {
+                        navController.navigate("favorites")
                     }
                 )
             }
-            
+
+            composable("favorites") {
+                FavoritesScreen(
+                    viewModel = favoritesViewModel,
+                    onArticleClick = { link ->
+                        val encodedLink = URLEncoder.encode(link, StandardCharsets.UTF_8.toString())
+                        navController.navigate("favorite_detail/$encodedLink")
+                    }
+                )
+            }
+
+            composable(
+                route = "favorite_detail/{link}",
+                arguments = listOf(navArgument("link") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val encodedLink = backStackEntry.arguments?.getString("link") ?: ""
+                val link = URLDecoder.decode(encodedLink, StandardCharsets.UTF_8.toString())
+
+                var favoriteArticle by remember { mutableStateOf<com.w57736e.yafeed.domain.model.FavoriteArticle?>(null) }
+
+                LaunchedEffect(link) {
+                    favoriteArticle = repository.getFavoriteByLink(link)
+                }
+
+                val fontSize by prefManager.fontSize.collectAsState(14f)
+                val showImages by prefManager.showImages.collectAsState(true)
+                val browserAvailable by prefManager.browserAvailable.collectAsState(false)
+                val browserType by prefManager.browserType.collectAsState("webview")
+                val useOriginalImagePreview by prefManager.useOriginalImagePreview.collectAsState(false)
+
+                favoriteArticle?.let { fav ->
+                    val source = com.w57736e.yafeed.domain.model.RssSource(
+                        name = fav.sourceName,
+                        url = fav.sourceUrl
+                    )
+                    NewsDetailScreen(
+                        article = fav.toRssArticle(),
+                        fontSize = fontSize,
+                        showImages = showImages,
+                        browserAvailable = browserAvailable,
+                        browserType = browserType,
+                        useOriginalImagePreview = useOriginalImagePreview,
+                        onOpenInBrowser = { url, type ->
+                            BrowserHelper.openInBrowser(context, url, type)
+                        },
+                        repository = repository,
+                        source = source
+                    )
+                }
+            }
+
             composable(
                 route = "news_list/{sourceId}",
                 arguments = listOf(navArgument("sourceId") { type = NavType.IntType })
@@ -181,7 +238,9 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                         useOriginalImagePreview = useOriginalImagePreview,
                         onOpenInBrowser = { url, type ->
                             BrowserHelper.openInBrowser(context, url, type)
-                        }
+                        },
+                        repository = repository,
+                        source = uiState.source
                     )
                 }
             }
@@ -221,6 +280,7 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                 val browserAvailable by prefManager.browserAvailable.collectAsState(false)
                 val availableBrowsers = remember { BrowserHelper.detectAvailableBrowsers(context) }
                 val notificationEnabled by prefManager.notificationEnabled.collectAsState(false)
+                val saveImagesOnFavorite by prefManager.saveImagesOnFavorite.collectAsState(false)
 
                 com.w57736e.yafeed.presentation.screens.settings.GeneralSettingsScreen(
                     maxCacheSize = maxCacheSize,
@@ -229,6 +289,7 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                     browserAvailable = browserAvailable,
                     availableBrowsers = availableBrowsers,
                     notificationEnabled = notificationEnabled,
+                    saveImagesOnFavorite = saveImagesOnFavorite,
                     onMaxCacheSizeChange = { size ->
                         scope.launch { prefManager.setMaxCacheSize(size) }
                     },
@@ -240,6 +301,9 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                     },
                     onNotificationEnabledChange = { enabled ->
                         scope.launch { prefManager.setNotificationEnabled(enabled) }
+                    },
+                    onSaveImagesOnFavoriteChange = { enabled ->
+                        scope.launch { prefManager.setSaveImagesOnFavorite(enabled) }
                     }
                 )
             }

@@ -19,7 +19,7 @@ class RssRefreshWorker(
         return try {
             val db = AppDatabase.getDatabase(applicationContext)
             val prefManager = PreferenceManager(applicationContext)
-            val repository = RssRepository(db.sourceDao(), db.articleDao(), RssParser())
+            val repository = RssRepository(db.sourceDao(), db.articleDao(), db.favoriteDao(), RssParser())
 
             val notificationEnabled = prefManager.notificationEnabled.first()
             if (!notificationEnabled) {

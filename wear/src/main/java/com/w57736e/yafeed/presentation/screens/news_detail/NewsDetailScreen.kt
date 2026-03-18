@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Schedule
@@ -23,12 +25,15 @@ import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.*
 import coil.compose.AsyncImage
 import com.w57736e.yafeed.R
+import com.w57736e.yafeed.data.repository.RssRepository
 import com.w57736e.yafeed.domain.model.RssArticle
+import com.w57736e.yafeed.domain.model.RssSource
 import com.w57736e.yafeed.data.repository.DateUtils
 import com.w57736e.yafeed.presentation.components.ImageViewer
 import com.w57736e.yafeed.presentation.components.ContentRenderer
 import com.w57736e.yafeed.image.ImageUrlTransformer
 import com.w57736e.yafeed.utils.ScreenUtils
+import kotlinx.coroutines.launch
 
 @Composable
 fun NewsDetailScreen(
@@ -38,13 +43,20 @@ fun NewsDetailScreen(
     browserAvailable: Boolean = false,
     browserType: String = "webview",
     useOriginalImagePreview: Boolean = false,
-    onOpenInBrowser: (String, String) -> Unit = { _, _ -> }
+    onOpenInBrowser: (String, String) -> Unit = { _, _ -> },
+    repository: RssRepository? = null,
+    source: RssSource? = null
 ) {
     val scrollState = rememberTransformingLazyColumnState()
     val formattedDate = remember(article.pubDate) { DateUtils.formatRssDateFull(article.pubDate) }
     val content = article.content ?: stringResource(R.string.no_content_available)
     var selectedImageUrl by remember { mutableStateOf<String?>(null) }
     var showNoBrowserDialog by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+
+    val isFavorited by remember(article.link, repository) {
+        repository?.isFavorite(article.link) ?: kotlinx.coroutines.flow.flowOf(false)
+    }.collectAsState(initial = false)
 
     selectedImageUrl?.let { imageUrl ->
         Dialog(onDismissRequest = { selectedImageUrl = null }) {
@@ -274,6 +286,42 @@ fun NewsDetailScreen(
                         .padding(horizontal = 12.dp),
                     showImages = showImages
                 )
+            }
+
+            // Source info
+            if (source != null) {
+                item {
+                    Text(
+                        "From: ${source.name}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+                    )
+                }
+            }
+
+            // Favorite button
+            if (repository != null && source != null) {
+                item {
+                    FilledTonalButton(
+                        onClick = {
+                            scope.launch {
+                                repository.toggleFavorite(article, source)
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 16.dp)
+                    ) {
+                        Icon(
+                            if (isFavorited) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(if (isFavorited) "Unfavorite" else "Favorite")
+                    }
+                }
             }
         }
     }

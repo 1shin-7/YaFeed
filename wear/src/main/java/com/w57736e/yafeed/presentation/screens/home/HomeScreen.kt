@@ -3,6 +3,7 @@ package com.w57736e.yafeed.presentation.screens.home
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,7 +27,8 @@ import com.w57736e.yafeed.presentation.components.SourceGridItem
 fun HomeScreen(
     viewModel: HomeViewModel,
     onSourceClick: (Int) -> Unit,
-    onSettingsClick: () -> Unit
+    onSettingsClick: () -> Unit,
+    onFavoritesClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScalingLazyListState()
@@ -114,10 +116,21 @@ fun HomeScreen(
 
                 item {
                     Button(
-                        onClick = onSettingsClick,
+                        onClick = onFavoritesClick,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 12.dp)
+                    ) {
+                        Icon(Icons.Default.Favorite, contentDescription = null)
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Favorites")
+                    }
+                }
+
+                item {
+                    Button(
+                        onClick = onSettingsClick,
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(Icons.Default.Settings, contentDescription = null)
                         Spacer(modifier = Modifier.width(4.dp))
