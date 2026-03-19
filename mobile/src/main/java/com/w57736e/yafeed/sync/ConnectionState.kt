@@ -78,3 +78,39 @@ enum class SyncStatus {
     FAILURE,
     IN_PROGRESS
 }
+
+/**
+ * 同步数据的键名常量 - 强类型
+ */
+object SyncKeys {
+    // 设备标识
+    const val DEVICE_ID = "deviceId"
+    const val DEVICE_WEAR = "wear"
+    const val DEVICE_MOBILE = "mobile"
+    
+    // 通用
+    const val LAST_MODIFIED = "lastModified"
+    const val SYNC_TIMESTAMP = "syncTimestamp"
+    
+    // 设置
+    const val UI_SCALE = "uiScale"
+    const val SHOW_IMAGES = "showImages"
+    const val UPDATE_INTERVAL = "updateInterval"
+    const val LIST_VIEW_GRID = "listViewGrid"
+    const val MAX_CACHE_SIZE = "maxCacheSize"
+    const val FONT_SIZE = "fontSize"
+    const val BROWSER_TYPE = "browserType"
+    const val BROWSER_AVAILABLE = "browserAvailable"
+    const val NOTIFICATION_ENABLED = "notificationEnabled"
+    
+    // 源
+    const val SOURCES_LIST = "sourcesList"
+    const val SOURCES_COUNT = "sourcesCount"
+    const val SOURCE_ID = "id"
+    const val SOURCE_NAME = "name"
+    const val SOURCE_URL = "url"
+    const val SOURCE_FAVICON = "faviconUrl"
+    const val SOURCE_NOTIFICATION = "notificationEnabled"
+    const val SOURCE_ORDER = "order"
+    const val SOURCE_LAST_MODIFIED = "lastModified"
+}

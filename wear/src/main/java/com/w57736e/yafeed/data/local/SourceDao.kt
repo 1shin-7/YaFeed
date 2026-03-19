@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SourceDao {
-    @Query("SELECT * FROM rss_sources")
+    @Query("SELECT * FROM rss_sources ORDER BY `order` ASC")
     fun getAllSources(): Flow<List<RssSource>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -23,4 +23,24 @@ interface SourceDao {
 
     @Query("SELECT * FROM rss_sources WHERE id = :id")
     suspend fun getSourceById(id: Int): RssSource?
+    
+    @Query("SELECT * FROM rss_sources WHERE url = :url LIMIT 1")
+    suspend fun getSourceByUrl(url: String): RssSource?
+    
+    @Query("DELETE FROM rss_sources WHERE url NOT IN (:urls)")
+    suspend fun deleteSourcesNotIn(urls: List<String>)
+    
+    @Transaction
+    suspend fun upsertSources(sources: List<RssSource>) {
+        sources.forEach { source ->
+            val existing = getSourceByUrl(source.url)
+            if (existing != null) {
+                // Update existing, preserving local id
+                updateSource(source.copy(id = existing.id))
+            } else {
+                // Insert new
+                insertSource(source)
+            }
+        }
+    }
 }

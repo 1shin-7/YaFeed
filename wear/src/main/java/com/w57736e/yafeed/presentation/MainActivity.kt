@@ -1,6 +1,7 @@
 package com.w57736e.yafeed.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
@@ -30,9 +31,12 @@ import com.w57736e.yafeed.presentation.screens.news_list.NewsListViewModel
 import com.w57736e.yafeed.presentation.screens.settings.SettingsScreen
 import com.w57736e.yafeed.presentation.screens.debug.WearConnectionDebugScreen
 import com.w57736e.yafeed.presentation.screens.debug.WearConnectionDebugViewModel
-import com.w57736e.yafeed.sync.MobileSyncManager
-import com.w57736e.yafeed.sync.WearConnectionStateManager
-import com.w57736e.yafeed.sync.WearMessageHandler
+import com.w57736e.yafeed.sync.WearableDataSyncManager
+import com.w57736e.yafeed.sync.WearableConnectionManager
+import com.w57736e.yafeed.sync.WearableMessageManager
+import com.w57736e.yafeed.sync.DataSyncListener
+import com.google.android.gms.wearable.Wearable
+import com.w57736e.yafeed.sync.SettingsBundle
 import com.w57736e.yafeed.presentation.theme.YaFeedTheme
 import com.w57736e.yafeed.image.CoilImageLoaderFactory
 import com.w57736e.yafeed.utils.BrowserHelper
@@ -41,12 +45,15 @@ import com.w57736e.yafeed.utils.ScreenUtils
 import com.w57736e.yafeed.workers.RssRefreshWorker
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
 class MainActivity : ComponentActivity() {
+    private var dataSyncListener: DataSyncListener? = null
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -61,14 +68,31 @@ class MainActivity : ComponentActivity() {
         val prefManager = PreferenceManager(this)
         val rssParser = RssParser()
         val repository = RssRepository(db.sourceDao(), db.articleDao(), db.favoriteDao(), rssParser)
+        val connectionManager = WearableConnectionManager(this)
+        val syncManager = WearableDataSyncManager(this, connectionManager)
 
-        // Seed default source if empty
+        // Register DataClient listener for sync
+        dataSyncListener = DataSyncListener(this, lifecycleScope)
+        Wearable.getDataClient(this).addListener(dataSyncListener!!)
+        Log.d("MainActivity", "DataClient listener registered")
+
+        // Seed default source if empty and sync to Mobile
         lifecycleScope.launch {
             val currentSources = repository.getAllSources().first()
             if (currentSources.isEmpty()) {
                 repository.addSource("https://www.theverge.com/rss/index.xml", "The Verge")
                 repository.addSource("https://9to5google.com/feed/", "9to5Google")
                 repository.addSource("https://www.ithome.com/rss", "ITHome")
+            }
+
+            // Sync sources to Mobile after seeding
+            launch(kotlinx.coroutines.Dispatchers.IO) {
+                delay(2000) // Wait for connection to establish
+                val sources = repository.getAllSources().first()
+                if (sources.isNotEmpty()) {
+                    Log.d("MainActivity", "Auto-syncing ${sources.size} sources to Mobile")
+                    syncManager.syncSources(sources)
+                }
             }
 
             // Parallelize independent operations
@@ -110,6 +134,14 @@ class MainActivity : ComponentActivity() {
             YaFeedApp(repository, prefManager)
         }
     }
+    
+    override fun onDestroy() {
+        dataSyncListener?.let {
+            Wearable.getDataClient(this).removeListener(it)
+            Log.d("MainActivity", "DataClient listener unregistered")
+        }
+        super.onDestroy()
+    }
 }
 
 @Composable
@@ -123,11 +155,11 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
     val newsListViewModel = remember { NewsListViewModel(repository, prefManager, context) }
     val favoritesViewModel = remember { FavoritesViewModel(repository) }
 
-    val connectionManager = remember { WearConnectionStateManager(context) }
-    val syncManager = remember { MobileSyncManager(context, connectionManager) }
-    val messageHandler = remember { WearMessageHandler(context) }
+    val connectionManager = remember { WearableConnectionManager(context) }
+    val syncManager = remember { WearableDataSyncManager(context, connectionManager) }
+    val messageManager = remember { WearableMessageManager(context) }
     val connectionDebugViewModel = remember {
-        WearConnectionDebugViewModel(connectionManager, syncManager, messageHandler, prefManager, repository)
+        WearConnectionDebugViewModel(connectionManager, syncManager, messageManager, prefManager, repository)
     }
 
     YaFeedTheme {

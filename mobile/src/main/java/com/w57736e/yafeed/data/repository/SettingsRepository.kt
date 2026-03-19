@@ -2,13 +2,14 @@ package com.w57736e.yafeed.data.repository
 
 import android.util.Log
 import com.w57736e.yafeed.data.local.PreferenceManager
-import com.w57736e.yafeed.sync.WearSyncManager
+import com.w57736e.yafeed.sync.WearableDataSyncManager
+import com.w57736e.yafeed.sync.SettingsBundle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
 class SettingsRepository(
     private val preferenceManager: PreferenceManager,
-    private val wearSyncManager: WearSyncManager
+    private val wearableDataSyncManager: WearableDataSyncManager
 ) {
     val uiScale: Flow<Float> = preferenceManager.uiScale
     val showImages: Flow<Boolean> = preferenceManager.showImages
@@ -69,7 +70,7 @@ class SettingsRepository(
     private suspend fun syncToWear() {
         try {
             Log.d("SettingsSync", "Syncing settings to Wear...")
-            wearSyncManager.syncSettings(
+            val bundle = SettingsBundle.create(
                 uiScale = uiScale.first(),
                 showImages = showImages.first(),
                 updateInterval = updateInterval.first(),
@@ -81,6 +82,7 @@ class SettingsRepository(
                 notificationEnabled = notificationEnabled.first(),
                 lastModified = lastModified.first()
             )
+            wearableDataSyncManager.syncSettings(bundle)
             Log.d("SettingsSync", "Settings synced successfully")
         } catch (e: Exception) {
             Log.e("SettingsSync", "Failed to sync settings", e)

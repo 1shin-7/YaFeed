@@ -4,17 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.w57736e.yafeed.data.local.PreferenceManager
 import com.w57736e.yafeed.data.repository.RssRepository
-import com.w57736e.yafeed.sync.MobileSyncManager
+import com.w57736e.yafeed.sync.WearableDataSyncManager
 import com.w57736e.yafeed.sync.SettingsBundle
-import com.w57736e.yafeed.sync.WearConnectionStateManager
-import com.w57736e.yafeed.sync.WearMessageHandler
+import com.w57736e.yafeed.sync.WearableConnectionManager
+import com.w57736e.yafeed.sync.WearableMessageManager
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class WearConnectionDebugViewModel(
-    private val connectionManager: WearConnectionStateManager,
-    private val syncManager: MobileSyncManager,
-    private val messageHandler: WearMessageHandler,
+    private val connectionManager: WearableConnectionManager,
+    private val syncManager: WearableDataSyncManager,
+    private val messageManager: WearableMessageManager,
     private val prefManager: PreferenceManager,
     private val repository: RssRepository
 ) : ViewModel() {
@@ -41,7 +41,7 @@ class WearConnectionDebugViewModel(
             notificationEnabled = prefManager.notificationEnabled.first(),
             lastModified = System.currentTimeMillis()
         )
-        syncManager.syncSettingsAtomic(bundle)
+        syncManager.syncSettings(bundle)
     }
 
     fun syncSources() = viewModelScope.launch {
@@ -50,10 +50,10 @@ class WearConnectionDebugViewModel(
     }
 
     fun openPageOnPhone() = viewModelScope.launch {
-        messageHandler.sendOpenPageRequest("https://github.com/w57736e/YaFeed")
+        messageManager.sendOpenPage("https://github.com/w57736e/YaFeed")
     }
 
     fun requestTextInput() = viewModelScope.launch {
-        messageHandler.requestTextInput("Enter text from phone:")
+        messageManager.requestInput("Enter text from phone:")
     }
 }

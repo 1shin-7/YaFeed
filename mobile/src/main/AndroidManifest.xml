@@ -4,6 +4,14 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    
+    <!-- Wearable 连接权限 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    
+    <!-- 通知权限 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -24,21 +32,15 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".sync.WearDataListenerService"
-            android:exported="true">
+<service
+            android:name=".sync.WearableListenerService"
+            android:exported="true"
+            android:permission="com.google.android.wearable.permission.BIND_LISTENER">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
-                <data android:scheme="wear" android:host="*" />
-            </intent-filter>
-        </service>
-
-        <service
-            android:name=".sync.MobileMessageListenerService"
-            android:exported="true">
-            <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
-                <data android:scheme="wear" android:host="*" />
+                <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
+                <action android:name="com.google.android.gms.wearable.CHANNEL_EVENT" />
             </intent-filter>
         </service>
     </application>

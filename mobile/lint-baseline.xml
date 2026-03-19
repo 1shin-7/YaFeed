@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 9.1.0" type="baseline" client="gradle" dependencies="false" name="AGP (9.1.0)" variant="all" version="9.1.0">
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="            Text(&quot;UI Scale: ${String.format(&quot;%.1f&quot;, uiScale)}&quot;, style = MaterialTheme.typography.titleSmall)"
+        errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/w57736e/yafeed/ui/settings/SettingsScreen.kt"
+            line="48"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="            Text(&quot;Font Size: ${String.format(&quot;%.0f&quot;, fontSize)}sp&quot;, style = MaterialTheme.typography.titleSmall)"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/w57736e/yafeed/ui/settings/SettingsScreen.kt"
+            line="87"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="CoarseFineLocation"
+        message="If you need access to FINE location, you must request both `ACCESS_FINE_LOCATION` and `ACCESS_COARSE_LOCATION`"
+        errorLine1="    &lt;uses-permission android:name=&quot;android.permission.ACCESS_FINE_LOCATION&quot; />"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="11"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlin.android than 2.3.10 is available: 2.3.20"
+        errorLine1="kotlin = &quot;2.3.10&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="3"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlin.plugin.compose than 2.3.10 is available: 2.3.20"
+        errorLine1="kotlin = &quot;2.3.10&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="3"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="This folder configuration (`v26`) is unnecessary; `minSdkVersion` is 28. Merge all the resources in this folder into `mipmap-anydpi`.">
+        <location
+            file="src/main/res/mipmap-anydpi-v26"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.black` appears to be unused"
+        errorLine1="    &lt;color name=&quot;black&quot;>#FF000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="3"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.white` appears to be unused"
+        errorLine1="    &lt;color name=&quot;white&quot;>#FFFFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="4"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.hello_world` appears to be unused"
+        errorLine1="    &lt;string name=&quot;hello_world&quot;>Hello World!&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.array.android_wear_capabilities` appears to be unused"
+        errorLine1="    &lt;string-array name=&quot;android_wear_capabilities&quot; translatable=&quot;false&quot;>"
+        errorLine2="                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/wear.xml"
+            line="3"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="IconDuplicates"
+        message="The following unrelated icon files have identical contents: ic_launcher.webp, ic_launcher_round.webp">
+        <location
+            file="src/main/res/mipmap-hdpi/ic_launcher_round.webp"/>
+        <location
+            file="src/main/res/mipmap-hdpi/ic_launcher.webp"/>
+    </issue>
+
+    <issue
+        id="IconDuplicates"
+        message="The following unrelated icon files have identical contents: ic_launcher.webp, ic_launcher_round.webp">
+        <location
+            file="src/main/res/mipmap-mdpi/ic_launcher_round.webp"/>
+        <location
+            file="src/main/res/mipmap-mdpi/ic_launcher.webp"/>
+    </issue>
+
+    <issue
+        id="IconDuplicates"
+        message="The following unrelated icon files have identical contents: ic_launcher.webp, ic_launcher_round.webp">
+        <location
+            file="src/main/res/mipmap-xhdpi/ic_launcher_round.webp"/>
+        <location
+            file="src/main/res/mipmap-xhdpi/ic_launcher.webp"/>
+    </issue>
+
+    <issue
+        id="IconDuplicates"
+        message="The following unrelated icon files have identical contents: ic_launcher.webp, ic_launcher_round.webp">
+        <location
+            file="src/main/res/mipmap-xxhdpi/ic_launcher_round.webp"/>
+        <location
+            file="src/main/res/mipmap-xxhdpi/ic_launcher.webp"/>
+    </issue>
+
+    <issue
+        id="IconDuplicates"
+        message="The following unrelated icon files have identical contents: ic_launcher.webp, ic_launcher_round.webp">
+        <location
+            file="src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp"/>
+        <location
+            file="src/main/res/mipmap-xxxhdpi/ic_launcher.webp"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {"
+        errorLine2="                                                    ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/w57736e/yafeed/sync/WearableListenerService.kt"
+            line="147"
+            column="53"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use the existing version catalog reference (`libs.kotlinx.coroutines.play.services`) instead"
+        errorLine1="    implementation(&quot;org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="101"
+            column="20"/>
+    </issue>
+
+</issues>

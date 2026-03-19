@@ -1,6 +1,7 @@
 package com.w57736e.yafeed
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -15,7 +16,11 @@ import com.w57736e.yafeed.data.local.PreferenceManager
 import com.w57736e.yafeed.data.repository.RssSourceRepository
 import com.w57736e.yafeed.data.repository.SettingsRepository
 import com.w57736e.yafeed.domain.model.RssSource
-import com.w57736e.yafeed.sync.WearConnectionManager
+import com.w57736e.yafeed.sync.WearableConnectionManager
+import com.w57736e.yafeed.sync.WearableDataSyncManager
+import com.w57736e.yafeed.sync.WearableMessageManager
+import com.w57736e.yafeed.sync.DataSyncListener
+import com.google.android.gms.wearable.Wearable
 import com.w57736e.yafeed.ui.components.WearDisconnectedOverlay
 import com.w57736e.yafeed.ui.sources.AddEditSourceScreen
 import com.w57736e.yafeed.ui.sources.SourcesScreen
@@ -24,24 +29,45 @@ import com.w57736e.yafeed.ui.settings.SettingsScreen
 import com.w57736e.yafeed.ui.settings.SettingsViewModel
 import com.w57736e.yafeed.ui.theme.YaFeedTheme
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    private var dataSyncListener: DataSyncListener? = null
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val database = AppDatabase.getDatabase(this)
         val preferenceManager = PreferenceManager(this)
-        val wearSyncManager = com.w57736e.yafeed.sync.WearSyncManager(this)
-        val sourcesViewModel = SourcesViewModel(RssSourceRepository(database.sourceDao(), wearSyncManager))
-        val settingsViewModel = SettingsViewModel(SettingsRepository(preferenceManager, wearSyncManager))
-        val connectionManager = WearConnectionManager(this)
+        val wearableDataSyncManager = WearableDataSyncManager(this)
+        val messageManager = WearableMessageManager(this)
+        val sourcesViewModel = SourcesViewModel(RssSourceRepository(database.sourceDao(), wearableDataSyncManager))
+        val settingsViewModel = SettingsViewModel(SettingsRepository(preferenceManager, wearableDataSyncManager))
+        val connectionManager = WearableConnectionManager(this)
+
+        // Register DataClient listener for sync
+        dataSyncListener = DataSyncListener(this, lifecycleScope)
+        Wearable.getDataClient(this).addListener(dataSyncListener!!)
+        Log.d("MainActivity", "DataClient listener registered")
 
         lifecycleScope.launch {
             while (isActive) {
                 connectionManager.checkConnection()
                 delay(10000)
+            }
+        }
+
+        // Request sync from Wear after startup if local data is empty
+        lifecycleScope.launch {
+            delay(3000) // Wait for connection to establish
+            val sources = database.sourceDao().getAllSources().first()
+            if (sources.isEmpty()) {
+                Log.d("MainActivity", "Local sources empty, requesting sync from Wear")
+                messageManager.requestSync()
+            } else {
+                Log.d("MainActivity", "Local sources count: ${sources.size}")
             }
         }
 
@@ -79,6 +105,14 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+    
+    override fun onDestroy() {
+        dataSyncListener?.let {
+            Wearable.getDataClient(this).removeListener(it)
+            Log.d("MainActivity", "DataClient listener unregistered")
+        }
+        super.onDestroy()
     }
 }
 

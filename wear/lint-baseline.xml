@@ -13,105 +13,6 @@
     </issue>
 
     <issue
-        id="MissingTranslation"
-        message="&quot;undo&quot; is not translated in &quot;ru&quot; (Russian), &quot;ja&quot; (Japanese), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;undo&quot;>Undo&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="8"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;favorites&quot; is not translated in &quot;ru&quot; (Russian), &quot;ja&quot; (Japanese), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;favorites&quot;>Favorites&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="16"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;favorite&quot; is not translated in &quot;ru&quot; (Russian), &quot;ja&quot; (Japanese), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;favorite&quot;>Favorite&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="17"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;unfavorite&quot; is not translated in &quot;ru&quot; (Russian), &quot;ja&quot; (Japanese), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;unfavorite&quot;>Unfavorite&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="18"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;save_images_on_favorite&quot; is not translated in &quot;ru&quot; (Russian), &quot;ja&quot; (Japanese), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;save_images_on_favorite&quot;>Save images on favorite&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="46"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;save_images_description&quot; is not translated in &quot;ru&quot; (Russian), &quot;ja&quot; (Japanese), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;save_images_description&quot;>Download images for offline viewing&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="47"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;cache_size&quot; is not translated in &quot;ru&quot; (Russian), &quot;ja&quot; (Japanese), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;cache_size&quot;>Cache Size: %d&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="48"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;update_interval&quot; is not translated in &quot;ru&quot; (Russian), &quot;ja&quot; (Japanese), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;update_interval&quot;>Update Interval(min)&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="49"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;font_size&quot; is not translated in &quot;ru&quot; (Russian), &quot;ja&quot; (Japanese), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;font_size&quot;>Font Size: %ssp&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="54"
-            column="13"/>
-    </issue>
-
-    <issue
         id="ObsoleteSdkInt"
         message="Unnecessary; `SDK_INT` is always >= 28"
         errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {"
@@ -204,6 +105,28 @@
 
     <issue
         id="UnusedResources"
+        message="The resource `R.string.favorite` appears to be unused"
+        errorLine1="    &lt;string name=&quot;favorite&quot;>Favorite&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="14"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.unfavorite` appears to be unused"
+        errorLine1="    &lt;string name=&quot;unfavorite&quot;>Unfavorite&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="15"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
         message="The resource `R.string.no_updates` appears to be unused"
         errorLine1="    &lt;string name=&quot;no_updates&quot;>No updates&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~">
@@ -222,6 +145,72 @@
             file="src/main/res/values/strings.xml"
             line="38"
             column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.save_images_on_favorite` appears to be unused"
+        errorLine1="    &lt;string name=&quot;save_images_on_favorite&quot;>Save images on favorite&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="46"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.save_images_description` appears to be unused"
+        errorLine1="    &lt;string name=&quot;save_images_description&quot;>Download images for offline viewing&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="47"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.cache_size` appears to be unused"
+        errorLine1="    &lt;string name=&quot;cache_size&quot;>Cache Size: %d&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="48"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.update_interval` appears to be unused"
+        errorLine1="    &lt;string name=&quot;update_interval&quot;>Update Interval(min)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="49"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.font_size` appears to be unused"
+        errorLine1="    &lt;string name=&quot;font_size&quot;>Font Size: %ssp&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="54"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.array.android_wear_capabilities` appears to be unused"
+        errorLine1="    &lt;string-array name=&quot;android_wear_capabilities&quot; translatable=&quot;false&quot;>"
+        errorLine2="                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/wear.xml"
+            line="3"
+            column="19"/>
     </issue>
 
     <issue
