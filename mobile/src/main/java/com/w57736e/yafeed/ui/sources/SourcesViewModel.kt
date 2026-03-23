@@ -13,6 +13,10 @@ class SourcesViewModel(private val repository: RssSourceRepository) : ViewModel(
     val sources: StateFlow<List<RssSource>> = repository.getAllSources()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    fun markBootstrapped() {
+        repository.markBootstrapped()
+    }
+
     fun addSource(name: String, url: String, notificationEnabled: Boolean) {
         viewModelScope.launch {
             val maxOrder = sources.value.maxOfOrNull { it.order } ?: -1

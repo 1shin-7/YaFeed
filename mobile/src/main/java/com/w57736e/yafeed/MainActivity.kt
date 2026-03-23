@@ -59,16 +59,21 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        // Request sync from Wear after startup if local data is empty
+        // Bootstrap: clear local sources and request sync from Wear
         lifecycleScope.launch {
-            delay(3000) // Wait for connection to establish
+            delay(2000) // Wait for connection to establish
+            
+            Log.d("MainActivity", "Bootstrap: clearing local sources")
+            database.sourceDao().deleteAllSources()
+            
+            Log.d("MainActivity", "Bootstrap: requesting sync from Wear")
+            messageManager.requestSync()
+            
+            // Wait for sources to arrive, then mark bootstrapped
+            delay(5000)
+            sourcesViewModel.markBootstrapped()
             val sources = database.sourceDao().getAllSources().first()
-            if (sources.isEmpty()) {
-                Log.d("MainActivity", "Local sources empty, requesting sync from Wear")
-                messageManager.requestSync()
-            } else {
-                Log.d("MainActivity", "Local sources count: ${sources.size}")
-            }
+            Log.d("MainActivity", "Bootstrap complete - sources: ${sources.size}")
         }
 
         setContent {
