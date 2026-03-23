@@ -13,9 +13,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
-import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
+import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material3.*
 import com.w57736e.yafeed.R
 import com.w57736e.yafeed.domain.model.RssSource
@@ -29,7 +29,7 @@ fun SourcesScreen(
     onEditSource: (Int) -> Unit,
     onNavigateToAddSource: () -> Unit
 ) {
-    val scrollState = rememberTransformingLazyColumnState()
+    val scrollState = rememberScalingLazyListState()
     var sourceToDelete by remember { mutableStateOf<RssSource?>(null) }
 
     sourceToDelete?.let { source ->
@@ -91,7 +91,7 @@ fun SourcesScreen(
             }
         }
     ) {
-        TransformingLazyColumn(
+        ScalingLazyColumn(
             state = scrollState,
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(top = 24.dp, start = 12.dp, end = 12.dp, bottom = 24.dp)
