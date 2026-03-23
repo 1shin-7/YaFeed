@@ -9,10 +9,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
-import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
+import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.*
 import com.w57736e.yafeed.R
 import com.w57736e.yafeed.presentation.components.ArticleCard
@@ -23,15 +24,19 @@ fun FavoritesScreen(
     onArticleClick: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val scrollState = rememberScalingLazyListState(initialCenterItemIndex = 0)
+    val scrollState = rememberTransformingLazyColumnState()
 
     ScreenScaffold(scrollState = scrollState) { contentPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
-            ScalingLazyColumn(
+            TransformingLazyColumn(
                 state = scrollState,
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = contentPadding,
-                autoCentering = if (uiState.favorites.isEmpty()) null else androidx.wear.compose.foundation.lazy.AutoCenteringParams()
+                contentPadding = PaddingValues(
+                    top = contentPadding.calculateTopPadding(),
+                    start = contentPadding.calculateLeftPadding(LayoutDirection.Ltr),
+                    end = contentPadding.calculateRightPadding(LayoutDirection.Ltr),
+                    bottom = 64.dp
+                )
             ) {
                 item {
                     Text(
@@ -55,7 +60,9 @@ fun FavoritesScreen(
                             )
                         },
                         onSwipePrimaryAction = { viewModel.deleteFavorite(favorite) },
-                        modifier = Modifier.padding(bottom = 8.dp)
+                        modifier = Modifier
+                            .padding(bottom = 8.dp)
+                            .animateItem()
                     ) {
                         ArticleCard(
                             article = favorite.toRssArticle(),
