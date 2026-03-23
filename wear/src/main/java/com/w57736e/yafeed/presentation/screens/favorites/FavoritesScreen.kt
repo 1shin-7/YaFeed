@@ -59,7 +59,9 @@ fun FavoritesScreen(
                             )
                         },
                         onSwipePrimaryAction = { viewModel.deleteFavorite(favorite) },
-                        modifier = Modifier.padding(bottom = 8.dp)
+                        modifier = Modifier
+                            .padding(bottom = 8.dp)
+                            .animateItem()
                     ) {
                         ArticleCard(
                             article = favorite.toRssArticle(),
