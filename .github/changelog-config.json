@@ -2,57 +2,69 @@
   "categories": [
     {
       "title": "## ✨ Features",
-      "labels": ["feature"]
+      "labels": ["feature"],
+      "exclude": {
+        "labels": ["ci", "chore"]
+      }
     },
     {
       "title": "## 🐛 Bug Fixes",
-      "labels": ["bug"]
+      "labels": ["bug"],
+      "exclude": {
+        "labels": ["ci", "chore"]
+      }
     },
     {
       "title": "## ⚡ Performance",
       "labels": ["performance"]
     },
     {
+      "title": "## 💄 Styles",
+      "labels": ["style"]
+    },
+    {
+      "title": "## ♻️ Refactor",
+      "labels": ["refactor"]
+    },
+    {
       "title": "## 🌐 Internationalization",
       "labels": ["i18n"]
     },
     {
-      "title": "## 🔧 Configuration",
-      "labels": ["chore"]
-    },
-    {
       "title": "## 👷 CI/CD",
       "labels": ["ci"]
+    },
+    {
+      "title": "## 🔧 Chores",
+      "labels": ["chore"]
     }
   ],
   "label_extractor": [
     {
-      "pattern": ":sparkles: feat:|:tada: initial:",
-      "target": "feature"
+      "pattern": ":sparkles: feat:",
+      "on_property": "title",
+      "method": "replace",
+      "target": "$1",
+      "on_empty": "feature"
     },
     {
-      "pattern": ":bug: fix:",
-      "target": "bug"
-    },
-    {
-      "pattern": ":zap: perf:",
-      "target": "performance"
-    },
-    {
-      "pattern": ":globe_with_meridians: i18n:",
-      "target": "i18n"
-    },
-    {
-      "pattern": ":wrench:|:bookmark: chore:",
-      "target": "chore"
-    },
-    {
-      "pattern": ":construction_worker: ci:",
-      "target": "ci"
+      "pattern": "^(?::\\w+:\\s*)?(\\w+)(?:\\(.+\\))?!?:",
+      "on_property": "title",
+      "method": "regex",
+      "target": "$1"
     }
   ],
-  "template": "${{CHANGELOG}}",
-  "pr_template": "- ${{TITLE}} (${{MERGE_SHA}})",
+  "template": "${{CHANGELOG}}\n\n**Full Changelog**: ${{RELEASE_DIFF}}\n",
+  "pr_template": "- ${{TITLE}} (#${{NUMBER}})",
+  "commit_template": "- ${{TITLE}} (${{SHA}})",
   "empty_template": "- No changes",
-  "trim_values": true
+  "transformers": [
+    {
+      "pattern": "^(?::\\w+:\\s*)?(\\w+)(?:\\(.+\\))?!?:\\s*(.+)$",
+      "target": "$2"
+    }
+  ],
+  "trim_values": true,
+  "max_pull_requests": 1000,
+  "max_back_track_time_days": 1000
 }
