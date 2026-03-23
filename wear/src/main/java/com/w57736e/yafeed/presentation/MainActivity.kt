@@ -87,11 +87,14 @@ class MainActivity : ComponentActivity() {
 
             // Sync sources to Mobile after seeding
             launch(kotlinx.coroutines.Dispatchers.IO) {
-                delay(2000) // Wait for connection to establish
-                val sources = repository.getAllSources().first()
-                if (sources.isNotEmpty()) {
-                    Log.d("MainActivity", "Auto-syncing ${sources.size} sources to Mobile")
-                    syncManager.syncSources(sources)
+                delay(2000)
+                try {
+                    val sources = repository.getAllSources().first()
+                    if (sources.isNotEmpty()) {
+                        syncManager.syncSources(sources)
+                    }
+                } catch (e: Exception) {
+                    Log.e("MainActivity", "Auto-sync failed: ${e.message}")
                 }
             }
 
@@ -290,12 +293,23 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
 
             composable("settings_sources") {
                 val uiState by homeViewModel.uiState.collectAsState()
+
+                suspend fun syncSources() {
+                    try {
+                        val sources = repository.getAllSources().first()
+                        syncManager.syncSources(sources)
+                    } catch (e: Exception) {
+                        Log.e("SourcesSync", "Failed to sync sources: ${e.message}")
+                    }
+                }
+
                 com.w57736e.yafeed.presentation.screens.settings.SourcesScreen(
                     sources = uiState.sources,
                     onAddSource = { name, url -> /* TODO */ },
                     onDeleteSource = { source ->
                         scope.launch {
                             repository.deleteSource(source)
+                            syncSources()
                         }
                     },
                     onEditSource = { sourceId ->
@@ -314,6 +328,27 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                 val notificationEnabled by prefManager.notificationEnabled.collectAsState(false)
                 val saveImagesOnFavorite by prefManager.saveImagesOnFavorite.collectAsState(false)
 
+                suspend fun syncSettings() {
+                    try {
+                        val bundle = SettingsBundle.create(
+                            showImages = prefManager.showImages.first(),
+                            updateInterval = prefManager.updateInterval.first(),
+                            listViewGrid = prefManager.isGridView.first(),
+                            maxCacheSize = prefManager.maxCacheSize.first(),
+                            fontSize = prefManager.fontSize.first(),
+                            browserType = prefManager.browserType.first(),
+                            browserAvailable = prefManager.browserAvailable.first(),
+                            notificationEnabled = prefManager.notificationEnabled.first(),
+                            saveImagesOnFavorite = prefManager.saveImagesOnFavorite.first(),
+                            useOriginalImagePreview = prefManager.useOriginalImagePreview.first(),
+                            lastModified = System.currentTimeMillis()
+                        )
+                        syncManager.syncSettings(bundle)
+                    } catch (e: Exception) {
+                        Log.e("SettingsSync", "Failed to sync settings: ${e.message}")
+                    }
+                }
+
                 com.w57736e.yafeed.presentation.screens.settings.GeneralSettingsScreen(
                     maxCacheSize = maxCacheSize,
                     updateInterval = updateInterval,
@@ -323,19 +358,34 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                     notificationEnabled = notificationEnabled,
                     saveImagesOnFavorite = saveImagesOnFavorite,
                     onMaxCacheSizeChange = { size ->
-                        scope.launch { prefManager.setMaxCacheSize(size) }
+                        scope.launch { 
+                            prefManager.setMaxCacheSize(size)
+                            syncSettings()
+                        }
                     },
                     onUpdateIntervalChange = { interval ->
-                        scope.launch { prefManager.setUpdateInterval(interval) }
+                        scope.launch { 
+                            prefManager.setUpdateInterval(interval)
+                            syncSettings()
+                        }
                     },
                     onBrowserTypeChange = { type ->
-                        scope.launch { prefManager.setBrowserType(type) }
+                        scope.launch { 
+                            prefManager.setBrowserType(type)
+                            syncSettings()
+                        }
                     },
                     onNotificationEnabledChange = { enabled ->
-                        scope.launch { prefManager.setNotificationEnabled(enabled) }
+                        scope.launch { 
+                            prefManager.setNotificationEnabled(enabled)
+                            syncSettings()
+                        }
                     },
                     onSaveImagesOnFavoriteChange = { enabled ->
-                        scope.launch { prefManager.setSaveImagesOnFavorite(enabled) }
+                        scope.launch { 
+                            prefManager.setSaveImagesOnFavorite(enabled)
+                            syncSettings()
+                        }
                     }
                 )
             }
@@ -345,18 +395,48 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                 val showImages by prefManager.showImages.collectAsState(true)
                 val useOriginalImagePreview by prefManager.useOriginalImagePreview.collectAsState(false)
 
+                suspend fun syncSettings() {
+                    try {
+                        val bundle = SettingsBundle.create(
+                            showImages = prefManager.showImages.first(),
+                            updateInterval = prefManager.updateInterval.first(),
+                            listViewGrid = prefManager.isGridView.first(),
+                            maxCacheSize = prefManager.maxCacheSize.first(),
+                            fontSize = prefManager.fontSize.first(),
+                            browserType = prefManager.browserType.first(),
+                            browserAvailable = prefManager.browserAvailable.first(),
+                            notificationEnabled = prefManager.notificationEnabled.first(),
+                            saveImagesOnFavorite = prefManager.saveImagesOnFavorite.first(),
+                            useOriginalImagePreview = prefManager.useOriginalImagePreview.first(),
+                            lastModified = System.currentTimeMillis()
+                        )
+                        syncManager.syncSettings(bundle)
+                    } catch (e: Exception) {
+                        Log.e("SettingsSync", "Failed to sync settings: ${e.message}")
+                    }
+                }
+
                 com.w57736e.yafeed.presentation.screens.settings.UiSettingsScreen(
                     showImages = showImages,
                     fontSize = fontSize,
                     useOriginalImagePreview = useOriginalImagePreview,
                     onShowImagesChange = { show ->
-                        scope.launch { prefManager.setShowImages(show) }
+                        scope.launch { 
+                            prefManager.setShowImages(show)
+                            syncSettings()
+                        }
                     },
                     onFontSizeChange = { size ->
-                        scope.launch { prefManager.setFontSize(size) }
+                        scope.launch { 
+                            prefManager.setFontSize(size)
+                            syncSettings()
+                        }
                     },
                     onUseOriginalImagePreviewChange = { enabled ->
-                        scope.launch { prefManager.setUseOriginalImagePreview(enabled) }
+                        scope.launch { 
+                            prefManager.setUseOriginalImagePreview(enabled)
+                            syncSettings()
+                        }
                     }
                 )
             }
@@ -377,6 +457,13 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                                 name
                             }
                             repository.addSource(url, finalName, notificationEnabled)
+                            // Sync to Mobile
+                            try {
+                                val sources = repository.getAllSources().first()
+                                syncManager.syncSources(sources)
+                            } catch (e: Exception) {
+                                Log.e("SourcesSync", "Failed to sync sources: ${e.message}")
+                            }
                         }
                     },
                     onNavigateBack = { navController.popBackStack() }
@@ -398,7 +485,16 @@ fun YaFeedApp(repository: RssRepository, prefManager: PreferenceManager) {
                     com.w57736e.yafeed.presentation.screens.settings.EditSourceScreen(
                         source = it,
                         onSave = { name, notificationEnabled ->
-                            repository.updateSource(sourceId, name, notificationEnabled)
+                            scope.launch {
+                                repository.updateSource(sourceId, name, notificationEnabled)
+                                // Sync to Mobile
+                                try {
+                                    val sources = repository.getAllSources().first()
+                                    syncManager.syncSources(sources)
+                                } catch (e: Exception) {
+                                    Log.e("SourcesSync", "Failed to sync sources: ${e.message}")
+                                }
+                            }
                         },
                         onNavigateBack = { navController.popBackStack() }
                     )

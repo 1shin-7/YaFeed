@@ -35,9 +35,7 @@ class WearableDataSyncManager(
      * 同步设置到 Mobile - 使用强类型 DataMap
      */
     suspend fun syncSettings(bundle: SettingsBundle): Result<Unit> {
-        Log.d(TAG, ">>> syncSettings START")
-        Log.d(TAG, "    bundle: showImages=${bundle.showImages}, updateInterval=${bundle.updateInterval}")
-        Log.d(TAG, "    bundle: fontSize=${bundle.fontSize}, browserType=${bundle.browserType}")
+        Log.d(TAG, "syncSettings: interval=${bundle.updateInterval}, cache=${bundle.maxCacheSize}")
         
         connectionManager.logSyncEvent(
             SyncEvent(
@@ -48,10 +46,8 @@ class WearableDataSyncManager(
         )
         
         return try {
-            // 使用时间戳确保每次都是新的 DataItem
             val timestamp = System.currentTimeMillis()
             val path = "$SETTINGS_PATH/$timestamp"
-            Log.d(TAG, "    path: $path")
             
             val request = PutDataMapRequest.create(path).apply {
                 dataMap.apply {
@@ -71,14 +67,9 @@ class WearableDataSyncManager(
                 }
             }
             
-            val dataRequest = request.asPutDataRequest()
-            Log.d(TAG, "    dataRequest.uri: ${dataRequest.uri}")
-            Log.d(TAG, "    dataRequest.data.size: ${dataRequest.data?.size ?: 0}")
-            
             withTimeout(TIMEOUT_MS) {
                 retryWithBackoff {
-                    val result = dataClient.putDataItem(dataRequest).await()
-                    Log.d(TAG, "    putDataItem result: uri=${result.uri}")
+                    dataClient.putDataItem(request.asPutDataRequest()).await()
                 }
             }
             
@@ -90,16 +81,16 @@ class WearableDataSyncManager(
                 )
             )
             
-            Log.d(TAG, "<<< syncSettings SUCCESS")
+            Log.d(TAG, "syncSettings: SUCCESS")
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e(TAG, "<<< syncSettings FAILED: ${e.javaClass.simpleName}: ${e.message}", e)
+            Log.e(TAG, "syncSettings: FAILED - ${e.message}")
             connectionManager.logSyncEvent(
                 SyncEvent(
                     timestamp = System.currentTimeMillis(),
                     type = SyncType.SETTINGS,
                     status = SyncStatus.FAILURE,
-                    message = "${e.javaClass.simpleName}: ${e.message}"
+                    message = e.message ?: "Unknown error"
                 )
             )
             Result.failure(e)
@@ -110,11 +101,7 @@ class WearableDataSyncManager(
      * 同步 RSS 源到 Mobile - 使用强类型 DataMap 数组
      */
     suspend fun syncSources(sources: List<RssSource>): Result<Unit> {
-        Log.d(TAG, ">>> syncSources START")
-        Log.d(TAG, "    sources count: ${sources.size}")
-        sources.forEachIndexed { i, s ->
-            Log.d(TAG, "    [$i] id=${s.id}, name=${s.name}, url=${s.url}")
-        }
+        Log.d(TAG, "syncSources: ${sources.size} sources")
         
         connectionManager.logSyncEvent(
             SyncEvent(
@@ -127,9 +114,7 @@ class WearableDataSyncManager(
         return try {
             val timestamp = System.currentTimeMillis()
             val path = "$SOURCES_PATH/$timestamp"
-            Log.d(TAG, "    path: $path")
             
-            // 将每个源转换为 DataMap
             val sourcesDataMaps = sources.map { source ->
                 DataMap().apply {
                     putInt(SyncKeys.SOURCE_ID, source.id)
@@ -152,14 +137,9 @@ class WearableDataSyncManager(
                 }
             }
             
-            val dataRequest = request.asPutDataRequest()
-            Log.d(TAG, "    dataRequest.uri: ${dataRequest.uri}")
-            Log.d(TAG, "    dataRequest.data.size: ${dataRequest.data?.size ?: 0}")
-            
             withTimeout(TIMEOUT_MS) {
                 retryWithBackoff {
-                    val result = dataClient.putDataItem(dataRequest).await()
-                    Log.d(TAG, "    putDataItem result: uri=${result.uri}")
+                    dataClient.putDataItem(request.asPutDataRequest()).await()
                 }
             }
             
@@ -171,16 +151,16 @@ class WearableDataSyncManager(
                 )
             )
             
-            Log.d(TAG, "<<< syncSources SUCCESS")
+            Log.d(TAG, "syncSources: SUCCESS")
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e(TAG, "<<< syncSources FAILED: ${e.javaClass.simpleName}: ${e.message}", e)
+            Log.e(TAG, "syncSources: FAILED - ${e.message}")
             connectionManager.logSyncEvent(
                 SyncEvent(
                     timestamp = System.currentTimeMillis(),
                     type = SyncType.SOURCES,
                     status = SyncStatus.FAILURE,
-                    message = "${e.javaClass.simpleName}: ${e.message}"
+                    message = e.message ?: "Unknown error"
                 )
             )
             Result.failure(e)
