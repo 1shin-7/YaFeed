@@ -8,9 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.unit.dp
-import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
 import androidx.wear.compose.foundation.lazy.itemsIndexed
-import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
+import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.*
 import com.w57736e.yafeed.R
 import com.w57736e.yafeed.presentation.components.ArticleCard
@@ -23,7 +23,7 @@ fun NewsListScreen(
     onArticleClick: (Int) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val scrollState = rememberScalingLazyListState()
+    val scrollState = rememberTransformingLazyColumnState()
 
     LaunchedEffect(sourceId) {
         viewModel.setSourceId(sourceId)
@@ -34,10 +34,15 @@ fun NewsListScreen(
             isRefreshing = uiState.isLoading,
             onRefresh = { viewModel.refreshArticles() }
         ) {
-            ScalingLazyColumn(
+            TransformingLazyColumn(
                 state = scrollState,
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = contentPadding
+                contentPadding = PaddingValues(
+                    top = contentPadding.calculateTopPadding(),
+                    start = contentPadding.calculateLeftPadding(androidx.compose.ui.unit.LayoutDirection.Ltr),
+                    end = contentPadding.calculateRightPadding(androidx.compose.ui.unit.LayoutDirection.Ltr),
+                    bottom = 64.dp
+                )
             ) {
                 item {
                     Text(

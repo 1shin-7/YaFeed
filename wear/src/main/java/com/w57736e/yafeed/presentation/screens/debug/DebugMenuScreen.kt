@@ -8,8 +8,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
-import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
-import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
+import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
+import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.*
 import com.w57736e.yafeed.R
 
@@ -19,13 +19,13 @@ fun DebugMenuScreen(
     onMarkdownAstClick: () -> Unit,
     onNavigateToConnectionDebug: () -> Unit
 ) {
-    val scrollState = rememberScalingLazyListState()
+    val scrollState = rememberTransformingLazyColumnState()
 
     ScreenScaffold(scrollState = scrollState) {
-        ScalingLazyColumn(
+        TransformingLazyColumn(
             state = scrollState,
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(top = 24.dp, start = 12.dp, end = 12.dp, bottom = 24.dp)
+            contentPadding = PaddingValues(top = 24.dp, start = 12.dp, end = 12.dp, bottom = 64.dp)
         ) {
             item {
                 Text(

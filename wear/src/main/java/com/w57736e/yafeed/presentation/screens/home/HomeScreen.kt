@@ -15,9 +15,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
-import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
+import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.*
 import com.w57736e.yafeed.R
 import com.w57736e.yafeed.presentation.components.SourceCard
@@ -32,7 +32,7 @@ fun HomeScreen(
     onFavoritesClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val scrollState = rememberScalingLazyListState()
+    val scrollState = rememberTransformingLazyColumnState()
     val chunkedSources = remember(uiState.sources) { uiState.sources.chunked(2) }
 
     ScreenScaffold(
@@ -60,13 +60,14 @@ fun HomeScreen(
             isRefreshing = uiState.isLoading,
             onRefresh = { viewModel.refreshAll() }
         ) {
-            ScalingLazyColumn(
+            TransformingLazyColumn(
                 state = scrollState,
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(
                     top = contentPadding.calculateTopPadding(),
-                    start = contentPadding.calculateStartPadding(LayoutDirection.Ltr),
-                    end = contentPadding.calculateEndPadding(LayoutDirection.Ltr),
+                    start = contentPadding.calculateLeftPadding(LayoutDirection.Ltr),
+                    end = contentPadding.calculateRightPadding(LayoutDirection.Ltr),
+                    bottom = 64.dp
                 )
             ) {
                 item {

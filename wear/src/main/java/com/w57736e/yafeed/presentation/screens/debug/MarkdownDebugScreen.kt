@@ -3,13 +3,13 @@ package com.w57736e.yafeed.presentation.screens.debug
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
+import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.ScreenScaffold
 import com.w57736e.yafeed.markdown.WearMarkdown
 
 @Composable
 fun MarkdownDebugScreen() {
-    val scrollState = rememberScalingLazyListState()
+    val scrollState = rememberTransformingLazyColumnState()
 
     ScreenScaffold(scrollState = scrollState) {
         WearMarkdown(
