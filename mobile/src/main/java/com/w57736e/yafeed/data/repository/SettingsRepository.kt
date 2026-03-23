@@ -11,28 +11,24 @@ class SettingsRepository(
     private val preferenceManager: PreferenceManager,
     private val wearableDataSyncManager: WearableDataSyncManager
 ) {
-    val uiScale: Flow<Float> = preferenceManager.uiScale
     val showImages: Flow<Boolean> = preferenceManager.showImages
-    val updateInterval: Flow<Int> = preferenceManager.updateInterval
+    val updateInterval: Flow<Long> = preferenceManager.updateInterval
     val listViewGrid: Flow<Boolean> = preferenceManager.listViewGrid
     val maxCacheSize: Flow<Int> = preferenceManager.maxCacheSize
     val fontSize: Flow<Float> = preferenceManager.fontSize
     val browserType: Flow<String> = preferenceManager.browserType
     val browserAvailable: Flow<Boolean> = preferenceManager.browserAvailable
     val notificationEnabled: Flow<Boolean> = preferenceManager.notificationEnabled
+    val saveImagesOnFavorite: Flow<Boolean> = preferenceManager.saveImagesOnFavorite
+    val useOriginalImagePreview: Flow<Boolean> = preferenceManager.useOriginalImagePreview
     val lastModified: Flow<Long> = preferenceManager.lastModified
-
-    suspend fun setUiScale(value: Float) {
-        preferenceManager.setUiScale(value)
-        syncToWear()
-    }
 
     suspend fun setShowImages(value: Boolean) {
         preferenceManager.setShowImages(value)
         syncToWear()
     }
 
-    suspend fun setUpdateInterval(value: Int) {
+    suspend fun setUpdateInterval(value: Long) {
         preferenceManager.setUpdateInterval(value)
         syncToWear()
     }
@@ -67,11 +63,20 @@ class SettingsRepository(
         syncToWear()
     }
 
+    suspend fun setSaveImagesOnFavorite(value: Boolean) {
+        preferenceManager.setSaveImagesOnFavorite(value)
+        syncToWear()
+    }
+
+    suspend fun setUseOriginalImagePreview(value: Boolean) {
+        preferenceManager.setUseOriginalImagePreview(value)
+        syncToWear()
+    }
+
     private suspend fun syncToWear() {
         try {
             Log.d("SettingsSync", "Syncing settings to Wear...")
             val bundle = SettingsBundle.create(
-                uiScale = uiScale.first(),
                 showImages = showImages.first(),
                 updateInterval = updateInterval.first(),
                 listViewGrid = listViewGrid.first(),
@@ -80,6 +85,8 @@ class SettingsRepository(
                 browserType = browserType.first(),
                 browserAvailable = browserAvailable.first(),
                 notificationEnabled = notificationEnabled.first(),
+                saveImagesOnFavorite = saveImagesOnFavorite.first(),
+                useOriginalImagePreview = useOriginalImagePreview.first(),
                 lastModified = lastModified.first()
             )
             wearableDataSyncManager.syncSettings(bundle)

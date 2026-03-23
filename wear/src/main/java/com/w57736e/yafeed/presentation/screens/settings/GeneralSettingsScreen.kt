@@ -79,11 +79,23 @@ fun GeneralSettingsScreen(
 
             item {
                 Text(
-                    "Update Interval(min)",
+                    "Update Interval",
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 8.dp),
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
+            }
+
+            item {
+                if (updateInterval !in listOf(5L, 10L, 15L, 30L, 60L)) {
+                    Text(
+                        "Custom: ${formatInterval(updateInterval)}",
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
 
             item {
@@ -179,5 +191,13 @@ fun GeneralSettingsScreen(
                 }
             }
         }
+    }
+}
+
+private fun formatInterval(minutes: Long): String {
+    return when {
+        minutes < 60 -> "${minutes}min"
+        minutes < 1440 -> "${minutes / 60}h"
+        else -> "${minutes / 1440}d"
     }
 }

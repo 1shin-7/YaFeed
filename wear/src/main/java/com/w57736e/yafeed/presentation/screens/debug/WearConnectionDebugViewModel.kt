@@ -30,15 +30,16 @@ class WearConnectionDebugViewModel(
 
     fun syncSettings() = viewModelScope.launch {
         val bundle = SettingsBundle.create(
-            uiScale = prefManager.uiScale.first(),
             showImages = prefManager.showImages.first(),
-            updateInterval = prefManager.updateInterval.first().toInt(),
+            updateInterval = prefManager.updateInterval.first(),
             listViewGrid = prefManager.isGridView.first(),
             maxCacheSize = prefManager.maxCacheSize.first(),
             fontSize = prefManager.fontSize.first(),
             browserType = prefManager.browserType.first(),
             browserAvailable = prefManager.browserAvailable.first(),
             notificationEnabled = prefManager.notificationEnabled.first(),
+            saveImagesOnFavorite = prefManager.saveImagesOnFavorite.first(),
+            useOriginalImagePreview = prefManager.useOriginalImagePreview.first(),
             lastModified = System.currentTimeMillis()
         )
         syncManager.syncSettings(bundle)

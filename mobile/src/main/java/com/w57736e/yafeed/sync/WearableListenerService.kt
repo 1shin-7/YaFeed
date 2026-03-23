@@ -129,20 +129,20 @@ class WearableListenerService : com.google.android.gms.wearable.WearableListener
                     
                     if (remoteTimestamp > localTimestamp) {
                         // 读取所有设置
-                        val uiScale = dataMap.getFloat(SyncKeys.UI_SCALE, 1.0f)
                         val showImages = dataMap.getBoolean(SyncKeys.SHOW_IMAGES, true)
-                        val updateInterval = dataMap.getInt(SyncKeys.UPDATE_INTERVAL, 30)
+                        val updateInterval = dataMap.getLong(SyncKeys.UPDATE_INTERVAL, 30L)
                         val listViewGrid = dataMap.getBoolean(SyncKeys.LIST_VIEW_GRID, false)
                         val maxCacheSize = dataMap.getInt(SyncKeys.MAX_CACHE_SIZE, 20)
-                        val fontSize = dataMap.getFloat(SyncKeys.FONT_SIZE, 14.0f)
+                        val fontSize = dataMap.getFloat(SyncKeys.FONT_SIZE, 14f)
                         val browserType = dataMap.getString(SyncKeys.BROWSER_TYPE, "default") ?: "default"
                         val browserAvailable = dataMap.getBoolean(SyncKeys.BROWSER_AVAILABLE, false)
                         val notificationEnabled = dataMap.getBoolean(SyncKeys.NOTIFICATION_ENABLED, false)
+                        val saveImagesOnFavorite = dataMap.getBoolean(SyncKeys.SAVE_IMAGES_ON_FAVORITE, false)
+                        val useOriginalImagePreview = dataMap.getBoolean(SyncKeys.USE_ORIGINAL_IMAGE_PREVIEW, false)
                         
-                        Log.d(TAG, "    settings: applying uiScale=$uiScale, showImages=$showImages")
+                        Log.d(TAG, "    settings: applying showImages=$showImages, updateInterval=$updateInterval")
                         
                         // 写入设置
-                        preferenceManager.setUiScale(uiScale)
                         preferenceManager.setShowImages(showImages)
                         preferenceManager.setUpdateInterval(updateInterval)
                         preferenceManager.setListViewGrid(listViewGrid)
@@ -151,6 +151,8 @@ class WearableListenerService : com.google.android.gms.wearable.WearableListener
                         preferenceManager.setBrowserType(browserType)
                         preferenceManager.setBrowserAvailable(browserAvailable)
                         preferenceManager.setNotificationEnabled(notificationEnabled)
+                        preferenceManager.setSaveImagesOnFavorite(saveImagesOnFavorite)
+                        preferenceManager.setUseOriginalImagePreview(useOriginalImagePreview)
                         
                         Log.d(TAG, "    settings: SUCCESS - applied all settings")
                     } else {

@@ -10,38 +10,41 @@ enum class ConnectionStatus {
 }
 
 data class SettingsBundle(
-    val uiScale: Float,
     val showImages: Boolean,
-    val updateInterval: Int,
+    val updateInterval: Long,
     val listViewGrid: Boolean,
     val maxCacheSize: Int,
     val fontSize: Float,
     val browserType: String,
     val browserAvailable: Boolean,
     val notificationEnabled: Boolean,
+    val saveImagesOnFavorite: Boolean,
+    val useOriginalImagePreview: Boolean,
     val lastModified: Long,
     val checksum: String
 ) {
     companion object {
         fun create(
-            uiScale: Float,
             showImages: Boolean,
-            updateInterval: Int,
+            updateInterval: Long,
             listViewGrid: Boolean,
             maxCacheSize: Int,
             fontSize: Float,
             browserType: String,
             browserAvailable: Boolean,
             notificationEnabled: Boolean,
+            saveImagesOnFavorite: Boolean,
+            useOriginalImagePreview: Boolean,
             lastModified: Long
         ): SettingsBundle {
-            val data = "$uiScale|$showImages|$updateInterval|$listViewGrid|$maxCacheSize|$fontSize|$browserType|$browserAvailable|$notificationEnabled|$lastModified"
+            val data = "$showImages|$updateInterval|$listViewGrid|$maxCacheSize|$fontSize|$browserType|$browserAvailable|$notificationEnabled|$saveImagesOnFavorite|$useOriginalImagePreview|$lastModified"
             val checksum = MessageDigest.getInstance("MD5")
                 .digest(data.toByteArray())
                 .joinToString("") { "%02x".format(it) }
             return SettingsBundle(
-                uiScale, showImages, updateInterval, listViewGrid, maxCacheSize,
-                fontSize, browserType, browserAvailable, notificationEnabled, lastModified, checksum
+                showImages, updateInterval, listViewGrid, maxCacheSize,
+                fontSize, browserType, browserAvailable, notificationEnabled,
+                saveImagesOnFavorite, useOriginalImagePreview, lastModified, checksum
             )
         }
     }

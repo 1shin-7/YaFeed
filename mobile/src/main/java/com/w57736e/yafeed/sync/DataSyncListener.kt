@@ -72,15 +72,16 @@ class DataSyncListener(
                     val preferenceManager = PreferenceManager(context)
                     
                     // Always accept Wear settings (Wear is source of truth)
-                    preferenceManager.setUiScale(dataMap.getFloat(SyncKeys.UI_SCALE, 1.0f))
                     preferenceManager.setShowImages(dataMap.getBoolean(SyncKeys.SHOW_IMAGES, true))
-                    preferenceManager.setUpdateInterval(dataMap.getInt(SyncKeys.UPDATE_INTERVAL, 30))
+                    preferenceManager.setUpdateInterval(dataMap.getLong(SyncKeys.UPDATE_INTERVAL, 30L))
                     preferenceManager.setListViewGrid(dataMap.getBoolean(SyncKeys.LIST_VIEW_GRID, false))
                     preferenceManager.setMaxCacheSize(dataMap.getInt(SyncKeys.MAX_CACHE_SIZE, 20))
-                    preferenceManager.setFontSize(dataMap.getFloat(SyncKeys.FONT_SIZE, 14.0f))
+                    preferenceManager.setFontSize(dataMap.getFloat(SyncKeys.FONT_SIZE, 14f))
                     preferenceManager.setBrowserType(dataMap.getString(SyncKeys.BROWSER_TYPE, "default") ?: "default")
                     preferenceManager.setBrowserAvailable(dataMap.getBoolean(SyncKeys.BROWSER_AVAILABLE, false))
                     preferenceManager.setNotificationEnabled(dataMap.getBoolean(SyncKeys.NOTIFICATION_ENABLED, false))
+                    preferenceManager.setSaveImagesOnFavorite(dataMap.getBoolean(SyncKeys.SAVE_IMAGES_ON_FAVORITE, false))
+                    preferenceManager.setUseOriginalImagePreview(dataMap.getBoolean(SyncKeys.USE_ORIGINAL_IMAGE_PREVIEW, false))
                     
                     Log.d(TAG, "    settings: SUCCESS")
                 }

@@ -31,8 +31,8 @@ class WearableDataSyncManager(private val context: Context) {
      */
     suspend fun syncSettings(bundle: SettingsBundle): Result<Unit> {
         Log.d(TAG, ">>> syncSettings START")
-        Log.d(TAG, "    bundle: uiScale=${bundle.uiScale}, showImages=${bundle.showImages}")
-        Log.d(TAG, "    bundle: updateInterval=${bundle.updateInterval}, fontSize=${bundle.fontSize}")
+        Log.d(TAG, "    bundle: showImages=${bundle.showImages}, updateInterval=${bundle.updateInterval}")
+        Log.d(TAG, "    bundle: fontSize=${bundle.fontSize}, browserType=${bundle.browserType}")
         
         return try {
             val timestamp = System.currentTimeMillis()
@@ -41,15 +41,16 @@ class WearableDataSyncManager(private val context: Context) {
             
             val request = PutDataMapRequest.create(path).apply {
                 dataMap.apply {
-                    putFloat(SyncKeys.UI_SCALE, bundle.uiScale)
                     putBoolean(SyncKeys.SHOW_IMAGES, bundle.showImages)
-                    putInt(SyncKeys.UPDATE_INTERVAL, bundle.updateInterval)
+                    putLong(SyncKeys.UPDATE_INTERVAL, bundle.updateInterval)
                     putBoolean(SyncKeys.LIST_VIEW_GRID, bundle.listViewGrid)
                     putInt(SyncKeys.MAX_CACHE_SIZE, bundle.maxCacheSize)
                     putFloat(SyncKeys.FONT_SIZE, bundle.fontSize)
                     putString(SyncKeys.BROWSER_TYPE, bundle.browserType)
                     putBoolean(SyncKeys.BROWSER_AVAILABLE, bundle.browserAvailable)
                     putBoolean(SyncKeys.NOTIFICATION_ENABLED, bundle.notificationEnabled)
+                    putBoolean(SyncKeys.SAVE_IMAGES_ON_FAVORITE, bundle.saveImagesOnFavorite)
+                    putBoolean(SyncKeys.USE_ORIGINAL_IMAGE_PREVIEW, bundle.useOriginalImagePreview)
                     putLong(SyncKeys.LAST_MODIFIED, bundle.lastModified)
                     putString(SyncKeys.DEVICE_ID, SyncKeys.DEVICE_MOBILE)
                     putLong(SyncKeys.SYNC_TIMESTAMP, timestamp)
