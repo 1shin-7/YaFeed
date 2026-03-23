@@ -24,8 +24,8 @@ extensions.configure<com.android.build.api.dsl.ApplicationExtension> {
         applicationId = "com.w57736e.yafeed"
         minSdk = 28
         targetSdk = 36
-        versionCode = 4
-        versionName = "1.5.1"
+        versionCode = 5
+        versionName = "1.5.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
