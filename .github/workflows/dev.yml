@@ -37,25 +37,17 @@ jobs:
           cd wear/build/outputs/apk/debug
           mv wear-debug.apk yafeed-wear-debug.apk
 
-      - name: Upload Mobile APKs
-        run: |
-          cd mobile/build/outputs/apk/debug
-          for file in yafeed-mobile-debug-*.apk; do
-            name=$(basename "$file" .apk)
-            echo "Uploading $file as $name"
-          done
-
       - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: yafeed-mobile-debug
-          path: mobile/build/outputs/apk/debug/yafeed-mobile-debug-*.apk
+          path: mobile/build/outputs/apk/debug/yafeed-mobile-debug.apk
           retention-days: 7
 
       - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: yafeed-wear-debug
-          path: wear/build/outputs/apk/debug/yafeed-wear-debug-*.apk
+          path: wear/build/outputs/apk/debug/yafeed-wear-debug.apk
           retention-days: 7
 
