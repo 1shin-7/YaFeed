@@ -1,5 +1,6 @@
 package com.w57736e.yafeed.presentation.screens.debug
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -7,8 +8,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
-import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
+import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
+import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.ScreenScaffold
 import androidx.wear.compose.material3.Text
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
@@ -16,7 +17,7 @@ import org.intellij.markdown.parser.MarkdownParser
 
 @Composable
 fun MarkdownAstDebugScreen() {
-    val scrollState = rememberScalingLazyListState()
+    val scrollState = rememberTransformingLazyColumnState()
     val markdown = """
 # ATX Heading 1
 ## ATX Heading 2
@@ -127,9 +128,10 @@ Inline HTML: <strong>bold</strong> <em>italic</em> <code>code</code>
     }
 
     ScreenScaffold(scrollState = scrollState) {
-        ScalingLazyColumn(
+        TransformingLazyColumn(
             modifier = Modifier.fillMaxSize(),
-            state = scrollState
+            state = scrollState,
+            contentPadding = PaddingValues(top = 24.dp, start = 12.dp, end = 12.dp, bottom = 64.dp)
         ) {
             items(
                 count = nodes.size,

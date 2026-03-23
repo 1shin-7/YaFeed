@@ -4,11 +4,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
-import androidx.wear.compose.foundation.lazy.ScalingLazyListState
+import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
+import androidx.wear.compose.foundation.lazy.TransformingLazyColumnState
 import androidx.wear.compose.foundation.lazy.items
-import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
+import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import com.mikepenz.markdown.compose.Markdown
 import com.mikepenz.markdown.compose.MarkdownElement
 import com.mikepenz.markdown.compose.components.markdownComponents
@@ -23,7 +24,7 @@ import org.intellij.markdown.parser.MarkdownParser
 fun WearMarkdown(
     content: String,
     modifier: Modifier = Modifier,
-    state: ScalingLazyListState = rememberScalingLazyListState(),
+    state: TransformingLazyColumnState = rememberTransformingLazyColumnState(),
     contentPadding: PaddingValues = PaddingValues(horizontal = 12.dp, vertical = 24.dp),
 ) {
     val markdownState = rememberMarkdownState(content, flavour = GFMFlavourDescriptor(), parser = MarkdownParser(
@@ -55,10 +56,15 @@ fun WearMarkdown(
         ),
         success = { successState, components, _ ->
             val nodes = remember(successState.node) { successState.node.children }
-            ScalingLazyColumn(
+            TransformingLazyColumn(
                 modifier = modifier,
                 state = state,
-                contentPadding = contentPadding
+                contentPadding = PaddingValues(
+                    top = contentPadding.calculateTopPadding(),
+                    start = contentPadding.calculateLeftPadding(LayoutDirection.Ltr),
+                    end = contentPadding.calculateRightPadding(LayoutDirection.Ltr),
+                    bottom = 64.dp
+                )
             ) {
                 items(nodes, key = { it.startOffset }) { node ->
                     MarkdownElement(
