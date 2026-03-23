@@ -47,7 +47,7 @@ fun AddSourceScreen(
                 },
                 enabled = url.isNotBlank() && !isLoading
             ) {
-                Icon(Icons.Default.Check, contentDescription = "Add")
+                Icon(Icons.Default.Check, contentDescription = stringResource(R.string.cd_add))
             }
         }
     ) {

@@ -52,7 +52,7 @@ fun SourcesScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Delete ${source.name}?",
+                    text = stringResource(R.string.delete_source_title, source.name),
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Center
                 )
@@ -64,7 +64,7 @@ fun SourcesScreen(
                     FilledIconButton(
                         onClick = { sourceToDelete = null }
                     ) {
-                        Icon(Icons.Default.Close, contentDescription = "Cancel")
+                        Icon(Icons.Default.Close, contentDescription = stringResource(R.string.cd_cancel))
                     }
                     FilledIconButton(
                         onClick = {
@@ -75,7 +75,7 @@ fun SourcesScreen(
                             containerColor = MaterialTheme.colorScheme.error
                         )
                     ) {
-                        Icon(Icons.Default.Check, contentDescription = "Confirm")
+                        Icon(Icons.Default.Check, contentDescription = stringResource(R.string.cd_confirm))
                     }
                 }
             }
@@ -111,7 +111,7 @@ fun SourcesScreen(
                     actionIcon = {
                         Icon(
                             Icons.Default.Delete,
-                            contentDescription = "Delete",
+                            contentDescription = stringResource(R.string.cd_delete),
                             tint = MaterialTheme.colorScheme.onErrorContainer
                         )
                     },

@@ -70,9 +70,27 @@
     <!-- Browser -->
     <string name="no_browser_available">Браузер недоступен</string>
     <string name="cannot_open">Невозможно открыть</string>
+    <string name="browser">Браузер</string>
+    <string name="browser_default">По умолчанию</string>
+    <string name="browser_samsung">Samsung</string>
+    <string name="browser_chrome">Chrome</string>
+    <string name="custom_interval">Пользовательский: %s</string>
 
     <!-- News Detail -->
     <string name="no_content_available">Контент недоступен.</string>
+
+    <!-- Content Description -->
+    <string name="cd_add">Добавить</string>
+    <string name="cd_cancel">Отмена</string>
+    <string name="cd_confirm">Подтвердить</string>
+    <string name="cd_delete">Удалить</string>
+    <string name="cd_save">Сохранить</string>
+
+    <!-- About -->
+    <string name="debug_mode_enabled">Режим отладки включен</string>
+    <string name="app_description">Современный RSS-ридер для Wear OS на базе Jetpack Compose Material 3 Expressive.</string>
+    <string name="libraries">Библиотеки</string>
+    <string name="libraries_list">RSS-Parser, Compose Markdown, Coil, Room, DataStore, WorkManager</string>
 
     <!-- Wear OS Components -->
     <string name="complication_label">YaFeed</string>

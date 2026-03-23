@@ -12,11 +12,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.*
+import com.w57736e.yafeed.R
 
 @Composable
 fun AboutScreen(onDebugModeEnabled: () -> Unit) {
@@ -50,7 +52,7 @@ fun AboutScreen(onDebugModeEnabled: () -> Unit) {
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        "YaFeed",
+                        stringResource(R.string.app_name),
                         style = MaterialTheme.typography.titleLarge,
                         textAlign = TextAlign.Center
                     )
@@ -63,7 +65,7 @@ fun AboutScreen(onDebugModeEnabled: () -> Unit) {
                                 tapCount++
                                 if (tapCount >= 5) {
                                     onDebugModeEnabled()
-                                    Toast.makeText(context, "Debug mode enabled", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, context.getString(R.string.debug_mode_enabled), Toast.LENGTH_SHORT).show()
                                     tapCount = 0
                                 }
                             }
@@ -86,7 +88,7 @@ fun AboutScreen(onDebugModeEnabled: () -> Unit) {
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
                         Text(
-                            "Modern Wear OS RSS Reader built with Jetpack Compose Material 3 Expressive.",
+                            stringResource(R.string.app_description),
                             style = MaterialTheme.typography.bodySmall
                         )
                     }
@@ -109,13 +111,13 @@ fun AboutScreen(onDebugModeEnabled: () -> Unit) {
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                "Libraries",
+                                stringResource(R.string.libraries),
                                 style = MaterialTheme.typography.labelMedium
                             )
                         }
                         Spacer(modifier = Modifier.height(6.dp))
                         Text(
-                            "RSS-Parser, Compose Markdown, Coil, Room, DataStore, WorkManager",
+                            stringResource(R.string.libraries_list),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

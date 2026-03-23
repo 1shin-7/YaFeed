@@ -70,9 +70,27 @@
     <!-- Browser -->
     <string name="no_browser_available">暂无可用浏览器</string>
     <string name="cannot_open">无法跳转</string>
+    <string name="browser">浏览器</string>
+    <string name="browser_default">默认</string>
+    <string name="browser_samsung">三星浏览器</string>
+    <string name="browser_chrome">Chrome</string>
+    <string name="custom_interval">自定义：%s</string>
 
     <!-- News Detail -->
     <string name="no_content_available">暂无内容。</string>
+
+    <!-- Content Description -->
+    <string name="cd_add">添加</string>
+    <string name="cd_cancel">取消</string>
+    <string name="cd_confirm">确认</string>
+    <string name="cd_delete">删除</string>
+    <string name="cd_save">保存</string>
+
+    <!-- About -->
+    <string name="debug_mode_enabled">调试模式已启用</string>
+    <string name="app_description">基于 Jetpack Compose Material 3 Expressive 构建的现代 Wear OS RSS 阅读器。</string>
+    <string name="libraries">开源库</string>
+    <string name="libraries_list">RSS-Parser, Compose Markdown, Coil, Room, DataStore, WorkManager</string>
 
     <!-- Wear OS Components -->
     <string name="complication_label">YaFeed</string>

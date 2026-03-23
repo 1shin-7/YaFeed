@@ -5,8 +5,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.*
@@ -53,8 +54,8 @@ fun GeneralSettingsScreen(
                     checked = saveImagesOnFavorite,
                     onCheckedChange = onSaveImagesOnFavoriteChange,
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                    label = { Text("Save images on favorite") },
-                    secondaryLabel = { Text("Download images for offline viewing") }
+                    label = { Text(stringResource(R.string.save_images_on_favorite)) },
+                    secondaryLabel = { Text(stringResource(R.string.save_images_description)) }
                 )
             }
 
@@ -64,10 +65,10 @@ fun GeneralSettingsScreen(
                     horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "Cache Size: $maxCacheSize",
+                        stringResource(R.string.cache_size, maxCacheSize),
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.fillMaxWidth().padding(bottom = 6.dp),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        textAlign = TextAlign.Center
                     )
                     Slider(
                         value = maxCacheSize.toFloat(),
@@ -81,20 +82,20 @@ fun GeneralSettingsScreen(
 
             item {
                 Text(
-                    "Update Interval",
+                    stringResource(R.string.update_interval),
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 8.dp),
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    textAlign = TextAlign.Center
                 )
             }
 
             item {
                 if (updateInterval !in listOf(5L, 10L, 15L, 30L, 60L)) {
                     Text(
-                        "Custom: ${formatInterval(updateInterval)}",
+                        stringResource(R.string.custom_interval, formatInterval(updateInterval)),
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                        textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -163,10 +164,10 @@ fun GeneralSettingsScreen(
             if (browserAvailable && availableBrowsers.size > 1) {
                 item {
                     Text(
-                        "Browser",
+                        stringResource(R.string.browser),
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 8.dp),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        textAlign = TextAlign.Center
                     )
                 }
 
@@ -181,9 +182,9 @@ fun GeneralSettingsScreen(
                             ) {
                                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
                                     Text(when (browser) {
-                                        "default" -> "Default"
-                                        "samsung" -> "Samsung"
-                                        "chrome" -> "Chrome"
+                                        "default" -> stringResource(R.string.browser_default)
+                                        "samsung" -> stringResource(R.string.browser_samsung)
+                                        "chrome" -> stringResource(R.string.browser_chrome)
                                         else -> browser
                                     })
                                 }

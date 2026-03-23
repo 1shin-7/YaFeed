@@ -45,7 +45,7 @@ fun EditSourceScreen(
                 },
                 enabled = name.isNotBlank() && !isLoading
             ) {
-                Icon(Icons.Default.Check, contentDescription = "Save")
+                Icon(Icons.Default.Check, contentDescription = stringResource(R.string.cd_save))
             }
         }
     ) {

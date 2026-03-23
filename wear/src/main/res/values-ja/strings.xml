@@ -70,9 +70,27 @@
     <!-- Browser -->
     <string name="no_browser_available">ブラウザが利用できません</string>
     <string name="cannot_open">開けません</string>
+    <string name="browser">ブラウザ</string>
+    <string name="browser_default">デフォルト</string>
+    <string name="browser_samsung">Samsung</string>
+    <string name="browser_chrome">Chrome</string>
+    <string name="custom_interval">カスタム: %s</string>
 
     <!-- News Detail -->
     <string name="no_content_available">コンテンツがありません。</string>
+
+    <!-- Content Description -->
+    <string name="cd_add">追加</string>
+    <string name="cd_cancel">キャンセル</string>
+    <string name="cd_confirm">確認</string>
+    <string name="cd_delete">削除</string>
+    <string name="cd_save">保存</string>
+
+    <!-- About -->
+    <string name="debug_mode_enabled">デバッグモード有効</string>
+    <string name="app_description">Jetpack Compose Material 3 Expressiveで構築された現代的なWear OS RSSリーダー。</string>
+    <string name="libraries">ライブラリ</string>
+    <string name="libraries_list">RSS-Parser, Compose Markdown, Coil, Room, DataStore, WorkManager</string>
 
     <!-- Wear OS Components -->
     <string name="complication_label">YaFeed</string>
