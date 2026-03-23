@@ -46,6 +46,15 @@ class RssRepository(
 
     suspend fun syncSources(sources: List<RssSource>) {
         sourceDao.upsertSources(sources)
+        // 删除本地不存在于远程列表中的源
+        val remoteUrls = sources.map { it.url }
+        if (remoteUrls.isNotEmpty()) {
+            sourceDao.deleteSourcesNotIn(remoteUrls)
+        } else {
+            // 如果远程列表为空，删除所有本地源
+            val localSources = getAllSources().first()
+            localSources.forEach { sourceDao.deleteSource(it) }
+        }
     }
 
     fun getCachedArticles(sourceId: Int): Flow<List<RssArticle>> {
