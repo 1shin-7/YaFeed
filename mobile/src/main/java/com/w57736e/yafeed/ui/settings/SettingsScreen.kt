@@ -83,8 +83,8 @@ fun SettingsScreen(
                         label = "Cache Size",
                         value = maxCacheSize.toFloat(),
                         onValueChange = { viewModel.setMaxCacheSize(it.toInt()) },
-                        valueRange = 5f..50f,
-                        steps = 44,
+                        valueRange = 10f..200f,
+                        steps = 18,
                         valueLabel = "$maxCacheSize articles"
                     )
                 }

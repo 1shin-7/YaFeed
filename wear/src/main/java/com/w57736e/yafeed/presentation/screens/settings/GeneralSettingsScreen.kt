@@ -65,13 +65,15 @@ fun GeneralSettingsScreen(
                 ) {
                     Text(
                         "Cache Size: $maxCacheSize",
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 6.dp),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
                     )
                     Slider(
                         value = maxCacheSize.toFloat(),
                         onValueChange = { onMaxCacheSizeChange(it.toInt()) },
-                        valueRange = 5f..50f,
-                        steps = 44,
+                        valueRange = 10f..200f,
+                        steps = 18,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
